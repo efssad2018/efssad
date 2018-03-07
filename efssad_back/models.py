@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Mission(models.Model):
+    missionID = models.IntegerField()
     level = models.IntegerField()
     description = models.CharField(max_length=1000)
     datetimeReceived = models.DateTimeField()
@@ -10,12 +11,12 @@ class Mission(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     civilCommander = models.CharField(max_length=100)
-    militaryCommander = models.CharField(null=True)
+    militaryCommander = models.CharField(max_length=1000, null=True)
 
 class Commander(models.Model):
     rank = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    deploymentStatus = CharField(max_length=1000)
+    deploymentStatus = models.CharField(max_length=1000)
     numOfTeams = models.IntegerField(default=5)
 
 class Team(models.Model):
