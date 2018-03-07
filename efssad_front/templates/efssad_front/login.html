@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>EFSSAD</title>
-    <form method="post">
-        Username:<br>
-        <input type="text" name="username"><br>
-        Password:<br>
-        <input type="text" name="password"><br>
-        <input type="submit" value="Login">
-    </form>
-</head>
-<body>
+{% extends 'efssad_front/master.html' %}
+ <!-- Custom styles for this template -->
+    <link href="efssad_front/signin.css" rel="stylesheet">
 
-</body>
-</html>
+{% block body %}
+
+<div class="accordion accordion-lg divcenter nobottommargin clearfix" style="margin-left: 32%; max-width:550px;">
+  <body class="text-center">
+    <form class="form-signin" action="#">
+      <img class="mb-4" src="#" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">EF Login</h1>
+      <label for="tb_username" class="sr-only">Username</label>
+      <input type="username" id="tb_username" class="form-control" placeholder="Username" required autofocus>
+      <label for="tb_password" class="sr-only">Password</label>
+      <input type="password" id="tb_password" class="form-control" placeholder="Password" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+    </form>
+  </body>
+</div>
+
+{% endblock %}
