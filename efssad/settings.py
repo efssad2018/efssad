@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'efssad_front.apps.EfssadFrontConfig',
     'efssad_back.apps.CommanderConfig',
     'django.contrib.admin',
     'django.contrib.auth',

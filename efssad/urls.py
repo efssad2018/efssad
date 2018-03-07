@@ -18,6 +18,6 @@ from django.urls import include, re_path, path
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
-    re_path(r'^index/', include('efssad_front.urls')),
+    re_path(r'^', include('efssad_front.urls')),
 
 ]
