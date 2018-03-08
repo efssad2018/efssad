@@ -1,8 +1,12 @@
 {% extends 'efssad_front/master.html' %}
+{% load staticfiles %}
 
 {% block body %}
+ <!-- Custom styles for this template -->
+<link rel="stylesheet" type="text/css" href="{% static 'efssad_front/style.css' %}" />
 
-<body class="text-center">
+<body>
+<div class="container">
   <table class="table">
       <thead class="thead-dark">
       <tr>
@@ -19,30 +23,16 @@
       <tbody>
       <tr>
           <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          <td>test</td>
+          <td>1</td>
+          <td>Zombie Invasion</td>
+          <td>11-02-2018 18:00</td>
+          <td>Ongoing</td>
         </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>test</td>
 
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-            <td>test</td>
-
-        </tr>
       </tbody>
     </table>
 
+</div>
 </body>
 
 {% endblock %}
