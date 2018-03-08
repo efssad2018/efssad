@@ -19,7 +19,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'efssad_front/master.css' %}" />
 <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
-
+{% block navbar %}
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <!-- Header -->
@@ -46,11 +46,14 @@
     </div>
 
 </nav>
+{% endblock %}
 
 {% block body %}
 {% endblock %}
 </body>
 <footer>
+    <br/>
+    <br/>
      <p class="mt-5 mb-3 text-muted">&copy; EFSSAD - 2018</p>
 </footer>
 </html>
