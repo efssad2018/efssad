@@ -12,5 +12,5 @@ def login(request):
     # return HttpResponse(template.render(context, request))
 
     # return HttpResponse('<h1>test</h1>')
-    #return render(request,'efssad_front/login.html', context)
+    # return render(request,'efssad_front/login.html', context)
     return render(request, 'efssad_front/MCmain.html', context)
