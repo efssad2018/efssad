@@ -3,19 +3,26 @@
  <!-- Custom styles for this template -->
 <link rel="stylesheet" type="text/css" href="{% static 'efssad_front/signin.css' %}" />
 
+{% block navbar %}
+{% endblock %}
 {% block body %}
 
 
-<div class="accordion accordion-lg divcenter nobottommargin clearfix" style="margin-left: 32%; margin-right:32%; max-width:550px;">
+<div class="accordion accordion-lg divcenter nobottommargin clearfix" style="margin-top:10%; margin-left: 32%; margin-right:32%; max-width:550px;">
   <body class="text-center">
     <form class="form-signin" action="#">
        {% csrf_token %}
-      <img class="mb-4" src="" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">EF Login</h1>
+      <img class="mb-4" src="{% static 'efssad_front/images/logo.png' %}" alt="" width="102" height="102">
+      <br/>
+      <br/>
+      <br/>
       <label for="tb_username" class="sr-only">Username</label>
       <input type="username" id="tb_username" class="form-control" placeholder="Username" required autofocus>
+      <br/>
       <label for="tb_password" class="sr-only">Password</label>
       <input type="password" id="tb_password" class="form-control" placeholder="Password" required>
+      <br/>
+      <br/>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
     </form>
