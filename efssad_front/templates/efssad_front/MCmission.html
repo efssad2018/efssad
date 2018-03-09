@@ -1,4 +1,5 @@
 {% extends 'efssad_front/master.html' %}
+{% load staticfiles %}
 
 {% block body %}
 <div class="container">
@@ -11,10 +12,36 @@
                 </h4>
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
-                <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <div class="panel-body">
+                    <div style="float:left; width: 50%; border:1px solid red;">
+                        <label>ID:</label>
+                        <span id="missionID"></span>
+                        <br/>
+                        <label>Level:</label>
+                        <span id="missionLevel"></span>
+                        <br/>
+                        <label>Description:</label>
+                        <span id="missionDesc"></span>
+                        <br/>
+                        <label>Time:</label>
+                        <span id="missionDatetime"></span>
+                        <br/>
+                        <label>Site Commanders:</label>
+
+                        <br/>
+                    </div>
+                    <div style="border:1px solid blue;">
+                        <label>Location:</label>
+                        <br/>
+                        <div id="locationMap" style="width=300px;height=250px;">
+                            <img src="{% static 'efssad_front/images/logo.png' %}" width="102" height="102">
+                        </div>
+                    </div>
                 </div>
+                <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
+                    <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+                    <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+                <!--</div>-->
             </div>
         </div>
     </div>
