@@ -1,0 +1,54 @@
+{% extends 'efssad_front/master.html' %}
+
+{% block body %}
+<body>
+
+<div class="container">
+    <div class="search">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control input-lg" placeholder="Search" style="width: 890px"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg" type="button">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>
+    <table class="table">
+        <thead style="background:black; color: white; height: 50px;">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Level</th>
+            <th scope="col">Description</th>
+            <th scope="col">Datetime received</th>
+            <th scope="col">Datetime completed</th>
+
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>1</td>
+            <td>Zombie Invasion</td>
+            <td>11-02-2018 18:00</td>
+            <td>15-02-2018 18:00</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+</div>
+</body>
+
+{% endblock %}
+
