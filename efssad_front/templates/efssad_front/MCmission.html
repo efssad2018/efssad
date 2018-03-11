@@ -2,6 +2,11 @@
 {% load staticfiles %}
 
 {% block body %}
+<!-- map -->
+{% load leaflet_tags %}
+{% leaflet_js %}
+{% leaflet_css %}
+
 <div class="container">
     <h2>Mission Details</h2>
     <div class="panel-group" id="missionDetail">
@@ -34,7 +39,7 @@
                         <label>Location:</label>
                         <br/>
                         <div id="locationMap" style="width=300px;height=250px;">
-                            <img src="{% static 'efssad_front/images/logo.png' %}" width="102" height="102">
+                            {% leaflet_map "yourmap" %}
                         </div>
                     </div>
                 </div>
