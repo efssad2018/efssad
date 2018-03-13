@@ -10,7 +10,7 @@
 <div class="container">
     <h2>Mission Details</h2>
     <div class="panel-group" id="missionDetail">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#missionDetail" href="#collapse1">Mission Info</a>
@@ -18,7 +18,7 @@
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    <div style="float:left; width: 50%; border:1px solid red;">
+                    <div style="float:left; width: 50%; #border:1px solid red;">
                         <label>ID:</label>
                         <span id="missionID"></span>
                         <br/>
@@ -35,17 +35,23 @@
 
                         <br/>
                     </div>
-                    <div style="border:1px solid blue;">
+                    <!--<div id="map">test</div>-->
+                    <div style="#border:1px solid blue;">
                         <label>Location:</label>
                         <br/>
                         <div id="locationMap" style="width=300px;height=250px;">
                             <!--{#% leaflet_map "yourmap" %}-->
+                            <!--<form method="POST" action="#">{% csrf_token %}-->
+                                <!--{{ form.media }}-->
+                                <!--{{ form.as_p }}-->
+                            <!--</form>-->
+
                         </div>
                     </div>
                 </div>
                 <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
-                    <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
-                    <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+                <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+                <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
                 <!--</div>-->
             </div>
 
@@ -59,33 +65,40 @@
         </div>
     </a>
 
-    <h2>Message Logs</h2>
+    <div id="btnGroup" style="float:right">
+        <button type="button" class="btn btn-warning">Redeployment</button>
+        <button type="button" class="btn btn-primary">Clean up</button>
+        <button type="button" class="btn btn-success">Livestream</button>
+    </div>
+
+
+    <h2>Mission Control Centre</h2>
 
     <table class="table">
         <thead style="background:black; color: white; height: 50px;">
 
-            <tr>
-                <th scope="col" class="col-md-1">Commander</th>
-                <th scope="col" class="col-md-1">Time</th>
-                <th scope="col" class="col-md-6">Message</th>
-            </tr>
+        <tr>
+            <th scope="col" class="col-md-1">Commander</th>
+            <th scope="col" class="col-md-1">Time</th>
+            <th scope="col" class="col-md-6">Message</th>
+        </tr>
 
         </thead>
 
         <tbody>
 
-            <tr>
-                <th scope="row">1</th>
-                <td>1</td>
-                <td>Zombie Invasion</td>
-            </tr>
+        <tr>
+            <th scope="row">1</th>
+            <td>1</td>
+            <td>Zombie Invasion</td>
+        </tr>
         </tbody>
 
     </table>
 
 
     <div class="form-group">
-        <textarea class="form-control" rows="5" id="comment"></textarea>
+        <textarea class="form-control" rows="4" id="comment"></textarea>
         <br>
         <button type="button" class="btn btn-primary active" style="float: right">Submit</button>
     </div>

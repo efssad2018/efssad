@@ -123,3 +123,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# geoposition
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBafZXPJQ-tfjipjVxsIj1FQfhjbWssvbw'
+
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 15,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}
