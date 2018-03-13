@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'geoposition',
-    'leaflet',
+    # 'leaflet',
     'bootstrap3',
     'efssad_front.apps.EfssadFrontConfig',
     'efssad_back.apps.CommanderConfig',
