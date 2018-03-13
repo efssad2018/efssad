@@ -13,7 +13,7 @@
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    <div style="float:left; width: 50%; border:1px solid red;">
+                    <div style="float:left; width: 50%;">
                         <label>ID:</label>
                         <span id="missionID"></span>
                         <br/>
@@ -23,14 +23,17 @@
                         <label>Description:</label>
                         <span id="missionDesc"></span>
                         <br/>
-                        <label>Time:</label>
-                        <span id="missionDatetime"></span>
+                        <label>DateTime Received:</label>
+                        <span id="dateTimeReceived"></span>
+                        <br/>
+                        <label>DateTime Completed:</label>
+                        <span id="dateTimeCompleted"></span>
                         <br/>
                         <label>Site Commanders:</label>
-
                         <br/>
+                        <label>Status:</label>
                     </div>
-                    <div style="border:1px solid blue;">
+                    <div id="map">
                         <label>Location:</label>
                         <br/>
                         <div id="locationMap" style="width=300px;height=250px;">
@@ -47,14 +50,7 @@
         </div>
     </div>
 
-    <!--when hover, the link shouldn't have an underline???-->
-    <a href="#" class="alert-link newPlan">
-        <div class="alert alert-danger">
-            <span id="numOfNewPlans" class="badge">3</span>&nbsp &nbsp <strong>New plan from CMO</strong>
-        </div>
-    </a>
-
-    <h2>Message Logs</h2>
+    <h2>Mission Logs</h2>
 
     <table class="table">
         <thead style="background:black; color: white; height: 50px;">
@@ -77,15 +73,6 @@
         </tbody>
 
     </table>
-
-
-    <div class="form-group">
-        <textarea class="form-control" rows="5" id="comment"></textarea>
-        <br>
-        <button type="button" class="btn btn-primary active" style="float: right">Submit</button>
-    </div>
-
-
 </div>
 
 {% endblock %}

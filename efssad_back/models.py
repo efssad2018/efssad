@@ -10,14 +10,12 @@ class Mission(models.Model):
     status = models.CharField(max_length=100)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    civilCommander = models.CharField(max_length=100)
-    militaryCommander = models.CharField(max_length=1000, null=True)
 
 class Commander(models.Model):
+    missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
     rank = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     deploymentStatus = models.CharField(max_length=1000)
-    numOfTeams = models.IntegerField(default=5)
 
 class Team(models.Model):
     commander = models.ForeignKey(Commander, on_delete=models.CASCADE)
@@ -29,6 +27,7 @@ class MessageLog(models.Model):
     dateTime = models.DateTimeField()
     message = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
+    planID = models.IntegerField()
 
 class Account(models.Model):
     commanderID = models.ForeignKey(Commander, on_delete=models.CASCADE)
