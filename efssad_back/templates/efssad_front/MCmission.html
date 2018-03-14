@@ -95,26 +95,27 @@
         <button type="button" class="btn btn-success" id="btn_liveStream">Livestream</button>
     </div>
 
-       <!-- script for different button -->
-<script>
-    var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
-    status = status.replace(/\s/g,'');
-    if(status == "ongoing"){
-        document.getElementById("missionStatus").className = "label label-warning";
-        document.getElementById("btn_complete").style.display="none";
-    }
-    if(status == "cleanup"){
-        document.getElementById("missionStatus").className = "label label-info";
-        document.getElementById("btn_redeployment").style.display="none";
-        document.getElementById("btn_cleanUp").style.display="none";
-    }
+    <!-- script for different button -->
+    <script>
+        var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
+        status = status.replace(/\s/g,'');
+        if(status == "ongoing"){
+            document.getElementById("missionStatus").className = "label label-warning";
+            document.getElementById("btn_complete").style.display="none";
+        }
+        if(status == "cleanup"){
+            document.getElementById("missionStatus").className = "label label-info";
+            document.getElementById("btn_redeployment").style.display="none";
+            document.getElementById("btn_cleanUp").style.display="none";
+        }
 
-    if(status == "complete"){
-        document.getElementById("missionStatus").className = "label label-default";
-        document.getElementById("btnGroup").style.display="none";
-    }
+        if(status == "complete"){
+            document.getElementById("missionStatus").className = "label label-default";
+            document.getElementById("btnGroup").style.display="none";
+        }
 
-</script>
+
+    </script>
 
     <h2>Mission Control Centre</h2>
 
