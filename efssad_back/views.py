@@ -18,3 +18,4 @@ def login(request):
     return render(request, 'efssad_front/MCmission.html', context)
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
+    # return render(request, 'efssad_front/MCdeployment.html', context)
