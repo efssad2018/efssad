@@ -12,17 +12,15 @@ def login(request):
     # return HttpResponse(template.render(context, request))
 
     # return HttpResponse('<h1>test</h1>')
-    return render(request,'efssad_front/login.html', context)
+    # return render(request,'efssad_front/login.html', context)
     # return render(request, 'efssad_front/MCmain.html', context)
     # return render(request, 'efssad_front/MCarchive.html', context)
     # return render(request, 'efssad_front/MCmission.html', context)
-    # return render(request, 'efssad_front/MCarchivedetails.html', context)
+    return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
 
 def mission(request):
-    context = {"message" : "Home"}
-    return render(request, 'efssad_front/MCmain.html', context)
+    return render(request, 'efssad_front/MCmain.html')
 
 def archive(request):
-    context = {"message" : "Archive"}
-    return render(request, 'efssad_front/MCarchive.html', context)
+    return render(request, 'efssad_front/MCarchive.html')
