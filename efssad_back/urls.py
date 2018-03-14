@@ -7,5 +7,7 @@ urlpatterns = [
     #path('', views.login, name=''),
     path('mcmain/', views.mcmain, name='mcmain'),
     path('scmission/', views.scmission, name='scmission'),
+    path('mission/', views.mission, name='mission'),
+    path('archive/', views.archive, name='archive'),
 
 ]

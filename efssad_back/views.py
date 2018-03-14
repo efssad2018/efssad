@@ -24,3 +24,9 @@ def mcmain(request):
 def scmission(request):
     return render(request, 'efssad_front/SCmission.html')
 
+def mission(request):
+    return render(request, 'efssad_front/MCmain.html')
+
+def archive(request):
+    return render(request, 'efssad_front/MCarchive.html')
+
