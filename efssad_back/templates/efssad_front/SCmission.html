@@ -1,0 +1,87 @@
+{% extends 'efssad_front/master.html' %}
+{% load staticfiles %}
+
+{% block body %}
+<div class="container">
+    <h2>Mission Details</h2>
+    <div class="panel-group" id="missionDetail">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#missionDetail" href="#collapse1">Mission Info</a>
+                </h4>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div style="float:left; width: 50%;">
+                        <label>ID:</label>
+                        <span id="missionID"></span>
+                        <br/>
+                        <label>Level:</label>
+                        <span id="missionLevel"></span>
+                        <br/>
+                        <label>Description:</label>
+                        <span id="missionDesc"></span>
+                        <br/>
+                        <label>DateTime Received:</label>
+                        <span id="dateTimeReceived"></span>
+                        <br/>
+                        <label>DateTime Completed:</label>
+                        <span id="dateTimeCompleted"></span>
+                        <br/>
+                        <label>Site Commanders:</label>
+                        <br/>
+                        <label>Status:</label>
+                        <br/>
+                        <label>Location:</label>
+                    </div>
+                    <div id="map">
+                        <label>Location:</label>
+                        <br/>
+                        <div id="locationMap" style="width=300px;height=250px;">
+                            <img src="{% static 'efssad_front/images/logo.png' %}" width="102" height="102">
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
+                    <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+                    <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+                <!--</div>-->
+            </div>
+
+        </div>
+    </div>
+
+    <h2>Message Logs</h2>
+
+    <table class="table">
+        <thead style="background:black; color: white; height: 50px;">
+
+            <tr>
+                <th scope="col">Commander</th>
+                <th scope="col">Time</th>
+                <th scope="col">Message</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <th scope="row">1</th>
+                <td>1</td>
+                <td>Zombie Invasion</td>
+            </tr>
+        </tbody>
+
+    </table>
+
+
+    <div class="form-group">
+        <textarea class="form-control" rows="5" id="comment"></textarea>
+        <button type="button" class="btn btn-primary active">Submit</button>
+    </div>
+
+</div>
+
+{% endblock %}
