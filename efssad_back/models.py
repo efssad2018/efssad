@@ -1,5 +1,4 @@
 from django.db import models
-from geoposition.fields import GeopositionField
 
 # Create your models here.
 class Mission(models.Model):
@@ -34,10 +33,6 @@ class Account(models.Model):
     commanderID = models.ForeignKey(Commander, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=1000)
-
-class PointOfInterest(models.Model):
-    name = models.CharField(max_length=100)
-    position = GeopositionField()
 
 
 

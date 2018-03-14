@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'geoposition',
     # 'leaflet',
     'bootstrap3',
     'efssad_back',
