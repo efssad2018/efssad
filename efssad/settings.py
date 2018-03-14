@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'geoposition',
     # 'leaflet',
     'bootstrap3',
     'efssad_back',
@@ -134,3 +133,5 @@ GEOPOSITION_MAP_OPTIONS = {
 GEOPOSITION_MARKER_OPTIONS = {
     'cursor': 'move'
 }
+
+LOGIN_REDIRECT_URL = '/mcmain/'
