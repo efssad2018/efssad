@@ -36,7 +36,7 @@
                         <br/>
                         <label>Status:</label>
                         <!--new - green, ongoing - yellow, cleanup - blue, completed - grey-->
-                        <span id="missionStatus"class="label label-warning" style="font-size: 15px">Ongoing</span>
+                        <span id="missionStatus"class="#" style="font-size: 15px">Ongoing</span>
 
                         <br/>
                     </div>
@@ -89,11 +89,32 @@
     </div>
 
     <div id="btnGroup" style="float:right">
-        <button type="button" class="btn btn-primary">Redeployment</button>
-        <button type="button" class="btn btn-primary">Clean up</button>
-        <button type="button" class="btn btn-success">Livestream</button>
+        <button type="button" class="btn btn-primary" id="btn_complete">Complete</button>
+        <button type="button" class="btn btn-primary" id="btn_redeployment">Redeployment</button>
+        <button type="button" class="btn btn-primary" id="btn_cleanUp">Clean up</button>
+        <button type="button" class="btn btn-success" id="btn_liveStream">Livestream</button>
     </div>
 
+       <!-- script for different button -->
+<script>
+    var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
+    status = status.replace(/\s/g,'');
+    if(status == "ongoing"){
+        document.getElementById("missionStatus").className = "label label-warning";
+        document.getElementById("btn_complete").style.display="none";
+    }
+    if(status == "cleanup"){
+        document.getElementById("missionStatus").className = "label label-info";
+        document.getElementById("btn_redeployment").style.display="none";
+        document.getElementById("btn_cleanUp").style.display="none";
+    }
+
+    if(status == "complete"){
+        document.getElementById("missionStatus").className = "label label-default";
+        document.getElementById("btnGroup").style.display="none";
+    }
+
+</script>
 
     <h2>Mission Control Centre</h2>
 
