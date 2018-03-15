@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     #re_path(r'^$/', views.login, name='login'),
-    #path('', views.login, name=''),
+    #path('', views.login, name='login'),
     path('mainmenu/', views.mainmenu, name='mainmenu'),
     path('mcmain/', views.mcmain, name='mcmain'),
     path('scmission/', views.scmission, name='scmission'),
