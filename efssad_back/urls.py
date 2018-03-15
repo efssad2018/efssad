@@ -9,5 +9,6 @@ urlpatterns = [
     path('scmission/', views.scmission, name='scmission'),
     path('mission/', views.mission, name='mission'),
     path('archive/', views.archive, name='archive'),
+    path('deployment/', views.deployment, name='deployment'),
 
 ]

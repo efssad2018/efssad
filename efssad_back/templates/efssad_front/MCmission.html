@@ -77,18 +77,28 @@
 
     </div>
 
-    <!--when hover, the link shouldn't have an underline???-->
-    <div class="alert-danger">
-        <a href="#" class="alert-link">
-            <div class="alert alert-danger">
-                <!--<span id="numOfNewPlans" class="badge">3</span>-->
-                <!--&nbsp &nbsp-->
-                <strong>Alert!</strong>&nbsp New plan from CMO
-            </div>
-        </a>
-    </div>
-
     <div id="btnGroup" style="float:right">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span id="numOfNewPlans" class="badge"><strong>!</strong></span>&nbsp New plan from CMO</button>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Some text in the modal.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <button type="button" class="btn btn-primary" id="btn_complete">Complete</button>
         <button type="button" class="btn btn-primary" id="btn_redeployment">Redeployment</button>
         <button type="button" class="btn btn-primary" id="btn_cleanUp">Clean up</button>
@@ -153,6 +163,7 @@
 
         </table>
     </div>
+
 
     <br/>
     <div class="form-group">
