@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+import speech_recognition as sr
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.template import loader
@@ -42,3 +43,17 @@ def archive(request):
 def deployment(request):
     return render(request, 'efssad_front/MCdeployment.html')
 
+def stt(request):
+    return render(request, 'efssad_front/speechtotext.html')
+
+
+def speechtotext():
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print('Say Something!')
+        audio = r.listen(source)
+
+    text = r.recognize_google(audio)
+    print(text)
+    print('Done!')
