@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.template import loader
 from efssad_back.models import Mission, Account
@@ -17,6 +18,14 @@ from efssad_back.models import Mission, Account
     # return render(request, 'efssad_front/MCmission.html', context)
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
+
+
+def mainmenu(request):
+    if request.User.groups.filter(name='MainCommander').exists():
+        # user is an admin
+        return redirect("mcmain")
+    else:
+        return redirect("scmission")
 
 def mcmain(request):
     return render(request, 'efssad_front/MCmain.html')
