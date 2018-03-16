@@ -6,10 +6,31 @@
 
 <!--  -->
 <script>
-function viewPlan(){
-    var rows = document.getElementsByTagName("tr");
-    
-}
+<!--function viewPlan(){-->
+    <!--var rows = document.getElementsByTagName("tr");-->
+    <!---->
+<!--}-->
+$(document).ready(function(){
+    <!--alert("hi");-->
+    var crisis1 = {
+       "crisis_date_time" : "11-02-2018 18:00",
+       "crisis_location" : "",
+       "crisis_phone" : "91234567",
+       "crisis_title" : "Fire",
+       "crisis_detail" : "Fire at TCT-LT",
+       "crisis_NRIC" : "S1122334A",
+       "crisis_emergency_level" : "1",
+       "plan_id" : "1",
+       "plan_category" : "",
+       "plan_teams" : "SWAT,Search & Rescue,War Fighter",
+       "plan_description" : "plan desc",
+       "plan_action" : "plan actions",
+       "plan_date" : "11-02-2018 18:05",
+       "plan_location" : "51.505,-0.09"
+    }
+    <!--var data = '{"crisis_date_time":"11-02-2018 18:00","crisis_location":""}'-->
+    alert(crisis1.crisis_date_time);
+});
 </script>
 
 <div class="container">
