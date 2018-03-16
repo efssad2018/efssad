@@ -134,4 +134,4 @@ GEOPOSITION_MARKER_OPTIONS = {
     'cursor': 'move'
 }
 
-LOGIN_REDIRECT_URL = '/mcmain/'
+LOGIN_REDIRECT_URL = '/mainmenu/'

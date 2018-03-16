@@ -25,6 +25,14 @@
       <br/>
       <br/>
       <input class="btn btn-lg btn-primary btn-block" type="submit" = value = "Login"></input>
+        {% if form.errors %}
+         <p>Your username and/or password is incorrect</p>
+        {% endif %}
+
+        {% if next %}
+        <p>YOU ARE NOT ALLOWED TO ACCESS THAT PAGE</p>
+        {% endif %}
+        <p><input type="hidden" name="next" value ="{{next}}"></p>
 
     </form>
   </body>

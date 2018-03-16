@@ -1,4 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+import speech_recognition as sr
+from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.template import loader
 from efssad_back.models import Mission, Account
@@ -18,6 +20,13 @@ from efssad_back.models import Mission, Account
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
 
+def mainmenu(request):
+
+    if request.user.groups.filter(name='maincommander'):
+        return redirect("mcmain")
+    elif request.user.groups.filter(name='sitecommander'):
+        return redirect("scmission")
+
 def mcmain(request):
     return render(request, 'efssad_front/MCmain.html')
     # return render(request, 'efssad_front/MCmission.html')
@@ -34,3 +43,17 @@ def archive(request):
 def deployment(request):
     return render(request, 'efssad_front/MCdeployment.html')
 
+def stt(request):
+    return render(request, 'efssad_front/speechtotext.html')
+
+
+def speechtotext():
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print('Say Something!')
+        audio = r.listen(source)
+
+    text = r.recognize_google(audio)
+    print(text)
+    print('Done!')
