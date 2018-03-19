@@ -44,15 +44,15 @@ def mission(request):
 def archive(request):
     return render(request, 'efssad_front/MCarchive.html')
 
-# def deployment(request, missionID):
-#     try:
-#         mission = Mission.objects.get(pk=missionID)
-#     except Mission.DoesNotExist:
-#         raise Http404("Mission does not exist")
-#     return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
+def deployment(request, missionID):
+    try:
+        mission = Mission.objects.get(pk=missionID)
+    except Mission.DoesNotExist:
+        raise Http404("Mission does not exist")
+    return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
 
-def deployment(request):
-    return render(request, 'efssad_front/MCdeployment.html')
+# def deployment(request):
+#     return render(request, 'efssad_front/MCdeployment.html')
 
 
 def stt(request):
