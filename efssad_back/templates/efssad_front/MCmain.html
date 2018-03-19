@@ -10,17 +10,22 @@
     <!--var rows = document.getElementsByTagName("tr");-->
     <!---->
 <!--}-->
+
 $(document).ready(function(){
-    <!--alert("hi");-->
+});
+
+function receiveMission(){
     var crisis1 = {
+       "crisis_id" : "1",
        "crisis_date_time" : "11-02-2018 18:00",
        "crisis_location" : "",
        "crisis_phone" : "91234567",
        "crisis_title" : "Fire",
        "crisis_detail" : "Fire at TCT-LT",
        "crisis_NRIC" : "S1122334A",
-       "crisis_emergency_level" : "1",
+       "incident_emergency_level" : "1",
        "plan_id" : "1",
+       "plan_title" : "initial plan",
        "plan_category" : "",
        "plan_teams" : "SWAT,Search & Rescue,War Fighter",
        "plan_description" : "plan desc",
@@ -28,14 +33,49 @@ $(document).ready(function(){
        "plan_date" : "11-02-2018 18:05",
        "plan_location" : "51.505,-0.09"
     }
-    <!--var data = '{"crisis_date_time":"11-02-2018 18:00","crisis_location":""}'-->
-    alert(crisis1.crisis_date_time);
-});
+    <!--alert(crisis1.crisis_date_time);-->
+
+    var missiontable = document.getElementById("missionTable");
+    var row = missiontable.insertRow(1);
+    var IDcell = row.insertCell(0);
+    var Lvlcell = row.insertCell(1);
+    var Desccell = row.insertCell(2);
+    var DTcell = row.insertCell(3);
+    var Statuscell = row.insertCell(4);
+    var Actioncell = row.insertCell(5);
+
+    var id = document.createElement('span');
+    id.style = "font-weight: bold";
+    id.innerHTML = crisis1.crisis_id;
+    IDcell.appendChild(id);
+    Lvlcell.innerHTML = crisis1.incident_emergency_level;
+    Desccell.innerHTML = crisis1.crisis_detail;
+    DTcell.innerHTML = crisis1.crisis_date_time;
+
+    var status = document.createElement('span');
+    status.className = "label label-success";
+    status.style = "font-size: 14px";
+    status.innerHTML = "New";
+    Statuscell.appendChild(status);
+
+    var action =  document.createElement('input');
+    action.type = "button";
+    action.className = "btn btn-primary active";
+    if(crisis1.incident_emergency_level == 3){
+        action.value = "View Plan";
+    }else{
+        action.value = "Deploy";
+    }
+    action.onclick = "location.href='/deployment';";
+    Actioncell.appendChild(action);
+
+}
 </script>
 
 <div class="container">
     <h2>Mission List</h2>
-    <table class="table table-hover">
+    <button type="button" class="btn btn-primary active" onclick="receiveMission()">Test Receive Mission</button>
+    <table id="missionTable" class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
             <tr>
                 <th scope="col" class="col-md-1">ID</th>
