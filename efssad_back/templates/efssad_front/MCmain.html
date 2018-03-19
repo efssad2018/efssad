@@ -1,7 +1,6 @@
 {% extends 'efssad_front/master.html' %}
 
 {% block body %}
-
 <body>
 
 <!--  -->
@@ -126,35 +125,6 @@ function receiveMission(){
         {% endfor %}
         </tbody>
     </table>
-
-      <!-- script for different span color -->
-    <script>
-        var status1 = document.querySelectorAll('*[id^="missionStatus"]');
-        document.write(status1.innerHTML);
-        status = status1.innerHTML.toLowerCase();
-        <!--var status = document.getElementById('missionStatus').innerHTML.toLowerCase();-->
-
-        status = status.replace(/\s/g,'');
-        if(status == "new"){
-            document.getElementById("missionStatus").className = "label label-success";
-        }
-        if(status == "ongoing"){
-            document.getElementById("missionStatus").className = "label label-warning";
-        }
-        if(status == "cleanup"){
-            document.getElementById("missionStatus").className = "label label-info";
-        }
-
-        if(status == "complete"){
-            document.getElementById("missionStatus").className = "label label-default";
-        }
-
-        if(status == "completed"){
-            document.getElementById("missionStatus").className = "label label-default";
-        }
-
-
-    </script>
 
     <table class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">

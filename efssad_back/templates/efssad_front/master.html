@@ -101,32 +101,32 @@
 
 {% block body %}
 {% endblock %}
-    <!-- script for different span color -->
-    <!--<script>-->
-        <!--var status = document.getElementById('missionStatus').innerHTML.toLowerCase();-->
-        <!--&lt;!&ndash;var status1 = document.getElementByClassName('ms');&ndash;&gt;-->
+     <!-- script for different span color -->
+    <script>
+    var status;
+    for(i=1; i<= {{all_missions.count}}; i++){
+        status = document.getElementById('missionStatus' + i).innerHTML.toLowerCase();
+         status = status.replace(/\s/g,'');
+        if(status == "new"){
+            document.getElementById("missionStatus" + i).className = "label label-success";
+        }
+        if(status == "ongoing"){
+            document.getElementById("missionStatus" + i).className = "label label-warning";
+        }
+        if(status == "cleanup"){
+            document.getElementById("missionStatus" + i).className = "label label-info";
+        }
 
-        <!--status = status.replace(/\s/g,'');-->
-        <!--if(status == "new"){-->
-            <!--document.getElementById("missionStatus").className = "label label-success";-->
-        <!--}-->
-        <!--if(status == "ongoing"){-->
-            <!--document.getElementById("missionStatus").className = "label label-warning";-->
-        <!--}-->
-        <!--if(status == "cleanup"){-->
-            <!--document.getElementById("missionStatus").className = "label label-info";-->
-        <!--}-->
+        if(status == "complete"){
+            document.getElementById("missionStatus" + i).className = "label label-default";
+        }
 
-        <!--if(status == "complete"){-->
-            <!--document.getElementById("missionStatus").className = "label label-default";-->
-        <!--}-->
+        if(status == "completed"){
+            document.getElementById("missionStatus" + i).className = "label label-default";
+        }
+    }
+    </script>
 
-        <!--if(status == "completed"){-->
-            <!--document.getElementById("missionStatus").className = "label label-default";-->
-        <!--}-->
-
-
-    <!--</script>-->
 </body>
 <footer class="text-center">
     <br/>
