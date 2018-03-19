@@ -130,7 +130,7 @@ function receiveMission(){
       <!-- script for different span color -->
     <script>
         var status1 = document.querySelectorAll('*[id^="missionStatus"]');
-        document.write(status1.value);
+        document.write(status1.innerHTML);
         status = status1.innerHTML.toLowerCase();
         <!--var status = document.getElementById('missionStatus').innerHTML.toLowerCase();-->
 
