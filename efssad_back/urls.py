@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('scmission/', views.scmission, name='scmission'),
     path('mission/', views.mission, name='mission'),
     path('archive/', views.archive, name='archive'),
-    path('deployment/', views.deployment, name='deployment'),
+    re_path(r'^deployment/(?P<missionID>[0-9]+)$', views.deployment, name='deployment'),
+    # path('deployment/', views.deployment, name='deployment'),
     path('stt/', views.stt, name='stt'),
 ]

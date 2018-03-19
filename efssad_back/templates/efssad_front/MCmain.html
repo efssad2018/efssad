@@ -6,14 +6,127 @@
 
 <!--  -->
 <script>
-function viewPlan(){
-    var rows = document.getElementsByTagName("tr");
-    
+<!--function viewPlan(){-->
+    <!--var rows = document.getElementsByTagName("tr");-->
+    <!---->
+<!--}-->
+
+$(document).ready(function(){
+});
+
+function receiveMission(){
+    var crisis1 = {
+       "crisis_id" : "1",
+       "crisis_date_time" : "11-02-2018 18:00",
+       "crisis_location" : "",
+       "crisis_phone" : "91234567",
+       "crisis_title" : "Fire",
+       "crisis_detail" : "Fire at TCT-LT",
+       "crisis_NRIC" : "S1122334A",
+       "incident_emergency_level" : "1",
+       "plan_id" : "1",
+       "plan_title" : "initial plan",
+       "plan_category" : "",
+       "plan_teams" : "SWAT,Search & Rescue,War Fighter",
+       "plan_description" : "plan desc",
+       "plan_action" : "plan actions",
+       "plan_date" : "11-02-2018 18:05",
+       "plan_location" : "51.505,-0.09"
+    }
+    <!--alert(crisis1.crisis_date_time);-->
+
+    var missiontable = document.getElementById("missionTable");
+    var row = missiontable.insertRow(1);
+    var IDcell = row.insertCell(0);
+    var Lvlcell = row.insertCell(1);
+    var Desccell = row.insertCell(2);
+    var DTcell = row.insertCell(3);
+    var Statuscell = row.insertCell(4);
+    var Actioncell = row.insertCell(5);
+
+    var id = document.createElement('span');
+    id.style = "font-weight: bold";
+    id.innerHTML = crisis1.crisis_id;
+    IDcell.appendChild(id);
+    Lvlcell.innerHTML = crisis1.incident_emergency_level;
+    Desccell.innerHTML = crisis1.crisis_detail;
+    DTcell.innerHTML = crisis1.crisis_date_time;
+
+    var status = document.createElement('span');
+    status.className = "label label-success";
+    status.style = "font-size: 14px";
+    status.innerHTML = "New";
+    Statuscell.appendChild(status);
+
+    var action =  document.createElement('input');
+    action.type = "button";
+    action.className = "btn btn-primary active";
+    if(crisis1.incident_emergency_level == 3){
+        action.value = "View Plan";
+    }else{
+        action.value = "Deploy";
+    }
+    action.onclick = "location.href='/deployment';";
+    Actioncell.appendChild(action);
+
 }
 </script>
 
 <div class="container">
     <h2>Mission List</h2>
+    <button type="button" class="btn btn-primary active" onclick="receiveMission()">Test Receive Mission</button>
+    <table id="missionTable" class="table table-hover">
+        <thead style="background:black; color: white; height: 50px;">
+            <tr>
+                <th scope="col" class="col-md-1">ID</th>
+                <th scope="col" class="col-md-1">Level</th>
+                <th scope="col" class="col-md-4">Description</th>
+                <th scope="col" class="col-md-2">Datetime</th>
+                <th scope="col" class="col-md-1">Status</th>
+                <th scope="col" class="col-md-1">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for mission in all_missions reversed %}
+            <tr>
+                <th scope="row">{{ mission.missionID }}</th>
+                <td>{{ mission.level }}</td>
+                <td>{{ mission.description }}</td>
+                <td>{{ mission.datetimeReceived }}</td>
+                <td><span class="label label-warning" style="font-size: 14px">{{ mission.status }}</span></td>
+
+                {% if mission.level == 3 %}
+                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
+                {% else %}
+                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                {% endif %}
+
+                <!-- Modal -->
+                <div id="myModal1" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Modal Header</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Some text in the modal.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
     <table class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
             <tr>
