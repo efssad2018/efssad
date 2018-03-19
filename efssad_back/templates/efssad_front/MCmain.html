@@ -32,7 +32,7 @@ function viewPlan(){
                 <td>{{ mission.level }}</td>
                 <td>{{ mission.description }}</td>
                 <td>{{ mission.datetimeReceived }}</td>
-                <td><span class="label label-warning" style="font-size: 14px">{{ mission.status }}</span></td>
+                <td><span class="label label-default" style="font-size: 14px" id="missionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
 
                 {% if mission.level == 3 %}
                 <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
@@ -65,6 +65,35 @@ function viewPlan(){
         {% endfor %}
         </tbody>
     </table>
+
+      <!-- script for different span color -->
+    <script>
+        var status1 = document.querySelectorAll('*[id^="missionStatus"]');
+        document.write(status1.value);
+        status = status1.innerHTML.toLowerCase();
+        <!--var status = document.getElementById('missionStatus').innerHTML.toLowerCase();-->
+
+        status = status.replace(/\s/g,'');
+        if(status == "new"){
+            document.getElementById("missionStatus").className = "label label-success";
+        }
+        if(status == "ongoing"){
+            document.getElementById("missionStatus").className = "label label-warning";
+        }
+        if(status == "cleanup"){
+            document.getElementById("missionStatus").className = "label label-info";
+        }
+
+        if(status == "complete"){
+            document.getElementById("missionStatus").className = "label label-default";
+        }
+
+        if(status == "completed"){
+            document.getElementById("missionStatus").className = "label label-default";
+        }
+
+
+    </script>
 
     <table class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
