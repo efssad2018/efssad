@@ -30,8 +30,8 @@ def mainmenu(request):
         return redirect("/admin")
 
 def mcmain(request):
-    # return render(request, 'efssad_front/MCmain.html')
-    return render(request, 'efssad_front/MCmission.html')
+    return render(request, 'efssad_front/MCmain.html')
+    # return render(request, 'efssad_front/MCmission.html')
 
 def scmission(request):
     return render(request, 'efssad_front/SCmission.html')
