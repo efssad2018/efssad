@@ -6,7 +6,7 @@ class Mission(models.Model):
     level = models.IntegerField()
     description = models.CharField(max_length=1000)
     datetimeReceived = models.DateTimeField()
-    datetimeCompleted = models.DateTimeField()
+    datetimeCompleted = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=100)
     latitude = models.FloatField()
     longitude = models.FloatField()
