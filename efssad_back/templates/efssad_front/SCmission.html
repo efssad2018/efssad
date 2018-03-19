@@ -38,9 +38,38 @@
                     <div id="map">
                         <label>Location:</label>
                         <br/>
-                        <div id="locationMap" style="width=300px;height=250px;">
-                            <img src="{% static 'efssad_front/images/logo.png' %}" width="102" height="102">
-                        </div>
+                        <div id="temp" hidden="true"></div>
+                        <div id='locationMap' style='width: 450px; height: 250px;'></div>
+                        <script>
+                            <!-- mapbox access token -->
+                            <!--mapboxgl.accessToken = 'pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA';-->
+                            <!--var map = new mapboxgl.Map({-->
+                                <!--container: 'locationMap',-->
+                                <!--style: 'mapbox://styles/mapbox/streets-v10'-->
+                            <!--});-->
+
+                            var lat = 51.505
+                            var long = -0.09
+                            var mymap = L.map('locationMap').setView([lat, long], 13);
+                            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA', {
+                                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                                maxZoom: 18,
+                                id: 'mapbox.streets',
+                                accessToken: 'pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA'
+                            }).addTo(mymap);
+
+                            var marker = L.marker([lat, long]).addTo(mymap);
+                            var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&sensor=false'
+                            $(document).ready(function(){
+                                $.get(url, function(data,status){
+                                    var addressjson = JSON.parse(data);
+                                    <!--alert(addressjson.results[0].formatted_address);-->
+                                    var text = "<b>Zombie Invasion</b><br>" + addressjson.results[0].formatted_address;
+                                    marker.bindPopup(text).openPopup();
+                                }, 'html');
+                            });
+
+                        </script>
                     </div>
                 </div>
                 <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
@@ -54,7 +83,7 @@
 
     <h2>Message Logs</h2>
 
-    <table class="table">
+    <table class="table borderless">
         <thead style="background:black; color: white; height: 50px;">
 
             <tr>
@@ -68,18 +97,29 @@
         <tbody>
 
             <tr>
-                <th scope="row">1</th>
-                <td>1</td>
-                <td>Zombie Invasion</td>
+                <th scope="row">SC Lim</th>
+                <td>15:54:05</td>
+                <td>Riot subside with five casualty</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Sys</th>
+                <td>16:10:05</td>
+                <td>Commence clean up</td>
+            </tr>
+
+            <tr>
+                <th scope="row">SC Tan</th>
+                <td>16:20:12</td>
+                <td>Cleanup completed</td>
             </tr>
         </tbody>
 
     </table>
 
-    <div class="form-group">
-        <textarea class="form-control" rows="5" id="comment"></textarea>
-        <button type="button" class="btn btn-primary active">Submit</button>
-    </div>
+     <div style="position:fixed; background-color: white; padding:10px; left: 0; bottom: 0; width:100%; text-align:center; padding-bottom:10px; padding-top:10px;" >
+         <a href="#"><i class="fa fa-microphone fa-3x" aria-hidden="true"></i></a>
+     </div>
 
 </div>
 
