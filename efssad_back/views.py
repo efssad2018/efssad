@@ -20,7 +20,7 @@ from efssad_back.models import Mission, Account
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
 
-def login(request):
+def user(request):
     return redirect("accounts/login")
 
 def mainmenu(request):
