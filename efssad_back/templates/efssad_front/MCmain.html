@@ -96,9 +96,13 @@ function receiveMission(){
 
                 {% if mission.level == 3 %}
                 {% with mission.missionID as msID %}
+                <td>
                     {% if mission.status|lower == "new" %}
-                    <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
-                    {% endif%}
+                    <button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button>
+                    {% else%}
+                    <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
+                    {% endif %}
+                </td>
                  <!-- Modal -->
                 <div id="myModal1" class="modal fade" role="dialog">
                     <div class="modal-dialog">
