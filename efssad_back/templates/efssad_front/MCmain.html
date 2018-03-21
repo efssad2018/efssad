@@ -95,12 +95,11 @@ function receiveMission(){
                 <td><span class="label label-default" style="font-size: 14px" id="missionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
 
                 {% if mission.level == 3 %}
-                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
-                {% else %}
-                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
-                {% endif %}
-
-                <!-- Modal -->
+                {% with mission.missionID as msID %}
+                    {% if mission.status|lower == "new" %}
+                    <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
+                    {% endif%}
+                 <!-- Modal -->
                 <div id="myModal1" class="modal fade" role="dialog">
                     <div class="modal-dialog">
 
@@ -114,12 +113,16 @@ function receiveMission(){
                                 <p>Some text in the modal.</p>
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/>
+                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
                             </div>
                         </div>
 
                     </div>
                 </div>
+                {% endwith %}
+                {% else %}
+                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                {% endif %}
             </tr>
 
         {% endfor %}
