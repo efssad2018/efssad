@@ -7,7 +7,7 @@ class Mission(models.Model):
     description = models.CharField(max_length=1000)
     datetimeReceived = models.DateTimeField()
     datetimeCompleted = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=100)
+    status = models.CharField(max_length=1000)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -32,7 +32,7 @@ class MessageLog(models.Model):
 class Account(models.Model):
     commanderID = models.ForeignKey(Commander, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
-    password = models.CharField(max_length=1000)
+    password = models.CharField(max_length=100)
 
 
 
