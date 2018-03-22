@@ -115,25 +115,6 @@
         <button type="button" class="btn btn-success" id="btn_liveStream">Livestream</button>
     </div>
 
-    <!-- script for different button -->
-    <script>
-        var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
-        status = status.replace(/\s/g,'');
-        if(status == "ongoing"){
-            document.getElementById("btn_complete").style.display="none";
-        }
-        if(status == "cleanup"){
-            document.getElementById("btn_redeployment").style.display="none";
-            document.getElementById("btn_cleanUp").style.display="none";
-        }
-
-        if(status == "complete"){
-            document.getElementById("btnGroup").style.display="none";
-        }
-
-
-    </script>
-
     <h2>Mission Control Centre</h2>
 
     <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
