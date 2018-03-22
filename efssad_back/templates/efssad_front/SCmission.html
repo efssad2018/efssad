@@ -15,25 +15,27 @@
                 <div class="panel-body">
                     <div style="float:left; width: 50%;">
                         <label>ID:</label>
-                        <span id="missionID"></span>
+                        <span id="missionID">{{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
-                        <span id="missionLevel"></span>
+                        <span id="missionLevel"> {{ mission.level }} </span>
                         <br/>
                         <label>Description:</label>
-                        <span id="missionDesc"></span>
+                        <span id="missionDesc"> {{ mission.description }}</span>
                         <br/>
                         <label>DateTime Received:</label>
-                        <span id="dateTimeReceived"></span>
+                        <span id="dateTimeReceived"> {{ mission.datetimeReceived }}</span>
                         <br/>
                         <label>DateTime Completed:</label>
-                        <span id="dateTimeCompleted"></span>
+                        <span id="dateTimeCompleted"> {{ mission.datetimeCompleted }}</span>
                         <br/>
                         <label>Site Commanders:</label>
+                        <span id="SC"> {{ user.get_username }}</span>
                         <br/>
                         <label>Status:</label>
+                        <span id="missionStatus"class="missionStatus" style="font-size: 15px">{{ mission.status }}</span>
                         <br/>
-                        <label>Location:</label>
+
                     </div>
                     <div id="map">
                         <label>Location:</label>
@@ -102,13 +104,19 @@
 
      <div style="position:fixed; background-color: white; padding:10px; left: 0; bottom: 0; width:100%; text-align:center; padding-bottom:10px; padding-top:10px;" >
          <div class="input-single">
-                    <textarea id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="50"></textarea>
-             <a href="#">   <button id="start-record-btn" class="fa fa-microphone fa-3x" aria-hidden="true"></button></a>
-                            <button id="send-record-btn" > SEND</button>
+                <form action="{% url 'savemessage' %}" method = "POST">
+                    {% csrf_token %}
+
+                    <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
+                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="50"></textarea>
+                    <a href="#">
+                    <button id="start-record-btn" class="fa fa-microphone fa-3x" aria-hidden="true" return false></button></a>
+
+                            <button id="send-record-btn" return false > SEND</button>
+                 </form>
          </div>
 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
          <script>
             try {
                 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -231,15 +239,6 @@
           notesList.html(html);
         }
 
-        function clearContents() {
-            document.getElementById("note-textarea").value = "";;
-        }
-
-        function saveNote(dateTime, content) {
-          localStorage.setItem('note-' + dateTime, content);
-        }
-
-
         function getAllNotes() {
           var notes = [];
           var key;
@@ -256,6 +255,47 @@
           return notes;
         }
         </script>
+         <script type="text/javascript">
+		// Let's put both functions within a resonably named namespace
+		var formData = {
+			set : function (){
+				// (Re)create the myForm valiable
+				var myForm = [];
+				// Delete old data from localstorage
+				localStorage.removeItem('myForm');
+				// Take each input's name and value and add it to the array we already created.
+				$('form input[type=text]').each(function(){
+					// Push each input's value into the temporary variable
+					myForm.push({ name: this.name, value: this.value});
+				});
+				// Add the array to localStorage
+				localStorage.myForm = JSON.stringify(myForm);
+			},
+			get : function (){
+				// Is the form already stored within localStorage? If so, get it and copy it's contents over our myform array variable.
+				if(localStorage.myForm != undefined){
+					// Get the existing values out of localStorage
+					myForm = JSON.parse(localStorage.myForm);
+					// Loop through myForm
+					for (var i = 0; i < myForm.length; i++) {
+						// Populate the form with what data you have for it
+						$('[name='+myForm[i].name+']').val(myForm[i].value);
+					}
+				}
+			}
+		}
+		// Populate the form with whatever data already exists for it
+		formData.get();
+		// Watch for a change in a change in an input field. If there is a change, resave the form values.
+		$("input").change( function() {
+			// If a change is detected, save the values.
+			formData.set();
+		});
+
+
+
+
+	</script>
      </div>
 
 </div>

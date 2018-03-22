@@ -24,10 +24,10 @@ class Team(models.Model):
 
 class MessageLog(models.Model):
     missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    dateTime = models.DateTimeField()
+    dateTime = models.DateTimeField(auto_now_add = True)
     message = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
-    planID = models.CharField(max_length=100)
+    planID = models.IntegerField()
 
 class Account(models.Model):
     commanderID = models.ForeignKey(Commander, on_delete=models.CASCADE)
