@@ -65,7 +65,7 @@ function receiveMission(){
     }else{
         action.value = "Deploy";
     }
-    action.onclick = "location.href='/deployment';";
+    action.onclick = "location.href='/deployment/" + crisis1.crisis_id + "';";
     Actioncell.appendChild(action);
 
 }
