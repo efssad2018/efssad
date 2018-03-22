@@ -1,6 +1,12 @@
 from django.db import models
 
 # Create your models here.
+class Commander(models.Model):
+    missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    rank = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    deploymentStatus = models.CharField(max_length=1000)
+
 class Mission(models.Model):
     missionID = models.IntegerField()
     level = models.IntegerField()
@@ -11,11 +17,7 @@ class Mission(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
-class Commander(models.Model):
-    missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    rank = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
-    deploymentStatus = models.CharField(max_length=1000)
+
 
 class Team(models.Model):
     commander = models.ForeignKey(Commander, on_delete=models.CASCADE)

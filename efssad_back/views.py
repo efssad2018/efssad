@@ -75,7 +75,7 @@ def savemessage (request):
     obj.name = name
     obj.planID = planID
     obj.save()
-    return redirect("scmission")
+    return redirect("scmissionID",  missionid)
 
 def stt(request):
     return render(request, 'efssad_front/speechtotext.html')
