@@ -200,28 +200,52 @@
     <!--checkbox for team deployment appear here-->
     <div style="width: 55%;">
         <div class="checkbox" style="height: 50px; border: 1px solid red;">
-            <label><input type="checkbox" value="">SWAT</label>
-        </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Search and Rescue</label>
-        </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Fireman</label>
-        </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Civil Defence</label>
-        </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">War Fighter</label>
-        </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Explosives and Ordnance Disposal</label>
+            <label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label>
+            <p id="swatText" style="display:none">Site Commander: name</p>
 
+        </div>
+        <div class="checkbox" style="height: 50px;">
+            <label><input id="srChkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label>
+            <p id="srText" style="display:none">Site Commander: name</p>
+        </div>
+        <div class="checkbox" style="height: 50px;">
+            <label><input id="firemanChkbox" onclick="displayTeam()" type="checkbox" value="fireman">Fireman</label>
+            <p id="firemanText" style="display:none">Site Commander: name</p>
+        </div>
+        <div class="checkbox" style="height: 50px;">
+            <label><input id="cdChkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label>
+            <p id="cdText" style="display:none">Site Commander: name</p>
+        </div>
+        <div class="checkbox" style="height: 50px;">
+            <label><input id="wfChkbox" onclick="displayTeam()" type="checkbox" value="wf">War Fighter</label>
+            <p id="wfText" style="display:none">Site Commander: name</p>
+        </div>
+        <div class="checkbox" style="height: 50px;">
+            <label><input id="eodChkbox" onclick="displayTeam()" type="checkbox" value=eod"">Explosives and Ordnance Disposal</label>
+            <p id="eodText" style="display:none">Site Commander: name</p>
         </div>
 
         <button type="button" class="btn btn-primary active">Deploy team</button>
     </div>
 
 </div>
+<script>
+    function displayTeam(){
 
+        var checkbox = document.getElementsByClassName("chkbox").value = "value";
+        alert(checkbox);
+        <!--var teamText = checkbox.value;-->
+        switch(checkbox){
+            case "swat":
+
+                break;
+        }
+
+        if(checkbox.checked == true){
+            teamText.style.display = "block";
+        }else{
+            teamText.style.display = "none";
+        }
+    }
+</script>
 {% endblock %}

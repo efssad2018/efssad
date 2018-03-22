@@ -50,8 +50,8 @@
                                 <!--style: 'mapbox://styles/mapbox/streets-v10'-->
                             <!--});-->
 
-                            var lat = 1.4382
-                            var long = 103.7890
+                            var lat = {{ mission.latitude}}
+                            var long = {{ mission.longitude }}
                             var mymap = L.map('locationMap').setView([lat, long], 13);
                             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA', {
                                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -108,10 +108,10 @@
                     {% csrf_token %}
 
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
-                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="50"></textarea>
+                    <textarea rows="2" cols="40" name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="50"></textarea>
                     <a href="#">
-                    <button id="start-record-btn" class="fa fa-microphone fa-3x" aria-hidden="true" return false></button></a>
-                    <button id="send-record-btn" return false > SEND</button>
+                    <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 45px;" aria-hidden="true" return false></button></a>
+                    <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
                  </form>
          </div>
 
