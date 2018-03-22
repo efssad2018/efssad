@@ -92,15 +92,18 @@ function receiveMission(){
                 <td>{{ mission.level }}</td>
                 <td>{{ mission.description }}</td>
                 <td>{{ mission.datetimeReceived }}</td>
-                <td><span class="label label-default" style="font-size: 14px" id="missionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
+                <td><span class="label label-default" style="font-size: 14px" id="tmissionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
 
                 {% if mission.level == 3 %}
-                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
-                {% else %}
-                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
-                {% endif %}
-
-                <!-- Modal -->
+                {% with mission.missionID as msID %}
+                <td>
+                    {% if mission.status|lower == "new" %}
+                    <button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button>
+                    {% else%}
+                    <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
+                    {% endif %}
+                </td>
+                 <!-- Modal -->
                 <div id="myModal1" class="modal fade" role="dialog">
                     <div class="modal-dialog">
 
@@ -114,12 +117,16 @@ function receiveMission(){
                                 <p>Some text in the modal.</p>
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/>
+                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
                             </div>
                         </div>
 
                     </div>
                 </div>
+                {% endwith %}
+                {% else %}
+                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                {% endif %}
             </tr>
 
         {% endfor %}
@@ -197,5 +204,29 @@ function receiveMission(){
 
 </div>
 </body>
+     <!-- script for different span color -->
+    <script>
+    var status;
+    for(i=1; i<= {{all_missions.count}}; i++){
+        status = document.getElementById('tmissionStatus' + i).innerHTML.toLowerCase();
+         status = status.replace(/\s/g,'');
+        if(status == "new"){
+            document.getElementById("tmissionStatus" + i).className = "label label-success";
+        }
+        if(status == "ongoing"){
+            document.getElementById("tmissionStatus" + i).className = "label label-warning";
+        }
+        if(status == "cleanup"){
+            document.getElementById("tmissionStatus" + i).className = "label label-info";
+        }
 
+        if(status == "complete"){
+            document.getElementById("tmissionStatus" + i).className = "label label-default";
+        }
+
+        if(status == "completed"){
+            document.getElementById("tmissionStatus" + i).className = "label label-default";
+        }
+    }
+    </script>
 {% endblock %}

@@ -20,6 +20,9 @@ from efssad_back.models import Mission, Account
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
 
+def user(request):
+    return redirect("accounts/login")
+
 def mainmenu(request):
 
     if request.user.groups.filter(name='maincommander'):
@@ -53,20 +56,5 @@ def deployment(request, missionID):
         raise Http404("Mission does not exist")
     return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
 
-# def deployment(request):
-#     return render(request, 'efssad_front/MCdeployment.html')
-
-
 def stt(request):
     return render(request, 'efssad_front/speechtotext.html')
-
-def speechtotext():
-    r = sr.Recognizer()
-
-    with sr.Microphone() as source:
-        print('Say Something!')
-        audio = r.listen(source)
-
-    text = r.recognize_google(audio)
-    print(text)
-    print('Done!')
