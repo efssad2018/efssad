@@ -54,7 +54,8 @@ def mission(request):
     return render(request, 'efssad_front/MCmain.html', context)
 
 def archive(request):
-    return render(request, 'efssad_front/MCarchive.html')
+    # return render(request, 'efssad_front/MCarchive.html')
+    return render(request, 'efssad_front/MCarchivedetails.html')
 
 def deployment(request, missionID):
     try:
