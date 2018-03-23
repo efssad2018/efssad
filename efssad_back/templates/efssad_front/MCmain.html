@@ -65,7 +65,7 @@ function receiveMission(){
     }else{
         action.value = "Deploy";
     }
-    action.onclick = "location.href='/deployment';";
+    action.onclick = "location.href='/deployment/" + crisis1.crisis_id + "';";
     Actioncell.appendChild(action);
 
 }
@@ -92,15 +92,18 @@ function receiveMission(){
                 <td>{{ mission.level }}</td>
                 <td>{{ mission.description }}</td>
                 <td>{{ mission.datetimeReceived }}</td>
-                <td><span class="label label-default" style="font-size: 14px" id="missionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
+                <td><span class="label label-default" style="font-size: 14px" id="tmissionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
 
                 {% if mission.level == 3 %}
-                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button></td>
-                {% else %}
-                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
-                {% endif %}
-
-                <!-- Modal -->
+                {% with mission.missionID as msID %}
+                <td>
+                    {% if mission.status|lower == "new" %}
+                    <button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button>
+                    {% else%}
+                    <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
+                    {% endif %}
+                </td>
+                 <!-- Modal -->
                 <div id="myModal1" class="modal fade" role="dialog">
                     <div class="modal-dialog">
 
@@ -114,88 +117,116 @@ function receiveMission(){
                                 <p>Some text in the modal.</p>
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/>
+                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
                             </div>
                         </div>
 
                     </div>
                 </div>
+                {% endwith %}
+                {% else %}
+                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                {% endif %}
             </tr>
 
         {% endfor %}
         </tbody>
     </table>
 
-    <table class="table table-hover">
-        <thead style="background:black; color: white; height: 50px;">
-            <tr>
-                <th scope="col" class="col-md-1">ID</th>
-                <th scope="col" class="col-md-1">Level</th>
-                <th scope="col" class="col-md-4">Description</th>
-                <th scope="col" class="col-md-2">Datetime</th>
-                <th scope="col" class="col-md-1">Status</th>
-                <th scope="col" class="col-md-1">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>3</td>
-                <td>Zombie Invasion</td>
-                <td>11-02-2018 18:00</td>
-                <td><span class="label label-warning" style="font-size: 14px">New</span></td>
-                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal">View Plan</button></td>
+    <!--<table class="table table-hover">-->
+        <!--<thead style="background:black; color: white; height: 50px;">-->
+            <!--<tr>-->
+                <!--<th scope="col" class="col-md-1">ID</th>-->
+                <!--<th scope="col" class="col-md-1">Level</th>-->
+                <!--<th scope="col" class="col-md-4">Description</th>-->
+                <!--<th scope="col" class="col-md-2">Datetime</th>-->
+                <!--<th scope="col" class="col-md-1">Status</th>-->
+                <!--<th scope="col" class="col-md-1">Action</th>-->
+            <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+            <!--<tr>-->
+                <!--<th scope="row">1</th>-->
+                <!--<td>3</td>-->
+                <!--<td>Zombie Invasion</td>-->
+                <!--<td>11-02-2018 18:00</td>-->
+                <!--<td><span class="label label-warning" style="font-size: 14px">New</span></td>-->
+                <!--<td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal">View Plan</button></td>-->
 
-                <!-- Modal -->
-                <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
+                <!--&lt;!&ndash; Modal &ndash;&gt;-->
+                <!--<div id="myModal" class="modal fade" role="dialog">-->
+                    <!--<div class="modal-dialog">-->
 
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Modal Header</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>Some text in the modal.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/>
-                            </div>
-                        </div>
+                        <!--&lt;!&ndash; Modal content&ndash;&gt;-->
+                        <!--<div class="modal-content">-->
+                            <!--<div class="modal-header">-->
+                                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                                <!--<h4 class="modal-title">Modal Header</h4>-->
+                            <!--</div>-->
+                            <!--<div class="modal-body">-->
+                                <!--<p>Some text in the modal.</p>-->
+                            <!--</div>-->
+                            <!--<div class="modal-footer">-->
+                                <!--<input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
-                    </div>
-                </div>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>1</td>
-                <td>Fire at Tampines</td>
-                <td>11-02-2018 18:00</td>
-                <td><span class="label label-warning" style="font-size: 14px">New</span></td>
-                <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/></td>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>2</td>
-                <td>Riot at Yishun</td>
-                <td>11-02-2018 18:00</td>
-                <td><span class="label label-warning" style="font-size: 14px">Clean Up</span></td>
-                <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/></td>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>3</td>
-                <td>Zombie Invasion</td>
-                <td>11-02-2018 18:00</td>
-                <td><span class="label label-warning" style="font-size: 14px">Ongoing</span></td>
-                <td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal">View Plan</button></td>
-            </tr>
-        </tbody>
-    </table>
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<th scope="row">1</th>-->
+                <!--<td>1</td>-->
+                <!--<td>Fire at Tampines</td>-->
+                <!--<td>11-02-2018 18:00</td>-->
+                <!--<td><span class="label label-warning" style="font-size: 14px">New</span></td>-->
+                <!--<td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<th scope="row">1</th>-->
+                <!--<td>2</td>-->
+                <!--<td>Riot at Yishun</td>-->
+                <!--<td>11-02-2018 18:00</td>-->
+                <!--<td><span class="label label-warning" style="font-size: 14px">Clean Up</span></td>-->
+                <!--<td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment';" value="Deploy"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<th scope="row">1</th>-->
+                <!--<td>3</td>-->
+                <!--<td>Zombie Invasion</td>-->
+                <!--<td>11-02-2018 18:00</td>-->
+                <!--<td><span class="label label-warning" style="font-size: 14px">Ongoing</span></td>-->
+                <!--<td><button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal">View Plan</button></td>-->
+            <!--</tr>-->
+        <!--</tbody>-->
+    <!--</table>-->
 
 
 </div>
 </body>
+     <!-- script for different span color -->
+    <script>
+    var status;
+    for(i=1; i<= {{all_missions.count}}; i++){
+        status = document.getElementById('tmissionStatus' + i).innerHTML.toLowerCase();
+         status = status.replace(/\s/g,'');
+        if(status == "new"){
+            document.getElementById("tmissionStatus" + i).className = "label label-success";
+        }
+        if(status == "ongoing"){
+            document.getElementById("tmissionStatus" + i).className = "label label-warning";
+        }
+        if(status == "cleanup"){
+            document.getElementById("tmissionStatus" + i).className = "label label-info";
+        }
 
+        if(status == "complete"){
+            document.getElementById("tmissionStatus" + i).className = "label label-default";
+        }
+
+        if(status == "completed"){
+            document.getElementById("tmissionStatus" + i).className = "label label-default";
+        }
+    }
+    </script>
 {% endblock %}

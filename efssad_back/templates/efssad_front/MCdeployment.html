@@ -33,7 +33,7 @@
                         <br/>
                         <label>Status:</label>
                         <!--new - green, ongoing - yellow, cleanup - blue, completed - grey-->
-                        <span id="missionStatus"class="missionStatus" style="font-size: 15px">{{ mission.status }}</span>
+                        <span id="missionStatus"class="#" style="font-size: 15px">{{ mission.status }}</span>
 
                         <br/>
                     </div>
@@ -70,24 +70,6 @@
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
-
-                        </script>
-
-                        <script>
-
-                            function myFunction() {
-                                // Get the checkbox
-                                var checkBox = document.getElementById("swatcheckbox");
-                                // Get the output text
-                                var text = document.getElementById("text");
-
-                            // If the checkbox is checked, display the output text
-                            if (checkBox.checked == true){
-                                 text.style.display = "block";
-                            } else {
-                            text.style.display = "none";
-                            }
-                           };
                         </script>
                     </div>
                 </div>
@@ -215,34 +197,79 @@
 
     <h2>Team Selection</h2>
 
-
     <!--checkbox for team deployment appear here-->
-    <div style="width: 55%;">
-        <div class="checkbox" id="swatcheckbox" onclick="myFunction()" style="height: 50px; border: 1px solid red;">
-            <label><input type="checkbox" value="">SWAT</label>
-            <p id="text" style="display:none">Checkbox is checked!</p>
+    <div style="width: 400px; margin-top: 20px;">
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label></h5>
+            <p id="swatText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> swat</p>
         </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Search and Rescue</label>
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label></h5>
+            <p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> sr</p>
         </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Fireman</label>
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="fireman">Fireman</label></h5>
+            <p id="firemanText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> fireman</p>
         </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Civil Defence</label>
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label></h5>
+            <p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> cd</p>
         </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">War Fighter</label>
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="wf">War Fighter</label></h5>
+            <p id="wfText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> wf</p>
         </div>
-        <div class="checkbox" style="height: 50px;">
-            <label><input type="checkbox" value="">Explosives and Ordnance Disposal</label>
-
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="eod">Explosives and Ordnance Disposal</label></h5>
+            <p id="eodText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> eod</p>
         </div>
 
         <button type="button" class="btn btn-primary active">Deploy team</button>
-
     </div>
 
 </div>
+<script>
+    function displayTeam(){
 
+        var checkbox = document.getElementsByClassName("chkbox");
+        var teamText;
+        var i;
+        for(i=0; i<checkbox.length; i++){
+            switch(checkbox[i].value){
+                case "swat":
+                    teamText = document.getElementById("swatText");
+                    break;
+                case "sr":
+                    teamText = document.getElementById("srText");
+                    break;
+                case "fireman":
+                    teamText = document.getElementById("firemanText");
+                    break;
+                case "cd":
+                    teamText = document.getElementById("cdText");
+                    break;
+                case "wf":
+                    teamText = document.getElementById("wfText");
+                    break;
+                case "eod":
+                    teamText = document.getElementById("eodText");
+                    break;
+            }
+
+            if(checkbox[i].checked == true){
+                <!--alert(checkbox[0].value);-->
+                <!--teamText.innerHTML = "hello " + checkbox[i].value;-->
+                assignAvailableSC(checkbox[i].value);
+                teamText.style.display = "block";
+            }else{
+                teamText.style.display = "none";
+            }
+        } <!-- end of forloop -->
+
+    }
+
+    function assignAvailableSC(team){
+        <!--alert(team);-->
+    }
+</script>
 {% endblock %}
