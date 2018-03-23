@@ -30,7 +30,9 @@ def mainmenu(request):
         return redirect("/admin")
 
 def mcmain(request):
-    return render(request, 'efssad_front/MCmain.html')
+    all_missions = Mission.objects.all()
+    context = {'all_missions': all_missions}
+    return render(request, 'efssad_front/MCmain.html', context)
     # return render(request, 'efssad_front/MCmission.html')
 
 def scmission(request):
