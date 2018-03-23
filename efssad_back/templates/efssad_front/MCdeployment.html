@@ -70,6 +70,24 @@
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
+
+                        </script>
+
+                        <script>
+
+                            function myFunction() {
+                                // Get the checkbox
+                                var checkBox = document.getElementById("swatcheckbox");
+                                // Get the output text
+                                var text = document.getElementById("text");
+
+                            // If the checkbox is checked, display the output text
+                            if (checkBox.checked == true){
+                                 text.style.display = "block";
+                            } else {
+                            text.style.display = "none";
+                            }
+                           };
                         </script>
                     </div>
                 </div>
@@ -197,10 +215,12 @@
 
     <h2>Team Selection</h2>
 
+
     <!--checkbox for team deployment appear here-->
     <div style="width: 55%;">
-        <div class="checkbox" style="height: 50px; border: 1px solid red;">
+        <div class="checkbox" id="swatcheckbox" onclick="myFunction()" style="height: 50px; border: 1px solid red;">
             <label><input type="checkbox" value="">SWAT</label>
+            <p id="text" style="display:none">Checkbox is checked!</p>
         </div>
         <div class="checkbox" style="height: 50px;">
             <label><input type="checkbox" value="">Search and Rescue</label>
