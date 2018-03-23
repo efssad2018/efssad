@@ -13,9 +13,9 @@
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    <div style="float:left; width: 50%;">
+                    <!--<div style="float:left; width: 50%;">-->
                         <label>ID:</label>
-                        <span id="missionID">{{ mission.missionID }}</span>
+                        <span id="missionIdNum">{{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
                         <span id="missionLevel"> {{ mission.level }} </span>
@@ -36,12 +36,12 @@
                         <span id="missionStatus"class="missionStatus" style="font-size: 15px">{{ mission.status }}</span>
                         <br/>
 
-                    </div>
-                    <div id="map">
+                    <!--</div>-->
+                    <!--<div id="map">-->
                         <label>Location:</label>
                         <br/>
                         <div id="temp" hidden="true"></div>
-                        <div id='locationMap' style='width: 450px; height: 250px;'></div>
+                        <div id='locationMap' style='width: 450px; height: 250px; z-index:1;'></div>
                         <script>
                             <!-- mapbox access token -->
                             <!--mapboxgl.accessToken = 'pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA';-->
@@ -72,7 +72,7 @@
                             });
 
                         </script>
-                    </div>
+                    <!--</div>-->
                 </div>
                 <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
                     <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
@@ -85,7 +85,7 @@
 
     <h2>Message Logs</h2>
 
-    <table class="table borderless" >
+    <table class="table borderless">
         <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
             <tr>
@@ -93,6 +93,14 @@
                 <th scope="col" style="text-align:left;width:200px">Date-Time</th>
                 <th scope="col">Message</th>
             </tr>
+
+        <tr>
+            <td>Test</td>
+             <td>Test2</td>
+             <td>Test3</td>
+        </tr>
+
+
 
         </thead>
     </table>
@@ -102,13 +110,13 @@
         </li>
     </ul>
 
-     <div style="position:fixed; background-color: white; padding:10px; left: 0; bottom: 0; width:100%; text-align:center; padding-bottom:10px; padding-top:10px;" >
-         <div class="input-single">
+     <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
+         <div class="input-single ">
                 <form action="{% url 'savemessage' %}" method = "POST">
                     {% csrf_token %}
 
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
-                    <textarea rows="2" cols="40" name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="50"></textarea>
+                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="35"></textarea>
                     <a href="#">
                     <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 45px;" aria-hidden="true" return false></button></a>
                     <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
@@ -291,12 +299,9 @@
 			formData.set();
 		});
 
-
-
-
 	</script>
      </div>
-
+    </div>
 </div>
 
 {% endblock %}
