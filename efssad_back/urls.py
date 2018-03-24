@@ -13,4 +13,5 @@ urlpatterns = [
     #path('stt/', views.stt, name='stt'),
     re_path(r'^scmission/(?P<missionID>[0-9]+)$', views.scmissionID, name='scmissionID'),
     re_path(r'^deployment/(?P<missionID>[0-9]+)$', views.deployment, name='deployment'),
+    re_path(r'^archiveDetail/(?P<missionID>[0-9]+)$', views.archiveDetail, name='archiveDetail'),
 ]
