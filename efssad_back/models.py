@@ -38,6 +38,7 @@ class Commander(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_mainComm = models.BooleanField(default=False)
+    deploymentStatus = models.CharField(max_length=1000, default="Unassigned")
 
     objects = MyUserManager()
 
@@ -76,7 +77,6 @@ class Mission(models.Model):
 class AssignedCommander(models.Model):
     missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
     name = models.ForeignKey(Commander, on_delete=models.CASCADE)
-    deploymentStatus = models.CharField(max_length=1000)
 
 class Team(models.Model):
     commander = models.ForeignKey(Commander, on_delete=models.CASCADE)

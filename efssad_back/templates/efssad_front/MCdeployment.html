@@ -200,20 +200,13 @@
     <!--checkbox for team deployment appear here-->
     <div style="width: 400px; margin-top: 20px;">
         <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label>
+            </h5>
+            <p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> cd</p>
+        </div>
+        <div class="checkbox" style="padding-bottom: 7px;">
             <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label></h5>
             <p id="swatText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> swat</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label></h5>
-            <p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> sr</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="fireman">Fireman</label></h5>
-            <p id="firemanText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> fireman</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label></h5>
-            <p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> cd</p>
         </div>
         <div class="checkbox" style="padding-bottom: 7px;">
             <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="wf">War Fighter</label></h5>
@@ -223,6 +216,11 @@
             <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="eod">Explosives and Ordnance Disposal</label></h5>
             <p id="eodText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> eod</p>
         </div>
+        <div class="checkbox" style="padding-bottom: 7px;">
+            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label></h5>
+            <p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> sr</p>
+        </div>
+
 
         <button type="button" class="btn btn-primary active">Deploy team</button>
     </div>
@@ -241,9 +239,6 @@
                     break;
                 case "sr":
                     teamText = document.getElementById("srText");
-                    break;
-                case "fireman":
-                    teamText = document.getElementById("firemanText");
                     break;
                 case "cd":
                     teamText = document.getElementById("cdText");
