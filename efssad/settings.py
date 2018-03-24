@@ -26,7 +26,7 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [iesef.herokuapp.com]
+ALLOWED_HOSTS = ['iesef.herokuapp.com']
 
 
 # Application definition
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'efssad.urls'
@@ -125,11 +126,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS=[
-    os.path.join(BASE_DIR, "static"),
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_STORAGE='whitenoise.django.GripManifestStaticFilesStorage'
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATICFILES_STORAGE='whitenoise.django.GzipManifestStaticFilesStorage'
 
 # geoposition
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBafZXPJQ-tfjipjVxsIj1FQfhjbWssvbw'
