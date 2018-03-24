@@ -51,8 +51,7 @@ def mission(request):
     return render(request, 'efssad_front/MCmain.html', context)
 
 def archive(request):
-    all_missions = Mission.objects.all();
-    context = {'all_missions' : all_missions}
+    context = {'all_missions': getAllMissions(request)};
     return render(request, 'efssad_front/MCarchive.html', context)
 
 def archiveDetail(request, missionID):
