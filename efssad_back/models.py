@@ -11,6 +11,7 @@ class MyUserManager(BaseUserManager):
 
         )
         user.is_mainComm = False
+        user.is_deployed = False
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -24,6 +25,7 @@ class MyUserManager(BaseUserManager):
         )
         user.is_mainComm = True
         user.is_admin = True
+        user.is_deployed = False
         user.save(using=self._db)
         return user
 
@@ -38,7 +40,7 @@ class Commander(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_mainComm = models.BooleanField(default=False)
-    deploymentStatus = models.CharField(max_length=1000, default="Unassigned")
+    is_deployed = models.BooleanField(default=False)
 
     objects = MyUserManager()
 
@@ -65,6 +67,8 @@ class Commander(AbstractBaseUser):
         return self.is_admin
 
 class Mission(models.Model):
+    def __int__(self):
+        return self.missionID
     missionID = models.IntegerField()
     level = models.IntegerField()
     description = models.CharField(max_length=1000)
@@ -75,20 +79,36 @@ class Mission(models.Model):
     longitude = models.FloatField()
 
 class AssignedCommander(models.Model):
-    missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    def __int__(self):
+        return self.missionID
+    missionID = models.IntegerField()
     name = models.ForeignKey(Commander, on_delete=models.CASCADE)
 
 class Team(models.Model):
-    commander = models.ForeignKey(Commander, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.type
+    description = models.CharField(max_length=100)
     strength = models.IntegerField()
     type = models.CharField(max_length=100)
 
 class MessageLog(models.Model):
-    missionID = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    def __int__(self):
+        return self.missionID
+    missionID = models.IntegerField()
     dateTime = models.DateTimeField(auto_now_add = True)
     message = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
+
+class Plan(models.Model):
+    def __int__(self):
+        return self.missionID
+    missionID = models.IntegerField()
     planID = models.IntegerField()
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    team = models.CharField(max_length=1000)
+    action = models.CharField(max_length=1000)
+    actiontime = models.DateTimeField()
 
 
 
