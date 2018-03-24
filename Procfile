@@ -1,1 +1,1 @@
-web: gunicorn getting started.wsgi --log-file -
+web: gunicorn efssad.wsgi --log-file -
