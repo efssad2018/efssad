@@ -24,10 +24,10 @@ def user(request):
     return redirect("accounts/login")
 
 def mainmenu(request):
-    type = request.user.is_mainComm
-    if type:
+    type = request.user.username
+    if Commander.objects.filter(username = type).filter(is_mainComm=True):
         return redirect("mcmain")
-    elif type:
+    elif Commander.objects.filter(username = type).filter(is_mainComm=False):
         return redirect("scmission")
     #else:
         #return redirect("login")
