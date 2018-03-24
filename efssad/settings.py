@@ -26,7 +26,7 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [iesef.herokuapp.com]
 
 
 # Application definition
@@ -124,6 +124,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR, "static"),
+]
+
+STATICFILES_STORAGE='whitenoise.django.GripManifestStaticFilesStorage'
 
 # geoposition
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyBafZXPJQ-tfjipjVxsIj1FQfhjbWssvbw'
