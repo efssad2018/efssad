@@ -51,8 +51,7 @@ def mission(request):
     return render(request, 'efssad_front/MCmain.html', context)
 
 def archive(request):
-    all_missions = Mission.objects.all();
-    context = {'all_missions' : all_missions}
+    context = {'all_missions': getAllMissions(request)};
     return render(request, 'efssad_front/MCarchive.html', context)
 
 def archiveDetail(request, missionID):
@@ -90,3 +89,8 @@ def getOneMission(request, missionID):
     except Mission.DoesNotExist:
         raise Http404("Mission does not exist")
     return mission
+
+
+def getMissions(request, missionDescription):
+    missions = Mission.objects.get(description__contains=missionDescription)
+    return missions
