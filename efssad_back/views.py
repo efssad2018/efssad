@@ -27,41 +27,40 @@ def mainmenu(request):
     type = request.user.username
     if Commander.objects.filter(username = type).filter(is_mainComm=True):
         return redirect("mcmain")
-    elif Commander.objects.filter(username = type).filter(is_mainComm=False):
+    elif Commander.objects.filter(username = type).filter(is_admin=False):
         return redirect("scmission")
-    #else:
-        #return redirect("login")
+    else:
+        return redirect ("/admin")
 
 def mcmain(request):
-    all_missions = Mission.objects.all()
-    context = {'all_missions': all_missions}
+    # all_missions = Mission.objects.all()
+    # context = {'all_missions': all_missions}
     # return render(request, 'efssad_front/MCmain.html', context)
+
     return render(request, 'efssad_front/MCmission.html')
 
 def scmission(request):
     return render(request, 'efssad_front/SCmission.html')
 
 def scmissionID(request, missionID):
-    try:
-        mission = Mission.objects.get(pk=missionID)
-    except Mission.DoesNotExist:
-        raise Http404("Mission does not exist")
+    mission = getOneMission(request, missionID)
     return render(request, 'efssad_front/SCmission.html', {'mission' : mission})
 
 def mission(request):
-    all_missions = Mission.objects.all()
-    context = {'all_missions' : all_missions}
+    context = {'all_missions' : getAllMissions(request)};
     return render(request, 'efssad_front/MCmain.html', context)
 
 def archive(request):
-    # return render(request, 'efssad_front/MCarchive.html')
-    return render(request, 'efssad_front/MCarchivedetails.html')
+    all_missions = Mission.objects.all();
+    context = {'all_missions' : all_missions}
+    return render(request, 'efssad_front/MCarchive.html', context)
+
+def archiveDetail(request, missionID):
+    mission = getOneMission(request, missionID)
+    return render(request, 'efssad_front/MCarchivedetails.html', {'mission' : mission})
 
 def deployment(request, missionID):
-    try:
-        mission = Mission.objects.get(pk=missionID)
-    except Mission.DoesNotExist:
-        raise Http404("Mission does not exist")
+    mission = getOneMission(request, missionID)
     return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
 
 def savemessage (request):
@@ -80,3 +79,14 @@ def savemessage (request):
 
 def stt(request):
     return render(request, 'efssad_front/speechtotext.html')
+
+def getAllMissions(request):
+    all_missions = Mission.objects.all()
+    return all_missions
+
+def getOneMission(request, missionID):
+    try:
+        mission = Mission.objects.get(pk=missionID)
+    except Mission.DoesNotExist:
+        raise Http404("Mission does not exist")
+    return mission

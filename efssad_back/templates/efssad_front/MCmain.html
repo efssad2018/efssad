@@ -92,7 +92,7 @@ function receiveMission(){
                 <td>{{ mission.level }}</td>
                 <td>{{ mission.description }}</td>
                 <td>{{ mission.datetimeReceived }}</td>
-                <td><span class="label label-default" style="font-size: 14px" id="tmissionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
+                <td><span class="#" style="font-size: 14px" id="tmissionStatus{{ mission.missionID }}">{{ mission.status }}</span></td>
 
                 {% if mission.level == 3 %}
                 {% with mission.missionID as msID %}
@@ -128,7 +128,6 @@ function receiveMission(){
                  <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
                 {% endif %}
             </tr>
-
         {% endfor %}
         </tbody>
     </table>
@@ -221,11 +220,11 @@ function receiveMission(){
         }
 
         if(status == "complete"){
-            document.getElementById("tmissionStatus" + i).className = "label label-default";
+            document.getElementById("missionTable").deleteRow({{all_missions.count}} - i + 1);
         }
 
         if(status == "completed"){
-            document.getElementById("tmissionStatus" + i).className = "label label-default";
+            document.getElementById("missionTable").deleteRow({{all_missions.count}} - i + 1);
         }
     }
     </script>
