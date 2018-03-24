@@ -28,12 +28,10 @@
         {% if form.errors %}
          <p>Your username and/or password is incorrect</p>
         {% endif %}
-
         {% if next %}
         <p>YOU ARE NOT ALLOWED TO ACCESS THAT PAGE</p>
         {% endif %}
         <p><input type="hidden" name="next" value ="{{next}}"></p>
-
     </form>
   </body>
 </div>
