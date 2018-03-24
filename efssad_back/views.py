@@ -3,7 +3,7 @@ import speech_recognition as sr
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, Http404
 from django.template import loader
-from efssad_back.models import Mission, Account, MessageLog
+from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander
 
 # Create your views here.
 #def login(request):
@@ -24,13 +24,13 @@ def user(request):
     return redirect("accounts/login")
 
 def mainmenu(request):
-
-    if request.user.groups.filter(name='maincommander'):
+    type = request.user.is_mainComm
+    if type:
         return redirect("mcmain")
-    elif request.user.groups.filter(name='sitecommander'):
+    elif type:
         return redirect("scmission")
-    elif request.user.groups.filter(name='admin'):
-        return redirect("/admin")
+    #else:
+        #return redirect("login")
 
 def mcmain(request):
     all_missions = Mission.objects.all()

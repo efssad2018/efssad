@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -135,3 +137,5 @@ GEOPOSITION_MARKER_OPTIONS = {
 }
 
 LOGIN_REDIRECT_URL = '/mainmenu/'
+
+AUTH_USER_MODEL = 'efssad_back.Commander'
