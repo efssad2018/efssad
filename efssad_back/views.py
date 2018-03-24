@@ -89,3 +89,8 @@ def getOneMission(request, missionID):
     except Mission.DoesNotExist:
         raise Http404("Mission does not exist")
     return mission
+
+
+def getMissions(request, missionDescription):
+    missions = Mission.objects.get(description__contains=missionDescription)
+    return missions
