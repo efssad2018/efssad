@@ -76,9 +76,6 @@ def savemessage (request):
     obj.save()
     return redirect("scmissionID",  missionid)
 
-def stt(request):
-    return render(request, 'efssad_front/speechtotext.html')
-
 def getAllMissions(request):
     all_missions = Mission.objects.all()
     return all_missions
@@ -90,7 +87,25 @@ def getOneMission(request, missionID):
         raise Http404("Mission does not exist")
     return mission
 
-
 def getMissions(request, missionDescription):
     missions = Mission.objects.get(description__contains=missionDescription)
     return missions
+
+#def sendUpdate(missionid)
+#def receivePlan(missionid)
+
+#def createMission() - includes convertToObj()
+#def updateMission(missionId)
+#def getAllMission()
+#def getOneMission(missionId)
+#def getMissions(missionDescription)
+
+#def getUnassignedCommanders(teamType)
+#def assignSiteCommander(missionId, commanderId)
+#def redeploy(missionId)
+#def cleanup(missionId)
+
+#def sendMessage(missionId,user)
+
+#def convertUpdateToJSON()
+#def getMessageLog(missionId)
