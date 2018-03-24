@@ -87,7 +87,7 @@ class AssignedCommander(models.Model):
 class Team(models.Model):
     def __str__(self):
         return self.type
-    description = models.CharField(max_length=100)
+    commander = models.CharField(max_length=100)
     strength = models.IntegerField()
     type = models.CharField(max_length=100)
 
