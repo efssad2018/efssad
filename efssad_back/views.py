@@ -54,15 +54,26 @@ def missionDetail(request, missionID):
     # return render(request, 'efssad_front/MCmain.html', context)
 
 #redirect the sc to the appropriate sc page
+# def scmission(request):
+#     name = request.user.name
+#     Person.objects.raw('SELECT missionID FROM efssad_back WHERE name = %s', [name])
+#    # missionID = userDetails.raw('SELECT missionID FROM efssad_back')
+#     if missionID == -1:
+#         return redirect("nomissions")
+#     else:
+#         return redirect("scmissionID",  missionID)
+    #return render(request, 'efssad_front/SCmission.html')
+
+#redirect the sc to the appropriate sc page
 def scmission(request):
     name = request.user.name
-    Person.objects.raw('SELECT missionID FROM efssad_back WHERE name = %s', [name])
-   # missionID = userDetails.raw('SELECT missionID FROM efssad_back')
-    if missionID == -1:
-        return redirect("nomissions")
+    # need to change name__exact="dynamic var"
+    query = MessageLog.objects.get(name__exact="youping")
+    context = {'query': query}
+    if query != -1:
+        return redirect("scmissionID", query.missionID)
     else:
-        return redirect("scmissionID",  missionID)
-    #return render(request, 'efssad_front/SCmission.html')
+        return redirect("nomissions")
 
 #if sc has no missions
 def nomissions(request):
@@ -72,6 +83,7 @@ def nomissions(request):
 def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
     messages = getmessagelog(request, missionID)
+    context = {'mission' : mission, 'messages' : messages}
     return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
 
 #get only one mission
@@ -89,6 +101,7 @@ def getmessagelog(request, missionID):
     except MessageLog.DoesNotExist:
         raise Http404("Message log does not exist")
     return messagelog
+
 #get archive of all past events
 def archive(request):
     context = {'all_missions': getAllMissions(request)};

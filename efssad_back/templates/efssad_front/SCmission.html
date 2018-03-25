@@ -1,6 +1,6 @@
 {% extends 'efssad_front/master.html' %}
 {% load staticfiles %}
-
+{{query}}
 {% block navbar %}
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -110,7 +110,7 @@
                 <th scope="col">Message</th>
             </tr>
         </thead>
-        {% for messagelog in all_messages %}
+        {% for messagelog in messages %}
             <tr>
                 <th scope="row">{{ messagelog.name }}</th>
                 <td>{{ messagelog.dateTime }}</td>
