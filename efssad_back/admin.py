@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from efssad_back.models import Commander
-from .models import Mission, Team, MessageLog, AssignedCommander
+from .models import Mission, Team, MessageLog, AssignedCommander, Plan
 
 # Register your models here.
 admin.site.register(Mission)
@@ -13,6 +13,7 @@ admin.site.register(Mission)
 admin.site.register(Team)
 admin.site.register(MessageLog)
 admin.site.register(AssignedCommander)
+admin.site.register(Plan)
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required

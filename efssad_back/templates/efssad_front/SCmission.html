@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block body %}
+{% if mission %}
 <div class="container">
     <h2>Mission Details</h2>
     <div class="panel-group" id="missionDetail">
@@ -298,5 +299,9 @@
      </div>
     </div>
 </div>
-
+{% else %}
+<div class="container">
+    <h4 style="text-align:center;">You have no missions assigned.</h4>
+</div>
+{% endif %}
 {% endblock %}
