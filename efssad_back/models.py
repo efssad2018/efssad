@@ -82,7 +82,7 @@ class AssignedCommander(models.Model):
     def __int__(self):
         return self.missionID
     missionID = models.IntegerField()
-    name = models.ForeignKey(Commander, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
 
 class Team(models.Model):
     def __str__(self):

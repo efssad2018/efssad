@@ -20,9 +20,12 @@ from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander
     # return render(request, 'efssad_front/MCarchivedetails.html', context)
     # return render(request, 'efssad_front/SCmission.html', context)
 
+#redirect user to login page
+#allows user to type 127.0.0.1
 def user(request):
     return redirect("accounts/login")
 
+#redirect user to their respective login menu
 def mainmenu(request):
     type = request.user.username
     if Commander.objects.filter(username = type).filter(is_mainComm=True):
@@ -32,37 +35,76 @@ def mainmenu(request):
     else:
         return redirect ("/admin")
 
+#request main page of mc
 def mcmain(request):
+    context = {'all_missions' : getAllMissions(request)}
+    return render(request, 'efssad_front/MCmain.html', context)
+
+#get all missions
+def getAllMissions(request):
+    all_missions = Mission.objects.all()
+    return all_missions
+
+#mission page for mc
+def mission(request):
+    return render(request, 'efssad_front/MCmission.html')
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
     # return render(request, 'efssad_front/MCmain.html', context)
 
-    return render(request, 'efssad_front/MCmission.html')
-
+#redirect the sc to the appropriate sc page
 def scmission(request):
+    name = request.user.name
+    Person.objects.raw('SELECT missionID FROM efssad_back WHERE name = %s', [name])
+   # missionID = userDetails.raw('SELECT missionID FROM efssad_back')
+    if missionID == -1:
+        return redirect("nomissions")
+    else:
+        return redirect("scmissionID",  missionID)
+    #return render(request, 'efssad_front/SCmission.html')
+
+#if sc has no missions
+def nomissions(request):
     return render(request, 'efssad_front/SCmission.html')
 
+#if sc has mission
 def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
-    return render(request, 'efssad_front/SCmission.html', {'mission' : mission})
+    messages = getmessagelog(request, missionID)
+    return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
 
-def mission(request):
-    context = {'all_missions' : getAllMissions(request)};
-    return render(request, 'efssad_front/MCmain.html', context)
+#get only one mission
+def getOneMission(request, missionID):
+    try:
+        mission = Mission.objects.get(pk=missionID)
+    except Mission.DoesNotExist:
+        raise Http404("Mission does not exist")
+    return mission
 
+#get messagelog from database
+def getmessagelog(request, missionID):
+    try:
+        messagelog = MessageLog.objects.get(pk=missionID)
+    except MessageLog.DoesNotExist:
+        raise Http404("Message log does not exist")
+    return messagelog
+#get archive of all past events
 def archive(request):
     context = {'all_missions': getAllMissions(request)};
     return render(request, 'efssad_front/MCarchive.html', context)
 
+#get archive details of all past events
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
     return render(request, 'efssad_front/MCarchivedetails.html', {'mission' : mission})
 
+#get deployment details
 def deployment(request, missionID):
     mission = getOneMission(request, missionID)
     return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
 
-def savemessage (request):
+#send message to the database
+def sendmessage (request):
     missionid = request.POST.get('missionID')
     missionInstance = Mission.objects.get(missionID=missionid)
     message = request.POST.get('message')
@@ -76,21 +118,12 @@ def savemessage (request):
     obj.save()
     return redirect("scmissionID",  missionid)
 
-def getAllMissions(request):
-    all_missions = Mission.objects.all()
-    return all_missions
-
-def getOneMission(request, missionID):
-    try:
-        mission = Mission.objects.get(pk=missionID)
-    except Mission.DoesNotExist:
-        raise Http404("Mission does not exist")
-    return mission
-
+#get mission
 def getMissions(request, missionDescription):
     missions = Mission.objects.get(description__contains=missionDescription)
     return missions
 
+#
 #def sendUpdate(missionid)
 #def receivePlan(missionid)
 
