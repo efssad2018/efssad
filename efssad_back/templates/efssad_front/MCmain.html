@@ -100,7 +100,7 @@ function receiveMission(){
                     {% if mission.status|lower == "new" %}
                     <button type="button" class="btn btn-primary active" data-toggle="modal" data-target="#myModal1">View Plan</button>
                     {% else%}
-                    <input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ msID }}';" value="Deploy"/>
+                    <input type="button" class="btn btn-primary active" onclick="location.href='/missionDetail/{{ msID }}';" value="Deploy"/>
                     {% endif %}
                 </td>
                  <!-- Modal -->
@@ -125,7 +125,11 @@ function receiveMission(){
                 </div>
                 {% endwith %}
                 {% else %}
-                 <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                    {% if mission.status|lower == "new" %}
+                    <td><input type="button" class="btn btn-primary active" onclick="location.href='/deployment/{{ mission.missionID }}';" value="Deploy"/></td>
+                    {% else %}
+                    <td><input type="button" class="btn btn-primary active" onclick="location.href='/missionDetail/{{ mission.missionID }}';" value="View Detail"/></td>
+                    {% endif %}
                 {% endif %}
             </tr>
         {% endfor %}

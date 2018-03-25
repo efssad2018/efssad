@@ -45,9 +45,10 @@ def getAllMissions(request):
     all_missions = Mission.objects.all()
     return all_missions
 
-#mission page for mc
-def mission(request):
-    return render(request, 'efssad_front/MCmission.html')
+#mission detail page for mc
+def missionDetail(request, missionID):
+    mission = getOneMission(request, missionID)
+    return render(request, 'efssad_front/MCmission.html', {'mission' : mission})
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
     # return render(request, 'efssad_front/MCmain.html', context)

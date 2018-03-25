@@ -20,22 +20,23 @@
                 <div class="panel-body">
                     <div style="float:left; width: 58%; #border:1px solid red;">
                         <label>ID:</label>
-                        <span id="missionID"></span>
+                        <span id="missionID">{{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
-                        <span id="missionLevel"></span>
+                        <span id="missionLevel">{{ mission.level }}</span>
                         <br/>
                         <label>Description:</label>
-                        <span id="missionDesc"></span>
+                        <span id="missionDesc">{{ mission.description }}</span>
                         <br/>
                         <label>Time:</label>
-                        <span id="missionDatetime"></span>
+                        <span id="missionDatetime">{{ mission.datetimeReceived }}</span>
                         <br/>
                         <label>Site Commanders:</label>
                         <span id="missionSC"></span>
                         <br/>
                         <label>Status:</label>
                         <!--new - green, ongoing - yellow, cleanup - blue, completed - grey-->
+                        <span id="missionStatus"class="#" style="font-size: 15px">{{ mission.status }}</span>
 
 
                         <br/>
@@ -54,8 +55,8 @@
                                 <!--style: 'mapbox://styles/mapbox/streets-v10'-->
                             <!--});-->
 
-                            var lat = 1.4382
-                            var long = 103.7890
+                            var lat = {{ mission.latitude}}
+                            var long = {{ mission.longitude }}
                             var mymap = L.map('locationMap').setView([lat, long], 13);
                             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA', {
                                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -70,11 +71,10 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>Zombie Invasion</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
-
                         </script>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
         <button type="button" class="btn btn-primary" id="btn_complete">Complete</button>
         <button type="button" class="btn btn-primary" id="btn_redeployment">Redeployment</button>
         <button type="button" class="btn btn-primary" id="btn_cleanUp">Clean up</button>
-        <button type="button" class="btn btn-success" id="btn_liveStream">Livestream</button>
+        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.160.17:8080')">Livestream</button>
     </div>
 
     <h2>Mission Control Centre</h2>
@@ -162,5 +162,31 @@
 
 
 </div>
+
+<!-- script for different button -->
+<script>
+    var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
+    status = status.replace(/\s/g,'');
+    if(status == "ongoing"){
+        document.getElementById("missionStatus").className = "label label-warning";
+        document.getElementById("btn_complete").style.display="none";
+    }
+    if(status == "cleanup"){
+        document.getElementById("missionStatus").className = "label label-info";
+        document.getElementById("btn_redeployment").style.display="none";
+        document.getElementById("btn_cleanUp").style.display="none";
+    }
+
+    if(status == "complete"){
+        document.getElementById("missionStatus").className = "label label-default";
+        document.getElementById("btnGroup").style.display="none";
+    }
+
+    if(status == "completed"){
+        document.getElementById("missionStatus").className = "label label-default";
+        document.getElementById("btnGroup").style.display="none";
+    }
+
+</script>
 
 {% endblock %}

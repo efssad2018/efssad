@@ -1,6 +1,21 @@
 {% extends 'efssad_front/master.html' %}
 {% load staticfiles %}
 
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Header -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="/accounts/login">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+                    </a>
+                </li>
+            </ul>
+    </div>
+</nav>
+{% endblock %}
+
 {% block body %}
 {% if mission %}
 <div class="container">
