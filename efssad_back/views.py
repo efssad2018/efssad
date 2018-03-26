@@ -84,8 +84,8 @@ def nomissions(request):
 #if sc has mission
 def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
-    messages = getmessagelog(request, missionID)
-    context = {'mission' : mission, 'messages' : messages}
+    message = getmessagelog(request, missionID)
+    context = {'mission' : mission, 'message' : message}
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/SCmission.html', context)
 
