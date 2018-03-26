@@ -16,4 +16,5 @@ urlpatterns = [
     re_path(r'^deployment/(?P<missionID>[0-9]+)$', views.deployment, name='deployment'),
     re_path(r'^archiveDetail/(?P<missionID>[0-9]+)$', views.archiveDetail, name='archiveDetail'),
     re_path(r'^missionDetail/(?P<missionID>[0-9]+)$', views.missionDetail, name='missionDetail'),
+    re_path(r'^updateStatus/(?P<missionID>[0-9]+)/(?P<status>\w+)$', views.updateStatus, name='updateStatus'),
 ]

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse, Http404
 from django.template import loader
 from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander
+from datetime import datetime
 
 # Create your views here.
 #def login(request):
@@ -144,6 +145,19 @@ def sendmessage (request):
 def getMissions(request, missionDescription):
     missions = Mission.objects.get(description__contains=missionDescription)
     return missions
+
+#update status - to cleanup or completed
+def updateStatus(request, missionID, status):
+    mission = getOneMission(request, missionID)
+    mission.status = status
+    mission.save()
+    if mission.status.lower() == "cleanup":
+        return redirect("missionDetail", missionID)
+    else:
+        mission.datetimeCompleted = datetime.now()
+        mission.save()
+        return redirect("archiveDetail", missionID)
+
 
 #
 #def sendUpdate(missionid)

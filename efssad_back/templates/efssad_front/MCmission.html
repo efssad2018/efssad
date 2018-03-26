@@ -109,10 +109,10 @@
 
             </div>
         </div>
-        <button type="button" class="btn btn-primary" id="btn_complete">Complete</button>
+        <button type="button" class="btn btn-primary" id="btn_complete" onclick="complete()">Complete</button>
         <button type="button" class="btn btn-primary" id="btn_redeployment" onclick="location.href='/deployment/{{ mission.missionID }}';">Redeployment</button>
         <button type="button" class="btn btn-primary" id="btn_cleanUp" onclick="cleanup()">Clean up</button>
-        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.160.17:8080')">Livestream</button>
+        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.160.17:8080/browserfs.html')">Livestream</button>
     </div>
 
     <h2>Mission Control Centre</h2>
@@ -177,12 +177,21 @@
     }
 
 </script>
+
+<!-- script for updating status button -->
 <script>
     function cleanup(){
         document.getElementById('missionStatus').innerHTML = "Cleanup";
         document.getElementById("missionStatus").className = "label label-info";
-        
+        document.location.href="/updateStatus/{{ mission.missionID }}/Cleanup";
     }
+
+    function complete(){
+        document.getElementById('missionStatus').innerHTML = "Completed";
+        document.getElementById("missionStatus").className = "label label-info";
+        document.location.href="/updateStatus/{{ mission.missionID }}/Completed";
+    }
+
 </script>
 
 {% endblock %}
