@@ -41,11 +41,6 @@ def mcmain(request):
     context = {'all_missions' : getAllMissions(request)}
     return render(request, 'efssad_front/MCmain.html', context)
 
-#get all missions
-def getAllMissions(request):
-    all_missions = Mission.objects.all()
-    return all_missions
-
 #mission detail page for mc
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
@@ -71,8 +66,8 @@ def missionDetail(request, missionID):
 def scmission(request):
     username = request.user.name
     try:
-        query = MessageLog.objects.filter(name__iexact=username)
-    except MessageLog.DoesNotExist:
+        query = AssignedCommander.objects.filter(name__iexact=username)
+    except AssignedCommander.DoesNotExist:
         return redirect("nomissions")
     if query:
         q = query.values_list('missionID', flat=True)
@@ -92,23 +87,6 @@ def scmissionID(request, missionID):
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/SCmission.html', context)
 
-#get only one mission
-def getOneMission(request, missionID):
-    try:
-        mission = Mission.objects.get(pk=missionID)
-    except Mission.DoesNotExist:
-        raise Http404("Mission does not exist")
-    return mission
-
-#get messagelog from database
-def getmessagelog(request, missionID):
-    try:
-        messagelog = MessageLog.objects.filter(missionID__exact=missionID)
-        # messagelog = MessageLog.objects.all()
-    except MessageLog.DoesNotExist:
-        raise Http404("Message log does not exist")
-    return messagelog
-
 #get archive of all past events
 def archive(request):
     context = {'all_missions': getAllMissions(request)};
@@ -125,23 +103,6 @@ def archiveDetail(request, missionID):
 def deployment(request, missionID):
     mission = getOneMission(request, missionID)
     return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
-
-#send message to the database
-def sendmessage (request):
-    missionID = request.POST.get('missionID')
-    missionInstance = Mission.objects.get(missionID=missionID)
-    message = request.POST.get('message')
-    name = request.user.username
-    obj = MessageLog()
-    obj.missionID = missionInstance
-    obj.message = message
-    obj.name = name
-    obj.updateID = 1
-    obj.save()
-    if Commander.objects.filter(username=name).filter(is_mainComm=True):
-        return redirect("missionDetail", missionID)
-    else:
-        return redirect("scmissionID", missionID)
 
 #get mission
 def getMissions(request, missionDescription):
@@ -182,8 +143,17 @@ def createMission(request): #- includes convertToObj()
     return redirect("mcmain")
 #def updateMission(missionId)
 
-#def getAllMission()
-#def getOneMission(missionId)
+#get all missions
+def getAllMissions(request):
+    all_missions = Mission.objects.all()
+    return all_missions
+#get only one mission
+def getOneMission(request, missionID):
+    try:
+        mission = Mission.objects.get(pk=missionID)
+    except Mission.DoesNotExist:
+        raise Http404("Mission does not exist")
+    return mission
 #def getMissions(missionDescription)
 
 #def getUnassignedCommanders(teamType)
@@ -191,7 +161,30 @@ def createMission(request): #- includes convertToObj()
 #def redeploy(missionId)
 #def cleanup(missionId)
 
-#def sendMessage(missionId,user)
+#send message to the database
+def sendmessage (request):
+    missionID = request.POST.get('missionID')
+    missionInstance = Mission.objects.get(missionID=missionID)
+    message = request.POST.get('message')
+    name = request.user.username
+    obj = MessageLog()
+    obj.missionID = missionInstance
+    obj.message = message
+    obj.name = name
+    obj.updateID = 1
+    obj.save()
+    if Commander.objects.filter(username=name).filter(is_mainComm=True):
+        return redirect("missionDetail", missionID)
+    else:
+        return redirect("scmissionID", missionID)
 
 #def convertUpdateToJSON()
-#def getMessageLog(missionId)
+#get messagelog from database
+
+def getmessagelog(request, missionID):
+    try:
+        messagelog = MessageLog.objects.filter(missionID__exact=missionID)
+        # messagelog = MessageLog.objects.all()
+    except MessageLog.DoesNotExist:
+        raise Http404("Message log does not exist")
+    return messagelog
