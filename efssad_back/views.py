@@ -132,15 +132,15 @@ def sendmessage (request):
     missionInstance = Mission.objects.get(missionID=missionid)
     message = request.POST.get('message')
     name = request.user.username
+    updateID = 1
     planID = 1
     obj = MessageLog()
     obj.missionID = missionInstance
     obj.message = message
     obj.name = name
+    obj.updateID = updateID
     obj.planID = planID
     obj.save()
-
-
     if Commander.objects.filter(username=name).filter(is_mainComm=True):
         return redirect("missionDetail", missionid)
     else:
@@ -168,8 +168,23 @@ def updateStatus(request, missionID, status):
 #def sendUpdate(missionid)
 #def receivePlan(missionid)
 
-#def createMission() - includes convertToObj()
-#def updateMission(missionId)
+#after receiving json file, create new mission
+def createMission(request): #- includes convertToObj()
+    #obj = Mission()
+    #obj.missionID =
+    #obj.level =
+    #obj.title =
+    #obj.description =
+    #obj.dateTimeReceived =
+    #obj.datetimeCompleted =
+    #obj.status =
+    #obj.is_crisisAbated =
+    #obj.latitude =
+    #obj.longitude =
+    #obj.save =
+    return redirect("mcmain")
+def updateMission(missionId)
+
 #def getAllMission()
 #def getOneMission(missionId)
 #def getMissions(missionDescription)
