@@ -66,14 +66,12 @@ def missionDetail(request, missionID):
 
 #redirect the sc to the appropriate sc page
 def scmission(request):
-    name = request.user.name
-    # need to change name__exact="dynamic var"
-    query = MessageLog.objects.get(name__exact="youping")
-    context = {'query': query}
-    if query != -1:
-        return redirect("scmissionID", query.missionID)
-    else:
+    username = request.user.name
+    try:
+        query = MessageLog.objects.get(name__iexact=username)
+    except MessageLog.DoesNotExist:
         return redirect("nomissions")
+    return redirect("scmissionID", query.missionID)
 
 #if sc has no missions
 def nomissions(request):
