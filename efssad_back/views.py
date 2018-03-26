@@ -68,10 +68,14 @@ def missionDetail(request, missionID):
 def scmission(request):
     username = request.user.name
     try:
-        query = MessageLog.objects.get(name__iexact=username)
+        query = MessageLog.objects.filter(name__iexact=username)
     except MessageLog.DoesNotExist:
         return redirect("nomissions")
-    return redirect("scmissionID", query.missionID)
+    if query:
+        q = query.values_list('missionID', flat=True)
+        return redirect("scmissionID", q.first())
+    else:
+        return redirect("nomissions")
 
 #if sc has no missions
 def nomissions(request):
@@ -82,7 +86,8 @@ def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
     messages = getmessagelog(request, missionID)
     context = {'mission' : mission, 'messages' : messages}
-    return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
+    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
+    return render(request, 'efssad_front/SCmission.html', context)
 
 #get only one mission
 def getOneMission(request, missionID):
@@ -95,7 +100,8 @@ def getOneMission(request, missionID):
 #get messagelog from database
 def getmessagelog(request, missionID):
     try:
-        messagelog = MessageLog.objects.get(pk=missionID)
+        messagelog = MessageLog.objects.filter(missionID__exact=missionID)
+        # messagelog = MessageLog.objects.all()
     except MessageLog.DoesNotExist:
         raise Http404("Message log does not exist")
     return messagelog
