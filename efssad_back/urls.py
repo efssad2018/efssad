@@ -11,6 +11,7 @@ urlpatterns = [
     path('archive/', views.archive, name='archive'),
     path('sendmessage/', views.sendmessage, name='sendmessage'),
     path('nomissions/', views.nomissions, name='nomissions'),
+    path('convertToJSON/', views.convertToJSON, name='convertToJSON'),
     #path('stt/', views.stt, name='stt'),
     re_path(r'^scmission/(?P<missionID>-?[0-9]+)$', views.scmissionID, name='scmissionID'),
     re_path(r'^deployment/(?P<missionID>[0-9]+)$', views.deployment, name='deployment'),

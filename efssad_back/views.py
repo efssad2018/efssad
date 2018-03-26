@@ -83,9 +83,29 @@ def nomissions(request):
 def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
-    context = {'mission' : mission, 'message' : message}
+
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+
+            element ={'message': cipher}
+
+            list.append(element)
+
+    context = {'mission' : mission, 'message' : list}
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/SCmission.html', context)
+
 
 #get archive of all past events
 def archive(request):
@@ -156,27 +176,39 @@ def getOneMission(request, missionID):
     return mission
 #def getMissions(missionDescription)
 
-#def getUnassignedCommanders(teamType)
+#def getUnassignedCommanders(teamType):
+
 #def assignSiteCommander(missionId, commanderId)
 #def redeploy(missionId)
 #def cleanup(missionId)
 
 #send message to the database
-def sendmessage (request):
-    missionID = request.POST.get('missionID')
-    missionInstance = Mission.objects.get(missionID=missionID)
+def sendmessage(request):
+    missionid = request.POST.get('missionID')
+    missionInstance = Mission.objects.get(missionID=missionid)
     message = request.POST.get('message')
     name = request.user.username
+    updateID = 1
+
+    key = -3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
     obj = MessageLog()
-    obj.missionID = missionInstance
+    obj.missionID = (missionInstance)
+
+    cipher = ''
+    for c in message:
+        if c in dummy:
+            cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+            message = cipher
+
     obj.message = message
     obj.name = name
-    obj.updateID = 1
+
+    obj.updateID = updateID
     obj.save()
-    if Commander.objects.filter(username=name).filter(is_mainComm=True):
-        return redirect("missionDetail", missionID)
-    else:
-        return redirect("scmissionID", missionID)
+    return redirect("scmissionID", missionid)
+
 
 #def convertUpdateToJSON()
 #get messagelog from database
@@ -188,3 +220,15 @@ def getmessagelog(request, missionID):
     except MessageLog.DoesNotExist:
         raise Http404("Message log does not exist")
     return messagelog
+
+def convertToJSON(request):
+    missionID = 1
+    for m in MessageLog.objects.raw('SELECT * FROM efssad_back WHERE missionID = %s', [missionID]):
+        print(m.updateID)
+        print(m.missionID)
+        print(m.commanderID)
+        print(m.dateTime)
+        print(m.message)
+    c = MissionLog.objects.raw('SELECT is_crisisAbated FROM efssad_back WHERE missionID = %s')
+    print(c.is_crisisAbated)
+    return render(request, 'efssad_front/testtest.html')
