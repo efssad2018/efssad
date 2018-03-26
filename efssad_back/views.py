@@ -139,7 +139,12 @@ def sendmessage (request):
     obj.name = name
     obj.planID = planID
     obj.save()
-    return redirect("scmissionID",  missionid)
+
+
+    if Commander.objects.filter(username=name).filter(is_mainComm=True):
+        return redirect("missionDetail", missionid)
+    else:
+        return redirect("scmissionID", missionid)
 
 #get mission
 def getMissions(request, missionDescription):
