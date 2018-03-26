@@ -92,37 +92,23 @@
 
     <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
 
-        <table class="table borderless">
-            <thead style="background:black; color: white; height: 50px;">
+       <table class="table borderless">
+        <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
             <tr>
-                <th scope="col" class="col-md-1">Commander</th>
-                <th scope="col" class="col-md-2">Time</th>
-                <th scope="col" class="col-md-10">Message</th>
+                <th scope="col" style="text-align:center;width:140px">Commander</th>
+                <th scope="col" style="text-align:left;width:200px">Date-Time</th>
+                <th scope="col">Message</th>
             </tr>
-
-            </thead>
-
-            <tbody>
-
+        </thead>
+        {% for messagelog in message %}
             <tr>
-                <td><strong>SYS</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Commencing Zombie Invasion</td>
+                <th scope="row">{{ messagelog.name }}</th>
+                <td>{{ messagelog.dateTime }}</td>
+                <td>{{ messagelog.message }}</td>
             </tr>
-            <tr>
-                <td><strong>SC Lim</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Destination reached</td>
-            </tr>
-            <tr>
-                <td><strong>SC Tan</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Zombie subside with five casualty</td>
-            </tr>
-            </tbody>
-
-        </table>
+        {% endfor %}
+    </table>
     </div>
 
 </div>

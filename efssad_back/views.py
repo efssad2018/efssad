@@ -48,7 +48,9 @@ def getAllMissions(request):
 #mission detail page for mc
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
-    return render(request, 'efssad_front/MCmission.html', {'mission' : mission})
+    message = getmessagelog(request, missionID)
+    context = {'mission' : mission, 'message' : message}
+    return render(request, 'efssad_front/MCmission.html', context)
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
     # return render(request, 'efssad_front/MCmain.html', context)
@@ -114,7 +116,9 @@ def archive(request):
 #get archive details of all past events
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
-    return render(request, 'efssad_front/MCarchivedetails.html', {'mission' : mission})
+    message = getmessagelog(request, missionID)
+    context = {'mission': mission, 'message': message}
+    return render(request, 'efssad_front/MCarchivedetails.html', context)
 
 #get deployment details
 def deployment(request, missionID):

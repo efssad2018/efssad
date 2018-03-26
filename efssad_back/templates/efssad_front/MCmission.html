@@ -118,7 +118,6 @@
     <h2>Mission Control Centre</h2>
 
     <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
-
         <table class="table borderless">
             <thead style="background:black; color: white; height: 50px;">
 
@@ -131,24 +130,14 @@
             </thead>
 
             <tbody>
-
+             {% for messagelog in message %}
             <tr>
-                <td><strong>SYS</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Commencing Zombie Invasion</td>
+                <th scope="row">{{ messagelog.name }}</th>
+                <td>{{ messagelog.dateTime }}</td>
+                <td>{{ messagelog.message }}</td>
             </tr>
-            <tr>
-                <td><strong>SC Lim</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Destination reached</td>
-            </tr>
-            <tr>
-                <td><strong>SC Tan</strong></td>
-                <td>11-02-2018 18:00</td>
-                <td>Zombie subside with five casualty</td>
-            </tr>
+        {% endfor %}
             </tbody>
-
         </table>
     </div>
 
