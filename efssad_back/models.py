@@ -73,7 +73,6 @@ class Mission(models.Model):
     level = models.IntegerField()
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=1000)
-    updateID = models.IntegerField()
     datetimeReceived = models.DateTimeField()
     datetimeCompleted = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=1000)
@@ -98,6 +97,7 @@ class MessageLog(models.Model):
     def __int__(self):
         return self.missionID
     missionID = models.IntegerField()
+    updateID = models.IntegerField()
     dateTime = models.DateTimeField(auto_now_add = True)
     message = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
