@@ -128,23 +128,20 @@ def deployment(request, missionID):
 
 #send message to the database
 def sendmessage (request):
-    missionid = request.POST.get('missionID')
-    missionInstance = Mission.objects.get(missionID=missionid)
+    missionID = request.POST.get('missionID')
+    missionInstance = Mission.objects.get(missionID=missionID)
     message = request.POST.get('message')
     name = request.user.username
-    updateID = 1
-    planID = 1
     obj = MessageLog()
     obj.missionID = missionInstance
     obj.message = message
     obj.name = name
-    obj.updateID = updateID
-    obj.planID = planID
+    obj.updateID = 1
     obj.save()
     if Commander.objects.filter(username=name).filter(is_mainComm=True):
-        return redirect("missionDetail", missionid)
+        return redirect("missionDetail", missionID)
     else:
-        return redirect("scmissionID", missionid)
+        return redirect("scmissionID", missionID)
 
 #get mission
 def getMissions(request, missionDescription):
@@ -183,7 +180,7 @@ def createMission(request): #- includes convertToObj()
     #obj.longitude =
     #obj.save =
     return redirect("mcmain")
-def updateMission(missionId)
+#def updateMission(missionId)
 
 #def getAllMission()
 #def getOneMission(missionId)
