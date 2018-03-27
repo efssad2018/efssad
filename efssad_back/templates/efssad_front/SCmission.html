@@ -123,7 +123,7 @@
      <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
          <div class="input-single ">
                     <form action="{% url 'sendmessage' %}" method = "POST">
-                                        {% csrf_token %}
+                    {% csrf_token %}
 
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
                     <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />

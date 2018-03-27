@@ -112,7 +112,7 @@ def archive(request):
     context = {'all_missions': getAllMissions(request)};
     return render(request, 'efssad_front/MCarchive.html', context)
 
-#get archive details of all past events
+#get archive details of past events
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
@@ -176,7 +176,7 @@ def getOneMission(request, missionID):
     return mission
 #def getMissions(missionDescription)
 
-#def getUnassignedCommanders(teamType):
+#def getUnassignedCommanders(request):
 
 #def assignSiteCommander(missionId, commanderId)
 #def redeploy(missionId)
@@ -221,14 +221,19 @@ def getmessagelog(request, missionID):
         raise Http404("Message log does not exist")
     return messagelog
 
+#just testing still not working
 def convertToJSON(request):
     missionID = 1
-    for m in MessageLog.objects.raw('SELECT * FROM efssad_back WHERE missionID = %s', [missionID]):
+    for m in MessageLog.objects.raw('SELECT * FROM efssad_back_messagelog WHERE missionID = %s', [missionID]):
         print(m.updateID)
         print(m.missionID)
-        print(m.commanderID)
+        print(m.name)
         print(m.dateTime)
         print(m.message)
-    c = MissionLog.objects.raw('SELECT is_crisisAbated FROM efssad_back WHERE missionID = %s')
-    print(c.is_crisisAbated)
+    for c in Mission.objects.raw('SELECT * FROM efssad_back_mission WHERE missionID = %s', [missionID]):
+        print(c.is_crisisAbated)
     return render(request, 'efssad_front/testtest.html')
+
+def searchByMissionID(request):
+    message = request.POST.get('message')
+    return redirect("archiveDetail", message)
