@@ -190,12 +190,14 @@ def updateStatus(request, missionID, status):
     mission = getOneMission(request, missionID)
     mission.status = status
     mission.save()
-    sendSystemMessage(request, missionID, status)
+
     if mission.status.lower() == "cleanup":
+        sendSystemMessage(request, missionID, "Commence Cleanup")
         return redirect("missionDetail", missionID)
     else:
         mission.datetimeCompleted = datetime.now()
         mission.save()
+        sendSystemMessage(request, missionID, "Mission Completed")
         return redirect("archiveDetail", missionID)
 
 
@@ -362,6 +364,8 @@ def sendSystemMessage(request, missionID, status):
         if c in dummy:
             cipher += dummy[(dummy.index(c) + key) % len(dummy)]
             message = cipher
+        else:
+            cipher += " "
 
     obj.message = message
     obj.name = name
