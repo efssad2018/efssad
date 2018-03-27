@@ -141,7 +141,29 @@ def archive(request):
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
-    context = {'mission': mission, 'message': message}
+
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+
+            dt = x.dateTime
+            cmdname = x.name
+            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
+
+            list.append(element)
+
+    context = {'mission': mission, 'message': list}
+    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
 #get deployment details
