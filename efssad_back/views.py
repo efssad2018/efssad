@@ -5,14 +5,12 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Plan
 from datetime import datetime
-# from django.contrib.auth.models import User, Group
-# from rest_framework import viewsets
-# from efssad_back.serializers import UserSerializer, GroupSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from efssad_back.serializers import MissionSerializer, MessageLogSerializer, PlanSerializer
-from rest_framework import mixins, generics
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 #def login(request):
@@ -402,9 +400,12 @@ def sendSystemMessage(request, missionID, status):
 # Lists all missions or create a new one
 # missions/
 class MissionList(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
-        messagelogs = MessageLog.objects.all()
-        serializer = MessageLogSerializer(messagelogs, many=True)
+        missions = Mission.objects.all()
+        serializer = MissionSerializer(missions, many=True)
         return Response(serializer.data)
 
     # let them create mission object
@@ -415,7 +416,7 @@ class MissionList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class MissionDetail(generics.RetrieveUpdateDestroyAPIView):
+class MissionDetail(APIView):
     def get_object(self, pk):
         try:
             return Mission.objects.get(pk=pk)
@@ -442,24 +443,88 @@ class MissionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # # Lists all messagelogs or create a new one
 # # messagelogs/
-# class MessageLogList(APIView):
-#     def get(self, request):
-#         messagelogs = MessageLog.objects.all()
-#         serializer = MessageLogSerializer(messagelogs, many=True)
-#         return Response(serializer.data)
-#
-#     # let them create plan object
-#     def post(self):
-#         pass
-#
+class MessageLogList(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        messagelogs = MessageLog.objects.all()
+        serializer = MessageLogSerializer(messagelogs, many=True)
+        return Response(serializer.data)
+
+    # let them create messagelogs object
+    def post(self, request):
+        serializer = MessageLogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MessageLogDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return MessageLog.objects.get(pk=pk)
+        except MessageLog.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        messagelog = self.get_object(pk)
+        serializer = MessageLogSerializer(messagelog)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        messagelog = self.get_object(pk)
+        serializer = MessageLogSerializer(messagelog, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        messagelog = self.get_object(pk)
+        messagelog.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 # # Lists all plans or create a new one
 # # plans/
-# class PlanList(APIView):
-#     def get(self, request):
-#         plans = Plan.objects.all()
-#         serializer = PlanSerializer(plans, many=True)
-#         return Response(serializer.data)
-#
-#     # let them create plan object
-#     def post(self):
-#         pass
+class PlanList(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        plans = Plan.objects.all()
+        serializer = PlanSerializer(plans, many=True)
+        return Response(serializer.data)
+
+    # let them create plan object
+    def post(self, request):
+        serializer = PlanSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PlanDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Plan.objects.get(pk=pk)
+        except Plan.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        plan = self.get_object(pk)
+        serializer = PlanSerializer(plan)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        plan = self.get_object(pk)
+        serializer = PlanSerializer(plan, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        plan = self.get_object(pk)
+        plan.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
