@@ -45,6 +45,7 @@ def mcmain(request):
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
+
     key = 3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     cipher = ''
@@ -59,12 +60,14 @@ def missionDetail(request, missionID):
                 if c in dummy:
                     cipher += dummy[(dummy.index(c) + key) % len(dummy)]
 
-            element = {'message': cipher}
+            dt = x.dateTime
+            cmdname = x.name
+            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
 
             list.append(element)
 
     context = {'mission': mission, 'message': list}
-    #return render(request, 'efssad_front/MCmission.html', {'mission' : mission} ,{'messages' : messages})
+    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCmission.html', context)
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
@@ -103,6 +106,7 @@ def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
 
+
     key = 3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     cipher = ''
@@ -117,7 +121,9 @@ def scmissionID(request, missionID):
                 if c in dummy:
                     cipher += dummy[(dummy.index(c) + key) % len(dummy)]
 
-            element ={'message': cipher}
+            dt = x.dateTime
+            cmdname= x.name
+            element ={'message': cipher,'dateTime': dt,'name': cmdname}
 
             list.append(element)
 
