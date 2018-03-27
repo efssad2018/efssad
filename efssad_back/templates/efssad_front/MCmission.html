@@ -148,6 +148,7 @@
             {% csrf_token %}
 
             <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}"/>
+            <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
             <textarea name="message" id="note-textarea" rows="4" class="form-control"></textarea>
             <br/>
             <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px; float: right;" return
