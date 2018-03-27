@@ -181,6 +181,7 @@ def updateStatus(request, missionID, status):
     mission = getOneMission(request, missionID)
     mission.status = status
     mission.save()
+    sendSystemMessage(request, missionID, status)
     if mission.status.lower() == "cleanup":
         return redirect("missionDetail", missionID)
     else:
@@ -287,3 +288,28 @@ def convertToJSON(request):
 def searchByMissionID(request):
     message = request.POST.get('message')
     return redirect("archiveDetail", message)
+
+#send system message when button is pressed
+def sendSystemMessage(request, missionID, status):
+    missionInstance = Mission.objects.get(missionID=missionID)
+    message = status
+    name = "System"
+    updateID = 1
+
+    key = -3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    obj = MessageLog()
+    obj.missionID = (missionInstance)
+
+    cipher = ''
+    for c in message:
+        if c in dummy:
+            cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+            message = cipher
+
+    obj.message = message
+    obj.name = name
+
+    obj.updateID = updateID
+    obj.save()
