@@ -27,13 +27,14 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['efies.pythonanywhere.com']
+ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # 'leaflet',
+    'jsonify',
     'rest_framework',
     'rest_framework.authtoken',
     'bootstrap3',

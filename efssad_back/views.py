@@ -3,8 +3,9 @@ import speech_recognition as sr
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, Http404
 from django.template import loader
-from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Plan
+from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Team, Plan
 from datetime import datetime
+from itertools import chain
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -75,22 +76,7 @@ def missionDetail(request, missionID):
             list.append(element)
 
     context = {'mission': mission, 'message': list}
-    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCmission.html', context)
-    # all_missions = Mission.objects.all()
-    # context = {'all_missions': all_missions}
-    # return render(request, 'efssad_front/MCmain.html', context)
-
-#redirect the sc to the appropriate sc page
-# def scmission(request):
-#     name = request.user.name
-#     Person.objects.raw('SELECT missionID FROM efssad_back WHERE name = %s', [name])
-#    # missionID = userDetails.raw('SELECT missionID FROM efssad_back')
-#     if missionID == -1:
-#         return redirect("nomissions")
-#     else:
-#         return redirect("scmissionID",  missionID)
-    #return render(request, 'efssad_front/SCmission.html')
 
 #redirect the sc to the appropriate sc page
 def scmission(request):
@@ -184,7 +170,18 @@ def archiveDetail(request, missionID):
 #get deployment details
 def deployment(request, missionID):
     mission = getOneMission(request, missionID)
-    return render(request, 'efssad_front/MCdeployment.html', {'mission' : mission})
+    commanders = getUnassignedCommanders(request)
+    # types = getAllTeam(request)
+    # allType = list(chain(commanders, types))
+    allType = ""
+    for commander in commanders:
+        typelist = getTeamType(request, commander)
+        allType = list(chain(allType,typelist))
+    commander = list(chain("",commanders))
+
+    context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
+    # i = c
+    return render(request, 'efssad_front/MCdeployment.html', context)
 
 #get mission
 def getMissions(request, missionDescription):
@@ -378,6 +375,21 @@ def sendSystemMessage(request, missionID, status):
 
     obj.updateID = updateID
     obj.save()
+
+# get unassigned Commanders
+def getUnassignedCommanders(request):
+    uaCommanders = Commander.objects.filter(is_deployed=False, is_admin=False, is_mainComm=False).values_list('name', flat=True)
+    return uaCommanders
+
+#get all teams types with available commander
+def getTeamType(request, commander):
+    type = Team.objects.filter(commander__iexact=commander).values_list('type', flat=True)
+    return type
+
+#get all team type
+def getAllTeam(request):
+    type = Team.objects.all()
+    return type
 
 # get unassigned Commanders
 # def getUnassignedCommanders(request):

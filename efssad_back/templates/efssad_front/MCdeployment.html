@@ -1,7 +1,12 @@
 {% extends 'efssad_front/master.html' %}
 {% load staticfiles %}
+{% load jsonify %}
 
 {% block body %}
+{{commanders}}
+{{mission}}
+{{type}}
+{{type|length}}
 <!-- map -->
 <!--{#% load leaflet_tags %}-->
 <!--{#% leaflet_js %}-->
@@ -227,37 +232,77 @@
 
 </div>
 <script>
+    <!--function displayTeam(){-->
+
+        <!--var checkbox = document.getElementsByClassName("chkbox");-->
+        <!--var teamText;-->
+        <!--var i;-->
+        <!--for(i=0; i<checkbox.length; i++){-->
+            <!--switch(checkbox[i].value){-->
+                <!--case "swat":-->
+                    <!--teamText = document.getElementById("swatText");-->
+                    <!--break;-->
+                <!--case "sr":-->
+                    <!--teamText = document.getElementById("srText");-->
+                    <!--break;-->
+                <!--case "cd":-->
+                    <!--teamText = document.getElementById("cdText");-->
+                    <!--break;-->
+                <!--case "wf":-->
+                    <!--teamText = document.getElementById("wfText");-->
+                    <!--break;-->
+                <!--case "eod":-->
+                    <!--teamText = document.getElementById("eodText");-->
+                    <!--break;-->
+            <!--}-->
+
+            <!--if(checkbox[i].checked == true){-->
+                <!--teamText.style.display = "block";-->
+            <!--}else{-->
+                <!--teamText.style.display = "none";-->
+            <!--}-->
+        <!--} &lt;!&ndash; end of forloop &ndash;&gt;-->
+
+    <!--}-->
+
     function displayTeam(){
+        var type = {{ type|jsonify }};
+        var commanders = {{ commanders|jsonify }};
+        <!--alert(type[0]);-->
+        <!--alert(type.length);-->
+        <!--alert(type[1].toLowerCase());-->
 
         var checkbox = document.getElementsByClassName("chkbox");
         var teamText;
+        var teamCommander;
         var i;
+        var j;
         for(i=0; i<checkbox.length; i++){
-            switch(checkbox[i].value){
-                case "swat":
-                    teamText = document.getElementById("swatText");
-                    break;
-                case "sr":
-                    teamText = document.getElementById("srText");
-                    break;
-                case "cd":
-                    teamText = document.getElementById("cdText");
-                    break;
-                case "wf":
-                    teamText = document.getElementById("wfText");
-                    break;
-                case "eod":
-                    teamText = document.getElementById("eodText");
-                    break;
-            }
-
             if(checkbox[i].checked == true){
+                for(j=0; j<type.length; j++){
+                    <!--alert("cb value: " + checkbox[i].value);-->
+                    <!--alert("type: " + type[j].toLowerCase());-->
+                    compare = checkbox[i].value.localeCompare(type[j].toLowerCase());
+                    if(compare == 0){
+                        <!--alert(compare);-->
+                        teamText = type[j].toLowerCase()+"Text";
+                        <!--alert(teamText);-->
+                        teamText = document.getElementById(teamText);
+                        teamCommander = commanders[j];
+                        teamText.innerHTML = "Site Commander Assigned: " + teamCommander;
+                        <!--alert("team text: " + teamText.innerHTML);-->
+                        break;
+                    }
+                }
+
+                <!--alert("check");-->
                 teamText.style.display = "block";
-            }else{
+            }
+            else{
                 teamText.style.display = "none";
             }
-        } <!-- end of forloop -->
 
+        }
     }
 
     function assignTeam(){
