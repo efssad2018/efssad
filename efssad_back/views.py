@@ -215,6 +215,7 @@ def createMission(request): #- includes convertToObj()
 def getAllMissions(request):
     all_missions = Mission.objects.all()
     return all_missions
+
 #get only one mission
 def getOneMission(request, missionID):
     try:
@@ -224,11 +225,39 @@ def getOneMission(request, missionID):
     return mission
 #def getMissions(missionDescription)
 
-#def getUnassignedCommanders(request):
-
 #def assignSiteCommander(missionId, commanderId)
 #def redeploy(missionId)
 #def cleanup(missionId)
+
+# #send message to the database
+# def sendmessage(request):
+#     missionid = request.POST.get('missionID')
+#     missionInstance = Mission.objects.get(missionID=missionid)
+#     message = request.POST.get('message')
+#     name = request.user.username
+#     updateID = 1
+#
+#     key = -3
+#     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#
+#     obj = MessageLog()
+#     obj.missionID = (missionInstance)
+#
+#     cipher = ''
+#     for c in message:
+#         if c in dummy:
+#             cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+#             message = cipher
+#
+#     obj.message = message
+#     obj.name = name
+#
+#     obj.updateID = updateID
+#     obj.save()
+#     if Commander.objects.filter(username=name).filter(is_mainComm=True):
+#         return redirect("missionDetail", missionid)
+#     else:
+#         return redirect("scmissionID", missionid)
 
 #send message to the database
 def sendmessage(request):
@@ -236,7 +265,14 @@ def sendmessage(request):
     missionInstance = Mission.objects.get(missionID=missionid)
     message = request.POST.get('message')
     name = request.user.username
-    updateID = 1
+
+    mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by('-updateID')
+
+    if mID:
+        uID = mID[0]
+        updateID = uID + 1
+    else:
+        updateID = 1
 
     key = -3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -262,8 +298,8 @@ def sendmessage(request):
 
 
 #def convertUpdateToJSON()
-#get messagelog from database
 
+#get messagelog from database
 def getmessagelog(request, missionID):
     try:
         messagelog = MessageLog.objects.filter(missionID__exact=missionID)
@@ -294,7 +330,14 @@ def sendSystemMessage(request, missionID, status):
     missionInstance = Mission.objects.get(missionID=missionID)
     message = status
     name = "System"
-    updateID = 1
+
+    mID = MessageLog.objects.filter(missionID=missionID).values_list('updateID', flat=True).order_by('-updateID')
+
+    if mID:
+        uID = mID[0]
+        updateID = uID + 1
+    else:
+        updateID = 1
 
     key = -3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -313,3 +356,6 @@ def sendSystemMessage(request, missionID, status):
 
     obj.updateID = updateID
     obj.save()
+
+# get unassigned Commanders
+# def getUnassignedCommanders(request):
