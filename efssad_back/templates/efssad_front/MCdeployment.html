@@ -222,7 +222,7 @@
         </div>
 
 
-        <button type="button" class="btn btn-primary active">Deploy team</button>
+        <button type="button" class="btn btn-primary active" onclick="assignTeam()">Deploy team</button>
     </div>
 
 </div>
@@ -252,9 +252,6 @@
             }
 
             if(checkbox[i].checked == true){
-                <!--alert(checkbox[0].value);-->
-                <!--teamText.innerHTML = "hello " + checkbox[i].value;-->
-                assignAvailableSC(checkbox[i].value);
                 teamText.style.display = "block";
             }else{
                 teamText.style.display = "none";
@@ -263,8 +260,41 @@
 
     }
 
+    function assignTeam(){
+        var checkbox = document.getElementsByClassName("chkbox");
+        var teamText;
+        var i;
+        for(i=0; i<checkbox.length; i++){
+            switch(checkbox[i].value){
+                case "swat":
+                    teamText = document.getElementById("swatText");
+                    break;
+                case "sr":
+                    teamText = document.getElementById("srText");
+                    break;
+                case "cd":
+                    teamText = document.getElementById("cdText");
+                    break;
+                case "wf":
+                    teamText = document.getElementById("wfText");
+                    break;
+                case "eod":
+                    teamText = document.getElementById("eodText");
+                    break;
+            }
+        }
+        for(i=0; i<checkbox.length; i++){
+            if(checkbox[i].checked == true){
+                assignAvailableSC(checkbox[i].value);
+                teamText.style.display = "block";
+            }else{
+                teamText.style.display = "none";
+            }
+        }
+    }
+
     function assignAvailableSC(team){
-        <!--alert(team);-->
+        alert(team);
     }
 </script>
 {% endblock %}

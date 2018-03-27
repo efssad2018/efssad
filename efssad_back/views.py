@@ -53,7 +53,31 @@ def mcmain(request):
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
-    context = {'mission' : mission, 'message' : message}
+
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
+
+            dt = x.dateTime
+            cmdname = x.name
+            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
+
+            list.append(element)
+
+    context = {'mission': mission, 'message': list}
+    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCmission.html', context)
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
@@ -92,21 +116,29 @@ def scmissionID(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
 
+
     key = 3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     cipher = ''
 
     list = []
+    emptystring =""
     for x in message:
 
         if x.message and x.message not in list:
 
             cipher = ''
-            for c in x.message:
-                if c in dummy:
-                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
 
-            element ={'message': cipher}
+            for c in x.message:
+
+                if c in dummy:
+                        cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
+
+            dt = x.dateTime
+            cmdname= x.name
+            element ={'message': cipher,'dateTime': dt,'name': cmdname}
 
             list.append(element)
 
@@ -124,7 +156,31 @@ def archive(request):
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
-    context = {'mission': mission, 'message': message}
+
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
+
+            dt = x.dateTime
+            cmdname = x.name
+            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
+
+            list.append(element)
+
+    context = {'mission': mission, 'message': list}
+    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
 #get deployment details
@@ -142,11 +198,14 @@ def updateStatus(request, missionID, status):
     mission = getOneMission(request, missionID)
     mission.status = status
     mission.save()
+
     if mission.status.lower() == "cleanup":
+        sendSystemMessage(request, missionID, "Commence Cleanup")
         return redirect("missionDetail", missionID)
     else:
         mission.datetimeCompleted = datetime.now()
         mission.save()
+        sendSystemMessage(request, missionID, "Mission Completed")
         return redirect("archiveDetail", missionID)
 
 
@@ -175,6 +234,7 @@ def createMission(request): #- includes convertToObj()
 def getAllMissions(request):
     all_missions = Mission.objects.all()
     return all_missions
+
 #get only one mission
 def getOneMission(request, missionID):
     try:
@@ -184,11 +244,39 @@ def getOneMission(request, missionID):
     return mission
 #def getMissions(missionDescription)
 
-#def getUnassignedCommanders(request):
-
 #def assignSiteCommander(missionId, commanderId)
 #def redeploy(missionId)
 #def cleanup(missionId)
+
+# #send message to the database
+# def sendmessage(request):
+#     missionid = request.POST.get('missionID')
+#     missionInstance = Mission.objects.get(missionID=missionid)
+#     message = request.POST.get('message')
+#     name = request.user.username
+#     updateID = 1
+#
+#     key = -3
+#     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#
+#     obj = MessageLog()
+#     obj.missionID = (missionInstance)
+#
+#     cipher = ''
+#     for c in message:
+#         if c in dummy:
+#             cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+#             message = cipher
+#
+#     obj.message = message
+#     obj.name = name
+#
+#     obj.updateID = updateID
+#     obj.save()
+#     if Commander.objects.filter(username=name).filter(is_mainComm=True):
+#         return redirect("missionDetail", missionid)
+#     else:
+#         return redirect("scmissionID", missionid)
 
 #send message to the database
 def sendmessage(request):
@@ -196,7 +284,14 @@ def sendmessage(request):
     missionInstance = Mission.objects.get(missionID=missionid)
     message = request.POST.get('message')
     name = request.user.username
-    updateID = 1
+
+    mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by('-updateID')
+
+    if mID:
+        uID = mID[0]
+        updateID = uID + 1
+    else:
+        updateID = 1
 
     key = -3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -209,18 +304,24 @@ def sendmessage(request):
         if c in dummy:
             cipher += dummy[(dummy.index(c) + key) % len(dummy)]
             message = cipher
+        else:
+            cipher += " "
+
 
     obj.message = message
     obj.name = name
 
     obj.updateID = updateID
     obj.save()
-    return redirect("scmissionID", missionid)
+    if Commander.objects.filter(username=name).filter(is_mainComm=True):
+        return redirect("missionDetail", missionid)
+    else:
+        return redirect("scmissionID", missionid)
 
 
 #def convertUpdateToJSON()
-#get messagelog from database
 
+#get messagelog from database
 def getmessagelog(request, missionID):
     try:
         messagelog = MessageLog.objects.filter(missionID__exact=missionID)
@@ -246,6 +347,42 @@ def searchByMissionID(request):
     message = request.POST.get('message')
     return redirect("archiveDetail", message)
 
+#send system message when button is pressed
+def sendSystemMessage(request, missionID, status):
+    missionInstance = Mission.objects.get(missionID=missionID)
+    message = status
+    name = "System"
+
+    mID = MessageLog.objects.filter(missionID=missionID).values_list('updateID', flat=True).order_by('-updateID')
+
+    if mID:
+        uID = mID[0]
+        updateID = uID + 1
+    else:
+        updateID = 1
+
+    key = -3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    obj = MessageLog()
+    obj.missionID = (missionInstance)
+
+    cipher = ''
+    for c in message:
+        if c in dummy:
+            cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+            message = cipher
+        else:
+            cipher += " "
+
+    obj.message = message
+    obj.name = name
+
+    obj.updateID = updateID
+    obj.save()
+
+# get unassigned Commanders
+# def getUnassignedCommanders(request):
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allows users to be viewed or edited.
