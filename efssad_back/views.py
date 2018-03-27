@@ -45,7 +45,26 @@ def mcmain(request):
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
-    context = {'mission' : mission, 'message' : message}
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+
+            element = {'message': cipher}
+
+            list.append(element)
+
+    context = {'mission': mission, 'message': list}
+    #return render(request, 'efssad_front/MCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCmission.html', context)
     # all_missions = Mission.objects.all()
     # context = {'all_missions': all_missions}
@@ -207,7 +226,10 @@ def sendmessage(request):
 
     obj.updateID = updateID
     obj.save()
-    return redirect("scmissionID", missionid)
+    if Commander.objects.filter(username=name).filter(is_mainComm=True):
+        return redirect("missionDetail", missionid)
+    else:
+        return redirect("scmissionID", missionid)
 
 
 #def convertUpdateToJSON()
