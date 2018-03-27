@@ -59,6 +59,8 @@ def missionDetail(request, missionID):
             for c in x.message:
                 if c in dummy:
                     cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
 
             dt = x.dateTime
             cmdname = x.name
@@ -112,14 +114,19 @@ def scmissionID(request, missionID):
     cipher = ''
 
     list = []
+    emptystring =""
     for x in message:
 
         if x.message and x.message not in list:
 
             cipher = ''
+
             for c in x.message:
+
                 if c in dummy:
-                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                        cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
 
             dt = x.dateTime
             cmdname= x.name
@@ -155,6 +162,8 @@ def archiveDetail(request, missionID):
             for c in x.message:
                 if c in dummy:
                     cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
 
             dt = x.dateTime
             cmdname = x.name
@@ -285,6 +294,9 @@ def sendmessage(request):
         if c in dummy:
             cipher += dummy[(dummy.index(c) + key) % len(dummy)]
             message = cipher
+        else:
+            cipher += " "
+
 
     obj.message = message
     obj.name = name
