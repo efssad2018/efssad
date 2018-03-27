@@ -1,4 +1,5 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 
@@ -19,4 +20,9 @@ urlpatterns = [
     re_path(r'^archiveDetail/(?P<missionID>[0-9]+)$', views.archiveDetail, name='archiveDetail'),
     re_path(r'^missionDetail/(?P<missionID>[0-9]+)$', views.missionDetail, name='missionDetail'),
     re_path(r'^updateStatus/(?P<missionID>[0-9]+)/(?P<status>\w+)$', views.updateStatus, name='updateStatus'),
+    # re_path(r'^api-auth/', include('rest_framework.urls'))
+    re_path(r'^missions/$', views.MissionList.as_view()),
+    re_path(r'^missions/(?P<pk>[0-9]+)/$', views.MissionDetail.as_view()),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

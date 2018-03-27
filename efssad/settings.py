@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['efies.pythonanywhere.com']
 
 INSTALLED_APPS = [
     # 'leaflet',
+    'rest_framework',
+    'rest_framework.authtoken',
     'bootstrap3',
     'efssad_back',
     'django.contrib.admin',
@@ -165,3 +167,11 @@ AUTH_USER_MODEL = 'efssad_back.Commander'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+# REST_FRAMEWORK = {
+#     # Use Django's standard `django.contrib.auth` permissions,
+#     # or allow read-only access for unauthenticated users.
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+#     ]
+# }

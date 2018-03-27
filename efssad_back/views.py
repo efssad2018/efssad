@@ -3,8 +3,16 @@ import speech_recognition as sr
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, Http404
 from django.template import loader
-from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander
+from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Plan
 from datetime import datetime
+# from django.contrib.auth.models import User, Group
+# from rest_framework import viewsets
+# from efssad_back.serializers import UserSerializer, GroupSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from efssad_back.serializers import MissionSerializer, MessageLogSerializer, PlanSerializer
+from rest_framework import mixins, generics
 
 # Create your views here.
 #def login(request):
@@ -237,3 +245,83 @@ def convertToJSON(request):
 def searchByMissionID(request):
     message = request.POST.get('message')
     return redirect("archiveDetail", message)
+
+# class UserViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows users to be viewed or edited.
+#     """
+#     queryset = Commander.objects.all().order_by('-name')
+#     serializer_class = UserSerializer
+#
+#
+# class GroupViewSet(viewsets.ModelViewSet):
+#     """
+#     API endpoint that allows groups to be viewed or edited.
+#     """
+#     queryset = Group.objects.all()
+#     serializer_class = GroupSerializer
+
+# Lists all missions or create a new one
+# missions/
+class MissionList(APIView):
+    def get(self, request):
+        messagelogs = MessageLog.objects.all()
+        serializer = MessageLogSerializer(messagelogs, many=True)
+        return Response(serializer.data)
+
+    # let them create mission object
+    def post(self, request):
+        serializer = MissionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MissionDetail(generics.RetrieveUpdateDestroyAPIView):
+    def get_object(self, pk):
+        try:
+            return Mission.objects.get(pk=pk)
+        except Mission.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        mission = self.get_object(pk)
+        serializer = MissionSerializer(mission)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        mission = self.get_object(pk)
+        serializer = MissionSerializer(mission, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        mission = self.get_object(pk)
+        mission.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# # Lists all messagelogs or create a new one
+# # messagelogs/
+# class MessageLogList(APIView):
+#     def get(self, request):
+#         messagelogs = MessageLog.objects.all()
+#         serializer = MessageLogSerializer(messagelogs, many=True)
+#         return Response(serializer.data)
+#
+#     # let them create plan object
+#     def post(self):
+#         pass
+#
+# # Lists all plans or create a new one
+# # plans/
+# class PlanList(APIView):
+#     def get(self, request):
+#         plans = Plan.objects.all()
+#         serializer = PlanSerializer(plans, many=True)
+#         return Response(serializer.data)
+#
+#     # let them create plan object
+#     def post(self):
+#         pass
