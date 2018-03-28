@@ -12,7 +12,7 @@ from rest_framework import status
 from efssad_back.serializers import MissionSerializer, MessageLogSerializer, PlanSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from drf_multiple_model.views import FlatMultipleModelAPIView
+# from drf_multiple_model.views import FlatMultipleModelAPIView
 from django.contrib import messages
 import json
 
