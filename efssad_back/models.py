@@ -71,10 +71,12 @@ class Mission(models.Model):
         return self.missionID
     missionID = models.IntegerField()
     level = models.IntegerField()
+    title = models.CharField(max_length=1000)
     description = models.CharField(max_length=1000)
     datetimeReceived = models.DateTimeField()
     datetimeCompleted = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=1000)
+    is_crisisAbated = models.BooleanField(default=False)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -95,6 +97,7 @@ class MessageLog(models.Model):
     def __int__(self):
         return self.missionID
     missionID = models.IntegerField()
+    updateID = models.IntegerField()
     dateTime = models.DateTimeField(auto_now_add = True)
     message = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
