@@ -13,6 +13,7 @@ from efssad_back.serializers import MissionSerializer, MessageLogSerializer, Pla
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib import messages
+import json
 
 # Create your views here.
 #def login(request):
@@ -437,6 +438,33 @@ def unassignSiteCommander(request, missionID):
         ua = Commander.objects.get(name__iexact=asc)
         ua.is_deployed = False
         ua.save()
+
+def storeJSONintoDB():
+    text1 = JsonFormat.objects.values_list('json', flat=True)
+
+    data1 = list(chain("", text1))
+    str1 = ''.join(data1)
+    data = json.loads(str1)
+
+    missionObj = Mission()
+    missionObj.missionID = data["crisis_id"]
+    missionObj.level = data["incident_emergency_level"]
+    missionObj.title = data["crisis_title"]
+    missionObj.description = data["crisis_details"]
+    missionObj.datetimeReceived = datetime.now()
+    missionObj.latitude = data["crisis_latitude"]
+    missionObj.longitude = data["crisis_longitude"]
+    missionObj.save()
+    planObj = Plan()
+    planObj.missionID = data["crisis_id"]
+    planObj.planID = data["plan_id"]
+    planObj.title = data["plan_title"]
+    planObj.description = data["plan_description"]
+    planObj.team = data["plan_teams"]
+    planObj.action = data["plan_action"]
+    planObj.actiontime = datetime.now()
+    planObj.save()
+    return redirect("scmissionID",  missionObj.missionID)
 
 
 
