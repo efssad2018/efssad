@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'jsonify',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_multiple_model',
     'bootstrap3',
     'efssad_back',
     'django.contrib.admin',

@@ -12,6 +12,7 @@ from rest_framework import status
 from efssad_back.serializers import MissionSerializer, MessageLogSerializer, PlanSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from drf_multiple_model.views import FlatMultipleModelAPIView
 
 # Create your views here.
 #def login(request):
@@ -408,6 +409,52 @@ def getAllTeam(request):
 #     """
 #     queryset = Group.objects.all()
 #     serializer_class = GroupSerializer
+
+class UpdateList(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        updates = MessageLog.objects.all()
+        missions = Mission.objects.all()
+        updateserializer = MessageLogSerializer(updates, many=True)
+        missionserializer = MissionSerializer(missions, many=True)
+        content={
+            'update': updateserializer.data,
+            'crisis_abated': missionserializer.data,
+        }
+        return Response(content)
+
+class UpdateNew(APIView):
+    def get_object(self, pk):
+        try:
+            return MessageLog.objects.get(updateID=pk)
+        except MessageLog.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        update = self.get_object(pk)
+        mission = Mission.objects.get(missionID=update.missionID)
+        updateserializer = MessageLogSerializer(update)
+        missionserializer = MissionSerializer(mission)
+        content = {
+            'update': updateserializer.data,
+            'crisis_abated': missionserializer.data,
+        }
+        return Response(content)
+
+    def put(self, request, pk):
+        mission = self.get_object(pk)
+        serializer = MissionSerializer(mission, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        mission = self.get_object(pk)
+        mission.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Lists all missions or create a new one
 # missions/

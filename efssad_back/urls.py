@@ -26,6 +26,8 @@ urlpatterns = [
     re_path(r'^messagelogs/(?P<pk>[0-9]+)/$', views.MessageLogDetail.as_view()),
     re_path(r'^plans/$', views.PlanList.as_view()),
     re_path(r'^plans/(?P<pk>[0-9]+)/$', views.PlanDetail.as_view()),
+    re_path(r'^updates/$', views.UpdateList.as_view()),
+    re_path(r'^updates/new/(?P<pk>[0-9]+)/$', views.UpdateNew.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
