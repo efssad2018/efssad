@@ -3,10 +3,10 @@
 {% load jsonify %}
 
 {% block body %}
-{{commanders}}
-{{mission}}
-{{type}}
-{{type|length}}
+<!--{{commanders}}-->
+<!--{{mission}}-->
+<!--{{type}}-->
+<!--{{type|length}}-->
 <!-- map -->
 <!--{#% load leaflet_tags %}-->
 <!--{#% leaflet_js %}-->
@@ -314,6 +314,12 @@
     function displayTeam(){
         var type = {{ type|jsonify }};
         var commanders = {{ commanders|jsonify }};
+        var key = "CMO";
+        for(var n=0; n<commanders.length; n++){
+            if(commanders[n] == key){
+                commanders.splice(n,1);
+            }
+        }
         var checkbox = document.getElementsByClassName("chkbox");
         var teamText;
         var teamCommander;

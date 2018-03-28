@@ -35,7 +35,9 @@
                         <span id="missionDatetimeCompleted"> {{ mission.datetimeCompleted }}</span>
                         <br/>
                         <label>Site Commanders:</label>
-                        <span id="missionSC"></span>
+                        {% for sc in assignedSC %}
+                        <span id="missionSC">{{sc}}.</span>
+                        {% endfor %}
                         <br/>
                         <label>Status:</label>
                         <!--new - green, ongoing - yellow, cleanup - blue, completed - grey-->

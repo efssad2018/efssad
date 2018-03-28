@@ -142,6 +142,7 @@ def archive(request):
 def archiveDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
+    assignedSC = getAssignedCommanders(request, missionID)
 
     key = 3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -165,7 +166,7 @@ def archiveDetail(request, missionID):
 
             list.append(element)
 
-    context = {'mission': mission, 'message': list}
+    context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
@@ -237,6 +238,7 @@ def updateStatus(request, missionID, status):
     else:
         mission.datetimeCompleted = datetime.now()
         mission.save()
+        unassignSiteCommander(request, missionID)
         sendSystemMessage(request, missionID, "Mission Completed")
         return redirect("archiveDetail", missionID)
 
@@ -455,6 +457,19 @@ def getAssignedCommanders(request, missionID):
     assignedSC = AssignedCommander.objects.filter(missionID=missionID).values_list('name', flat=True)
     assignedSC = list(chain("", assignedSC))
     return assignedSC
+
+#unassign commanders upon mission complete
+def unassignSiteCommander(request, missionID):
+    assignedSC = getAssignedCommanders(request, missionID)
+    for asc in assignedSC:
+        ua = Commander.objects.get(name__iexact=asc)
+        ua.is_deployed = False
+        ua.save()
+
+
+
+
+
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
