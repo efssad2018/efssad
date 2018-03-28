@@ -409,6 +409,8 @@ def assignSiteCommander(request):
                 assignedsc.missionID = missionID
                 assignedsc.name = sc.name
                 assignedsc.save()
+
+        updateStatus(request, missionID, "Ongoing")
         return redirect("missionDetail", missionID)
     else:
         messages.info(request, 'No Available Commander!')
