@@ -27,11 +27,7 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
 ALLOWED_HOSTS = ['efies.pythonanywhere.com']
-=======
-ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
->>>>>>> 8a5c3a871050d5014f40ddb5161a0961a45d90e2
 
 
 # Application definition
