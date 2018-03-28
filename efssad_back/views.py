@@ -167,7 +167,6 @@ def archiveDetail(request, missionID):
             list.append(element)
 
     context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
-    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
 #get deployment details
@@ -179,8 +178,6 @@ def deployment(request, missionID):
         typelist = getTeamType(request, commander)
         allType = list(chain(allType,typelist))
     commander = list(chain("",commanders))
-
-    # asdad
 
     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
 
@@ -197,7 +194,11 @@ def updateStatus(request, missionID, status):
     mission.status = status
     mission.save()
 
-    if mission.status.lower() == "cleanup":
+    if mission.status.lower() == "ongoing":
+        sendSystemMessage(request, missionID, "Teams Deployed")
+        return redirect("missionDetail", missionID)
+
+    elif mission.status.lower() == "cleanup":
         sendSystemMessage(request, missionID, "Commence Cleanup")
         return redirect("missionDetail", missionID)
     else:
@@ -407,6 +408,7 @@ def assignSiteCommander(request):
             sc.is_deployed = True
             sc.save()
 
+
         for x in assignSC.split(','):
             assignedsc = AssignedCommander()
             assignedsc.missionID = missionID
@@ -414,11 +416,12 @@ def assignSiteCommander(request):
             assignedsc.save()
 
         updateStatus(request, missionID, "Ongoing")
-        sendSystemMessage(request, missionID, "Commence Mission")
         return redirect("missionDetail", missionID)
     else:
         messages.info(request, 'No Available Commander!')
         return redirect("deployment", missionID)
+
+
 
 
 #get assigned commanders based on missionID
