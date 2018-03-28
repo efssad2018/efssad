@@ -180,6 +180,8 @@ def deployment(request, missionID):
         allType = list(chain(allType,typelist))
     commander = list(chain("",commanders))
 
+    # asdad
+
     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
 
     return render(request, 'efssad_front/MCdeployment.html', context)
@@ -401,16 +403,18 @@ def assignSiteCommander(request):
     if assignSC:
         for x in assignSC.split(','):
             sc = Commander.objects.get(name__iexact=x)
-            if sc:
-                sc.is_deployed = True
-                sc.save()
+            # if sc:
+            sc.is_deployed = True
+            sc.save()
 
-                assignedsc = AssignedCommander()
-                assignedsc.missionID = missionID
-                assignedsc.name = sc.name
-                assignedsc.save()
+        for x in assignSC.split(','):
+            assignedsc = AssignedCommander()
+            assignedsc.missionID = missionID
+            assignedsc.name = x
+            assignedsc.save()
 
         updateStatus(request, missionID, "Ongoing")
+        sendSystemMessage(request, missionID, "Commence Mission")
         return redirect("missionDetail", missionID)
     else:
         messages.info(request, 'No Available Commander!')
