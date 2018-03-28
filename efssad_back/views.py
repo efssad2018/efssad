@@ -170,56 +170,19 @@ def archiveDetail(request, missionID):
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
-# #get deployment details
-# def deployment(request, missionID):
-#     mission = getOneMission(request, missionID)
-#     commanders = getUnassignedCommanders(request)
-#     # types = getAllTeam(request)
-#     # allType = list(chain(commanders, types))
-#     allType = ""
-#     for commander in commanders:
-#         typelist = getTeamType(request, commander)
-#         allType = list(chain(allType,typelist))
-#     commander = list(chain("",commanders))
-#
-#     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
-#     # i = c
-#     return render(request, 'efssad_front/MCdeployment.html', context)
-
 #get deployment details
 def deployment(request, missionID):
     mission = getOneMission(request, missionID)
     commanders = getUnassignedCommanders(request)
-    # types = getAllTeam(request)
-    # allType = list(chain(commanders, types))
     allType = ""
     for commander in commanders:
         typelist = getTeamType(request, commander)
         allType = list(chain(allType,typelist))
     commander = list(chain("",commanders))
 
-    update_assign_cmd_result = update_assign_cmd(request, missionID, typelist ,commander)
-
     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
-    # i = c
+
     return render(request, 'efssad_front/MCdeployment.html', context)
-
-##############################testing purpose #####################
-def update_assign_cmd(requst, missionID, typelist, commander):
-    get_names_from_types_result = []
-
-    for get_names_from_types in typelist:
-        if get_names_from_types == Team.type:
-            get_names_from_types_result = Team.commander ## Get specify cmder based on available types
-
-        #else do nothing or error
-    for update_assign_cmd_result in get_names_from_types_result:
-        if update_assign_cmd_result == AssignedCommander.name:
-            ##save the table
-            AssignedCommander.missionID = missionID
-
-    x = True # Update success
-    return x
 
 #get mission
 def getMissions(request, missionDescription):
