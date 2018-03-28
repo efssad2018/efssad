@@ -12,6 +12,7 @@ from rest_framework import status
 from efssad_back.serializers import MissionSerializer, MessageLogSerializer, PlanSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.contrib import messages
 
 # Create your views here.
 #def login(request):
@@ -52,6 +53,7 @@ def mcmain(request):
 def missionDetail(request, missionID):
     mission = getOneMission(request, missionID)
     message = getmessagelog(request, missionID)
+    assignedSC = getAssignedCommanders(request, missionID)
 
     key = 3
     dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -75,7 +77,7 @@ def missionDetail(request, missionID):
 
             list.append(element)
 
-    context = {'mission': mission, 'message': list}
+    context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
     return render(request, 'efssad_front/MCmission.html', context)
 
 #redirect the sc to the appropriate sc page
@@ -167,6 +169,22 @@ def archiveDetail(request, missionID):
     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
     return render(request, 'efssad_front/MCarchivedetails.html', context)
 
+# #get deployment details
+# def deployment(request, missionID):
+#     mission = getOneMission(request, missionID)
+#     commanders = getUnassignedCommanders(request)
+#     # types = getAllTeam(request)
+#     # allType = list(chain(commanders, types))
+#     allType = ""
+#     for commander in commanders:
+#         typelist = getTeamType(request, commander)
+#         allType = list(chain(allType,typelist))
+#     commander = list(chain("",commanders))
+#
+#     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
+#     # i = c
+#     return render(request, 'efssad_front/MCdeployment.html', context)
+
 #get deployment details
 def deployment(request, missionID):
     mission = getOneMission(request, missionID)
@@ -179,9 +197,28 @@ def deployment(request, missionID):
         allType = list(chain(allType,typelist))
     commander = list(chain("",commanders))
 
+    update_assign_cmd_result = update_assign_cmd(request, missionID, typelist ,commander)
+
     context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
     # i = c
     return render(request, 'efssad_front/MCdeployment.html', context)
+
+##############################testing purpose #####################
+def update_assign_cmd(requst, missionID, typelist, commander):
+    get_names_from_types_result = []
+
+    for get_names_from_types in typelist:
+        if get_names_from_types == Team.type:
+            get_names_from_types_result = Team.commander ## Get specify cmder based on available types
+
+        #else do nothing or error
+    for update_assign_cmd_result in get_names_from_types_result:
+        if update_assign_cmd_result == AssignedCommander.name:
+            ##save the table
+            AssignedCommander.missionID = missionID
+
+    x = True # Update success
+    return x
 
 #get mission
 def getMissions(request, missionDescription):
@@ -239,7 +276,7 @@ def getOneMission(request, missionID):
     return mission
 #def getMissions(missionDescription)
 
-#def assignSiteCommander(missionId, commanderId)
+
 #def redeploy(missionId)
 #def cleanup(missionId)
 
@@ -391,8 +428,33 @@ def getAllTeam(request):
     type = Team.objects.all()
     return type
 
-# get unassigned Commanders
-# def getUnassignedCommanders(request):
+# assign site commanders to mission
+def assignSiteCommander(request):
+    missionID = request.POST.get('missionID')
+    assignSC = request.POST.get('scAva')
+
+    if assignSC:
+        for x in assignSC.split(','):
+            sc = Commander.objects.get(name__iexact=x)
+            if sc:
+                sc.is_deployed = True
+                sc.save()
+
+                assignedsc = AssignedCommander()
+                assignedsc.missionID = missionID
+                assignedsc.name = sc.name
+                assignedsc.save()
+        return redirect("missionDetail", missionID)
+    else:
+        messages.info(request, 'No Available Commander!')
+        return redirect("deployment", missionID)
+
+
+#get assigned commanders based on missionID
+def getAssignedCommanders(request, missionID):
+    assignedSC = AssignedCommander.objects.filter(missionID=missionID).values_list('name', flat=True)
+    assignedSC = list(chain("", assignedSC))
+    return assignedSC
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
