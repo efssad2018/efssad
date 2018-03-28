@@ -1,7 +1,12 @@
 {% extends 'efssad_front/master.html' %}
 {% load staticfiles %}
+{% load jsonify %}
 
 {% block body %}
+<!--{{commanders}}-->
+<!--{{mission}}-->
+<!--{{type}}-->
+<!--{{type|length}}-->
 <!-- map -->
 <!--{#% load leaflet_tags %}-->
 <!--{#% leaflet_js %}-->
@@ -20,7 +25,7 @@
                 <div class="panel-body">
                     <div style="float:left; width: 58%; #border:1px solid red;">
                         <label>ID:</label>
-                        <span id="missionID"> {{ mission.missionID }}</span>
+                        <span id="mID"> {{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
                         <span id="missionLevel">{{ mission.level }}</span>
@@ -198,73 +203,214 @@
     <h2>Team Selection</h2>
 
     <!--checkbox for team deployment appear here-->
-    <div style="width: 400px; margin-top: 20px;">
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label>
-            </h5>
-            <p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> cd</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label></h5>
-            <p id="swatText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> swat</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="wf">War Fighter</label></h5>
-            <p id="wfText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> wf</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="eod">Explosives and Ordnance Disposal</label></h5>
-            <p id="eodText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> eod</p>
-        </div>
-        <div class="checkbox" style="padding-bottom: 7px;">
-            <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label></h5>
-            <p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> sr</p>
-        </div>
+    <div class="form-group">
+        <form action="{% url 'assignSiteCommander' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}"/>
+            <input type="hidden" id="scAva" name="scAva"/>
+
+            <div style="width: 400px; margin-top: 20px;">
+                <div class="checkbox" style="padding-bottom: 7px;">
+                    <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil
+                        Defence</label>
+                    </h5>
+                    <p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;">
+                        <strong>Site Commander Assigned:</strong> cd</p>
+                </div>
+                <div class="checkbox" style="padding-bottom: 7px;">
+                    <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label>
+                    </h5>
+                    <p id="swatText"
+                       style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site
+                        Commander Assigned:</strong> swat</p>
+                </div>
+                <div class="checkbox" style="padding-bottom: 7px;">
+                    <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="wf">War
+                        Fighter</label></h5>
+                    <p id="wfText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;">
+                        <strong>Site Commander Assigned:</strong> wf</p>
+                </div>
+                <div class="checkbox" style="padding-bottom: 7px;">
+                    <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="eod">Explosives and
+                        Ordnance Disposal</label></h5>
+                    <p id="eodText"
+                       style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site
+                        Commander Assigned:</strong> eod</p>
+                </div>
+                <div class="checkbox" style="padding-bottom: 7px;">
+                    <h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and
+                        Rescue</label></h5>
+                    <p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;">
+                        <strong>Site Commander Assigned:</strong> sr</p>
+                </div>
 
 
-        <button type="button" class="btn btn-primary active">Deploy team</button>
+                <button type="submit" class="btn btn-primary active">Deploy team</button>
+            </div>
+            </form>
     </div>
+    <!--<div style="width: 400px; margin-top: 20px;">-->
+        <!--<div class="checkbox" style="padding-bottom: 7px;">-->
+            <!--<h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="cd">Civil Defence</label>-->
+            <!--</h5>-->
+            <!--<p id="cdText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> cd</p>-->
+        <!--</div>-->
+        <!--<div class="checkbox" style="padding-bottom: 7px;">-->
+            <!--<h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="swat">SWAT</label></h5>-->
+            <!--<p id="swatText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> swat</p>-->
+        <!--</div>-->
+        <!--<div class="checkbox" style="padding-bottom: 7px;">-->
+            <!--<h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="wf">War Fighter</label></h5>-->
+            <!--<p id="wfText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> wf</p>-->
+        <!--</div>-->
+        <!--<div class="checkbox" style="padding-bottom: 7px;">-->
+            <!--<h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="eod">Explosives and Ordnance Disposal</label></h5>-->
+            <!--<p id="eodText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> eod</p>-->
+        <!--</div>-->
+        <!--<div class="checkbox" style="padding-bottom: 7px;">-->
+            <!--<h5><label><input class="chkbox" onclick="displayTeam()" type="checkbox" value="sr">Search and Rescue</label></h5>-->
+            <!--<p id="srText" style="display:none; border: 1px solid LightGrey; border-radius: 5px; padding:15px;"><strong>Site Commander Assigned:</strong> sr</p>-->
+        <!--</div>-->
+
+
+        <!--<button type="button" class="btn btn-primary active" onclick="assignTeam()">Deploy team</button>-->
+    <!--</div>-->
 
 </div>
 <script>
-    function displayTeam(){
+    <!--function displayTeam(){-->
 
+        <!--var checkbox = document.getElementsByClassName("chkbox");-->
+        <!--var teamText;-->
+        <!--var i;-->
+        <!--for(i=0; i<checkbox.length; i++){-->
+            <!--switch(checkbox[i].value){-->
+                <!--case "swat":-->
+                    <!--teamText = document.getElementById("swatText");-->
+                    <!--break;-->
+                <!--case "sr":-->
+                    <!--teamText = document.getElementById("srText");-->
+                    <!--break;-->
+                <!--case "cd":-->
+                    <!--teamText = document.getElementById("cdText");-->
+                    <!--break;-->
+                <!--case "wf":-->
+                    <!--teamText = document.getElementById("wfText");-->
+                    <!--break;-->
+                <!--case "eod":-->
+                    <!--teamText = document.getElementById("eodText");-->
+                    <!--break;-->
+            <!--}-->
+
+            <!--if(checkbox[i].checked == true){-->
+                <!--teamText.style.display = "block";-->
+            <!--}else{-->
+                <!--teamText.style.display = "none";-->
+            <!--}-->
+        <!--} &lt;!&ndash; end of forloop &ndash;&gt;-->
+
+    <!--}-->
+
+    function displayTeam(){
+        var type = {{ type|jsonify }};
+        var commanders = {{ commanders|jsonify }};
+        var key = "CMO";
+        for(var n=0; n<commanders.length; n++){
+            if(commanders[n] == key){
+                commanders.splice(n,1);
+            }
+        }
         var checkbox = document.getElementsByClassName("chkbox");
         var teamText;
+        var teamCommander;
         var i;
-        for(i=0; i<checkbox.length; i++){
-            switch(checkbox[i].value){
-                case "swat":
-                    teamText = document.getElementById("swatText");
-                    break;
-                case "sr":
-                    teamText = document.getElementById("srText");
-                    break;
-                case "cd":
-                    teamText = document.getElementById("cdText");
-                    break;
-                case "wf":
-                    teamText = document.getElementById("wfText");
-                    break;
-                case "eod":
-                    teamText = document.getElementById("eodText");
-                    break;
-            }
+        var j;
+        var scAva = false;
+        var assignCommanders = [];
 
+        for(i=0; i<checkbox.length; i++){
             if(checkbox[i].checked == true){
-                <!--alert(checkbox[0].value);-->
-                <!--teamText.innerHTML = "hello " + checkbox[i].value;-->
-                assignAvailableSC(checkbox[i].value);
-                teamText.style.display = "block";
-            }else{
+                for(j=0; j<type.length; j++){
+                    <!--alert("cb value: " + checkbox[i].value);-->
+                    <!--alert("type: " + type[j].toLowerCase());-->
+                    compare = checkbox[i].value.localeCompare(type[j].toLowerCase());
+                    if(compare == 0){
+                        scAva = true;
+                        teamText = type[j].toLowerCase()+"Text";
+                        teamText = document.getElementById(teamText);
+                        teamCommander = commanders[j];
+                        teamText.innerHTML = "Site Commander Assigned: " + teamCommander;
+
+                        assignCommanders.push(teamCommander);
+                        teamText.style.display = "block";
+                        break;
+                    }
+                }
+                if(!scAva){
+                    teamText = checkbox[i].value + "Text";
+                    teamText = document.getElementById(teamText);
+                    teamText.innerHTML = "Site Commander Assigned: Not Available" ;
+                    teamText.style.display = "block";
+                }
+            }
+            else{
+                teamText = checkbox[i].value + "Text";
+                teamText = document.getElementById(teamText);
                 teamText.style.display = "none";
             }
-        } <!-- end of forloop -->
 
+        }
+        assignAvailableSC(assignCommanders);
+    }
+
+    function assignTeam(){
+        var type = {{ type|jsonify }};
+        var commanders = {{ commanders|jsonify }};
+        var checkbox = document.getElementsByClassName("chkbox");
+        var teamText;
+        var teamCommander;
+        var i;
+        var j;
+        var assignCommanders = [];
+
+        for(i=0; i<checkbox.length; i++){
+            if(checkbox[i].checked == true){
+                for(j=0; j<type.length; j++){
+                    <!--alert("cb value: " + checkbox[i].value);-->
+                    <!--alert("type: " + type[j].toLowerCase());-->
+                    compare = checkbox[i].value.localeCompare(type[j].toLowerCase());
+                    if(compare == 0){
+                        teamText = type[j].toLowerCase()+"Text";
+                        teamText = document.getElementById(teamText);
+                        teamCommander = commanders[j];
+                        teamText.innerHTML = "Site Commander Assigned: " + teamCommander;
+
+                        assignCommanders.push(teamCommander);
+                        teamText.style.display = "block";
+                        break;
+                    }
+                }
+            }
+            else{
+                teamText = checkbox[i].value + "Text";
+                teamText = document.getElementById(teamText);
+                teamText.style.display = "none";
+            }
+
+        }
+        assignAvailableSC(assignCommanders);
     }
 
     function assignAvailableSC(team){
         <!--alert(team);-->
+        <!--$.ajax({-->
+        <!--type: 'POST',-->
+        <!--url: '/assignSiteCommander/',-->
+        <!--data: {'assignSC[]': team, 'missionID': {{mission.missionID}}},-->
+    <!--});-->
+    document.getElementById('scAva').value = team;
+    <!--alert(document.getElementById('scAva').value);-->
+    <!--alert("end function");-->
     }
 </script>
 {% endblock %}

@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from jsonfield import JSONField
+import collections
+
+class JsonFormat(models.Model):
+    json = JSONField()
+
 class MyUserManager(BaseUserManager):
     def create_user(self, rank, name, username, password):
         user = self.model(
@@ -111,7 +117,7 @@ class Plan(models.Model):
     description = models.CharField(max_length=1000)
     team = models.CharField(max_length=1000)
     action = models.CharField(max_length=1000)
-    actiontime = models.DateTimeField()
+    plantime = models.DateTimeField()
 
 
 

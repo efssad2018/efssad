@@ -27,13 +27,21 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['efies.pythonanywhere.com']
+=======
+ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
+>>>>>>> 8a5c3a871050d5014f40ddb5161a0961a45d90e2
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # 'leaflet',
+    'jsonify',
+    'rest_framework',
+    'rest_framework.authtoken',
+    # 'drf_multiple_model',
     'bootstrap3',
     'efssad_back',
     'django.contrib.admin',
@@ -164,4 +172,13 @@ LOGIN_REDIRECT_URL = '/mainmenu/'
 AUTH_USER_MODEL = 'efssad_back.Commander'
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
