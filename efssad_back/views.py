@@ -477,7 +477,9 @@ class UpdateList(APIView):
 class UpdateNew(APIView):
     def get_object(self, pk):
         try:
-            return MessageLog.objects.get(updateID=pk)
+            mission = Mission.objects.get(missionID=pk)
+            if MessageLog.objects.filter(missionID=mission.missionID).order_by("-updateID")[0]:
+                return MessageLog.objects.filter(missionID=mission.missionID).order_by("-updateID")[0]
         except MessageLog.DoesNotExist:
             raise Http404
 
@@ -492,18 +494,18 @@ class UpdateNew(APIView):
         }
         return Response(content)
 
-    def put(self, request, pk):
-        mission = self.get_object(pk)
-        serializer = MissionSerializer(mission, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        mission = self.get_object(pk)
-        mission.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    # def put(self, request, pk):
+    #     mission = self.get_object(pk)
+    #     serializer = MissionSerializer(mission, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    # def delete(self, request, pk):
+    #     mission = self.get_object(pk)
+    #     mission.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Lists all missions or create a new one
 # missions/
