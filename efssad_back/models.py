@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from jsonfield import JSONField
+import collections
+
+class JsonFormat(models.Model):
+    json = JSONField()
+
 class MyUserManager(BaseUserManager):
     def create_user(self, rank, name, username, password):
         user = self.model(
