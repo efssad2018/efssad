@@ -28,6 +28,7 @@ urlpatterns = [
     re_path(r'^plans/(?P<pk>[0-9]+)/$', views.PlanDetail.as_view()),
     re_path(r'^updates/$', views.UpdateList.as_view()),
     re_path(r'^updates/new/(?P<pk>[0-9]+)/$', views.UpdateNew.as_view()),
+    path('assignSiteCommander/', views.assignSiteCommander, name='assignSiteCommander'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

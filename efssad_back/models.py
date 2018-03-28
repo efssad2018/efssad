@@ -111,7 +111,7 @@ class Plan(models.Model):
     description = models.CharField(max_length=1000)
     team = models.CharField(max_length=1000)
     action = models.CharField(max_length=1000)
-    actiontime = models.DateTimeField()
+    plantime = models.DateTimeField()
 
 
 
