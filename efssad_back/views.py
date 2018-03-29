@@ -171,8 +171,12 @@ def scmission(request):
                             return redirect("nomissions")
 
                     if query:
-                        q = query.values_list('missionID', flat=True)
-                        return redirect("scmissionID", q.first())
+                        q = query.values_list('missionID', flat=True).order_by('-missionID')
+                        status = getDeploymentStatus(request, username)
+                        if status[0]:
+                            return redirect("scmissionID", q.first())
+                        else:
+                            return redirect("nomissions")
                     else:
                         return redirect("nomissions")
 
@@ -517,8 +521,7 @@ def sendmessage(request):
                     message = request.POST.get('message')
                     name = request.user.username
 
-                    mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by(
-                        '-updateID')
+                    mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by('-updateID')
 
                     if mID:
                         uID = mID[0]
@@ -816,6 +819,34 @@ def storeJSONintoDB():
 def getDeploymentStatus(request, commander):
     status = list(Commander.objects.filter(name__iexact=commander).values_list('is_deployed', flat=True))
     return status
+
+#update msglog table
+def updateMsgLog(request):
+    missionID = int(request.GET['missionID'])
+    message = getmessagelog(request, missionID)
+    key = 3
+    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    cipher = ''
+
+    list = []
+    for x in message:
+
+        if x.message and x.message not in list:
+
+            cipher = ''
+            for c in x.message:
+                if c in dummy:
+                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                else:
+                    cipher += " "
+
+            dt = x.dateTime
+            cmdname = x.name
+            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
+
+            list.append(element)
+
+    return render(request, 'efssad_front/updateMsgLog.html', {'message' : list})
 
 
 

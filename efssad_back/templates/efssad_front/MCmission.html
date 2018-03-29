@@ -119,27 +119,23 @@
 
     <h2>Mission Control Centre</h2>
 
-    <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
-        <table class="table borderless">
-            <thead style="background:black; color: white; height: 50px;">
+     <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
+        <table class="table borderless" id="msglog">
+            <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
             <tr>
-                <th scope="col" class="col-md-1">Commander</th>
-                <th scope="col" class="col-md-2">Time</th>
-                <th scope="col" class="col-md-10">Message</th>
+                <th scope="col" style="text-align:center;width:140px">Commander</th>
+                <th scope="col" style="text-align:left;width:200px">Date-Time</th>
+                <th scope="col">Message</th>
             </tr>
-
             </thead>
-
-            <tbody>
-             {% for messagelog in message %}
+            {% for messagelog in message reversed%}
             <tr>
-                <th scope="row">{{ messagelog.name }}</th>
+                <td><strong>{{ messagelog.name }}</strong></td>
                 <td>{{ messagelog.dateTime }}</td>
                 <td>{{ messagelog.message }}</td>
             </tr>
-        {% endfor %}
-            </tbody>
+            {% endfor %}
         </table>
     </div>
 
@@ -398,5 +394,20 @@
 		});
 
 	</script>
+
+<script>
+    setInterval(function(){
+        var mID = {{ mission.missionID }};
+        $.ajax({
+            type: "GET",
+            url: {% url 'updateMsgLog' %},
+            data :{'missionID' : mID}
+        })
+        .done(function(response){
+            $('#msglog td').remove();
+            $('#msglog').append(response);
+        });
+    }, 10000)
+</script>
 
 {% endblock %}

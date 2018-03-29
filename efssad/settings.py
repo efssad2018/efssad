@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     # 'leaflet',
-    'livereload',
     'jsonify',
     'rest_framework',
     'rest_framework.authtoken',
