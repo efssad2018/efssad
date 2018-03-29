@@ -90,8 +90,12 @@ def scmission(request):
     except AssignedCommander.DoesNotExist:
         return redirect("nomissions")
     if query:
-        q = query.values_list('missionID', flat=True)
-        return redirect("scmissionID", q.first())
+        q = query.values_list('missionID', flat=True).order_by('-missionID')
+        status = getDeploymentStatus(request, username)
+        if status[0]:
+            return redirect("scmissionID", q.first())
+        else:
+            return redirect("nomissions")
     else:
         return redirect("nomissions")
 
@@ -467,8 +471,10 @@ def storeJSONintoDB():
     planObj.save()
     return redirect("scmissionID",  missionObj.missionID)
 
-
-
+#get deployment status of commander
+def getDeploymentStatus(request, commander):
+    status = list(Commander.objects.filter(name__iexact=commander).values_list('is_deployed', flat=True))
+    return status
 
 
 
