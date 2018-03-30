@@ -5,13 +5,33 @@
 
 <!--  -->
 <script>
-<!--function viewPlan(){-->
-    <!--var rows = document.getElementsByTagName("tr");-->
-    <!---->
-<!--}-->
-
 $(document).ready(function(){
+    <!--$.ajax({-->
+        <!--url: 'http://127.0.0.1:8000/test/new/1',-->
+        <!--type: 'GET',-->
+        <!--success: function(data){-->
+            <!--&lt;!&ndash;console.log("my data: " + data.message);&ndash;&gt;-->
+            <!--alert(data);-->
+            <!--&lt;!&ndash;alert('hi');&ndash;&gt;-->
+        <!--},-->
+        <!--failure: function(data){-->
+            <!--alert('Got an error dude');-->
+        <!--}-->
+    <!--});-->
 });
+
+function testReceive(){
+    $.ajax({
+        url: 'http://127.0.0.1:8000/test/new/1',
+        type: 'get',
+        success: function(data){
+            alert(data);
+        },
+        failure: function(data){
+            alert('Got error');
+        }
+    });
+}
 
 function receiveMission(){
     var crisis1 = {
@@ -68,11 +88,30 @@ function receiveMission(){
     action.onclick = "location.href='/deployment/" + crisis1.crisis_id + "';";
     Actioncell.appendChild(action);
 }
+
+<!--(function poll(){-->
+    <!--setTimeout(function(){-->
+        <!--var req = $.ajax({-->
+                    <!--url: "http://127.0.0.1:8000/updates/new/1",-->
+                    <!--type: "GET",-->
+                    <!--success: function (response) {-->
+                        <!--console.log(response);-->
+                    <!--},-->
+                    <!--dataType: "json",-->
+                    <!--timeout: 2000,-->
+                    <!--headers: {-->
+                        <!--'Content-type': 'application/json',-->
+                        <!--'Authorization': 'Token 479b4e2edc4adbb44722432a8fd27e626d577b80',-->
+                    <!--}-->
+
+        <!--})-->
+    <!--}, 5000);-->
+<!--})();-->
 </script>
 
 <div class="container">
     <h2>Mission List</h2>
-    <button type="button" class="btn btn-primary active" onclick="receiveMission()">Test Receive Mission</button>
+    <button id="receiveBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission</button>
     <table id="missionTable" class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
             <tr>

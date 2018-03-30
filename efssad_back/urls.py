@@ -28,6 +28,8 @@ urlpatterns = [
     re_path(r'^plans/(?P<pk>[0-9]+)/$', views.PlanDetail.as_view()),
     re_path(r'^updates/$', views.UpdateList.as_view()),
     re_path(r'^updates/new/(?P<pk>[0-9]+)/$', views.UpdateNew.as_view()),
+    # re_path(r'^updates/new/(?P<pk>[0-9]+)/$', views.UpdatePull),
+    re_path(r'^test/new/(?P<pk>[0-9]+)/$', views.PullFromCMO, name='pullFromCMO'),
     path('assignSiteCommander/', views.assignSiteCommander, name='assignSiteCommander'),
 ]
 

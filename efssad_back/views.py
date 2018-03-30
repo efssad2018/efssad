@@ -15,6 +15,9 @@ from rest_framework.permissions import IsAuthenticated
 # from drf_multiple_model.views import FlatMultipleModelAPIView
 from django.contrib import messages
 import json
+import requests
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 # Create your views here.
 #def login(request):
@@ -472,6 +475,7 @@ def storeJSONintoDB():
 
 
 
+
 # class UserViewSet(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allows users to be viewed or edited.
@@ -487,9 +491,34 @@ def storeJSONintoDB():
 #     queryset = Group.objects.all()
 #     serializer_class = GroupSerializer
 
+# trying jiawei's method - dk how to return data from both mission obj and messagelogs obj into one json
+# currently only returns messagelogs obj as json
+def UpdatePull(request, pk):
+    mission = Mission.objects.get(missionID=pk)
+    messagelogs = MessageLog.objects.filter(missionID=mission.missionID)
+    updates = serializers.serialize('json',messagelogs,cls=DjangoJSONEncoder)
+    return HttpResponse(updates, content_type='application/json')
+
+# using python requests library to get json from url
+# dk how to maintain on the mcmain page, currently it directs to the json page
+def PullFromCMO(request, pk):
+    url = "http://127.0.0.1:8000/updates/new/" + pk
+    print(url)
+    header = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token 479b4e2edc4adbb44722432a8fd27e626d577b80'
+    }
+    r = requests.get(url, headers=header)
+    jsonData = json.loads(r.content)
+    print(jsonData)
+    # context = {'jsonFromCMO': json.dumps(jsonData), 'all_missions' : getAllMissions(request)}
+    # return redirect('mcmain', context)
+    return HttpResponse(json.dumps(jsonData), content_type='application/json')
+
+# /updates/
 class UpdateList(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         updates = MessageLog.objects.all()
@@ -502,25 +531,31 @@ class UpdateList(APIView):
         }
         return Response(content)
 
+# /updates/new/<missionID>
 class UpdateNew(APIView):
     def get_object(self, pk):
         try:
             mission = Mission.objects.get(missionID=pk)
-            if MessageLog.objects.filter(missionID=mission.missionID).order_by("-updateID")[0]:
+            if MessageLog.objects.filter(missionID=mission.missionID):
                 return MessageLog.objects.filter(missionID=mission.missionID).order_by("-updateID")[0]
-        except MessageLog.DoesNotExist:
+            else:
+                return MessageLog()
+        except (MessageLog.DoesNotExist, Mission.DoesNotExist):
             raise Http404
 
     def get(self, request, pk):
         update = self.get_object(pk)
-        mission = Mission.objects.get(missionID=update.missionID)
-        updateserializer = MessageLogSerializer(update)
-        missionserializer = MissionSerializer(mission)
-        content = {
-            'update': updateserializer.data,
-            'crisis_abated': missionserializer.data,
-        }
-        return Response(content)
+        if update.missionID is not None:
+            mission = Mission.objects.get(missionID=update.missionID)
+            updateserializer = MessageLogSerializer(update)
+            missionserializer = MissionSerializer(mission)
+            content = {
+                'update': updateserializer.data,
+                'crisis_abated': missionserializer.data,
+            }
+            return Response(content)
+        else:
+            raise Http404
 
     # def put(self, request, pk):
     #     mission = self.get_object(pk)
