@@ -887,10 +887,15 @@ def PullFromCMO(request, pk):
     }
     r = requests.get(url, headers=header)
     jsonData = json.loads(r.content)
+    # str1 = ''.join(data)
     print(jsonData)
+    # w = jsonData['update']
+    w = json.dumps(jsonData)
     # context = {'jsonFromCMO': json.dumps(jsonData), 'all_missions' : getAllMissions(request)}
     # return redirect('mcmain', context)
-    return HttpResponse(json.dumps(jsonData), content_type='application/json')
+    # return HttpResponse(json.dumps(jsonData), content_type='application/json')
+    context = {'jsonData' : jsonData, 'all_missions' : getAllMissions(request)}
+    return render(request, 'efssad_front/MCmain.html', context)
 
 # /updates/
 class UpdateList(APIView):
