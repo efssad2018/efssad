@@ -166,6 +166,7 @@ GEOPOSITION_MARKER_OPTIONS = {
 }
 
 LOGIN_REDIRECT_URL = '/mainmenu/'
+LOGOUT_REDIRECT_URL = '/account/login'
 
 AUTH_USER_MODEL = 'efssad_back.Commander'
 

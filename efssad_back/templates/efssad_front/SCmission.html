@@ -1,12 +1,23 @@
 {% extends 'efssad_front/master.html' %}
 {% load staticfiles %}
 
-{% block body %}
-<!-- map -->
-<!--{#% load leaflet_tags %}-->
-<!--{#% leaflet_js %}-->
-<!--{#% leaflet_css %}-->
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Header -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="/accounts/login">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+                    </a>
+                </li>
+            </ul>
+    </div>
+</nav>
+{% endblock %}
 
+{% block body %}
+{% if mission %}
 <div class="container">
     <h2>Mission Details</h2>
     <div class="panel-group" id="missionDetail">
@@ -18,37 +29,35 @@
             </div>
             <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    <div style="float:left; width: 58%; #border:1px solid red;">
+                    <!--<div style="float:left; width: 50%;">-->
                         <label>ID:</label>
                         <span id="mID">{{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
-                        <span id="missionLevel">{{ mission.level }}</span>
+                        <span id="missionLevel"> {{ mission.level }} </span>
                         <br/>
                         <label>Description:</label>
-                        <span id="missionDesc">{{ mission.description }}</span>
+                        <span id="missionDesc"> {{ mission.description }}</span>
                         <br/>
-                        <label>Time:</label>
-                        <span id="missionDatetime">{{ mission.datetimeReceived }}</span>
+                        <label>DateTime Received:</label>
+                        <span id="dateTimeReceived"> {{ mission.datetimeReceived }}</span>
+                        <br/>
+                        <label>DateTime Completed:</label>
+                        <span id="dateTimeCompleted"> {{ mission.datetimeCompleted }}</span>
                         <br/>
                         <label>Site Commanders:</label>
-                        {% for sc in assignedSC %}
-                        <span id="missionSC">{{sc}}.</span>
-                        {% endfor %}
+                        <span id="SC"> {{ user.get_username }}</span>
                         <br/>
                         <label>Status:</label>
-                        <!--new - green, ongoing - yellow, cleanup - blue, completed - grey-->
-                        <span id="missionStatus"class="#" style="font-size: 15px">{{ mission.status }}</span>
-
-
+                        <span id="missionStatus"class="missionStatus" style="font-size: 15px">{{ mission.status }}</span>
                         <br/>
-                    </div>
 
-                    <div style="#border:1px solid blue;">
+                    <!--</div>-->
+                    <!--<div id="map">-->
                         <label>Location:</label>
                         <br/>
                         <div id="temp" hidden="true"></div>
-                        <div id='locationMap' style='width: 450px; height: 250px;'></div>
+                        <div id='locationMap' style='width: 450px; height: 250px; z-index:1;'></div>
                         <script>
                             <!-- mapbox access token -->
                             <!--mapboxgl.accessToken = 'pk.eyJ1IjoiZWZzc2FkMjAxOCIsImEiOiJjamVweW92cjAwMjBqMnBwN2hjdjI2c2U0In0.xrb23x0OU1w5ow36J543xA';-->
@@ -73,51 +82,24 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>Zombie Invasion</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
+
                         </script>
-                    </div>
+                    <!--</div>-->
                 </div>
-            </div>
                 <!--<div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,-->
-                <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
-                <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
+                    <!--sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+                    <!--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.-->
                 <!--</div>-->
-        </div>
-
-    </div>
-
-    <div id="btnGroup" style="float:right">
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span id="numOfNewPlans" class="badge"><strong>!</strong></span>&nbsp New plan from CMO</button>
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Modal Header</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Some text in the modal.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-
             </div>
+
         </div>
-        <button type="button" class="btn btn-primary" id="btn_complete" onclick="complete()">Complete</button>
-        <button type="button" class="btn btn-primary" id="btn_redeployment" onclick="location.href='/deployment/{{ mission.missionID }}';">Redeployment</button>
-        <button type="button" class="btn btn-primary" id="btn_cleanUp" onclick="cleanup()">Clean up</button>
-        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.160.17:8080/browserfs.html')">Livestream</button>
     </div>
 
-    <h2>Mission Control Centre</h2>
+    <h2>Message Logs</h2>
 
     <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
         <table class="table borderless" id="msglog">
@@ -140,84 +122,22 @@
     </div>
 
 
-    <br/>
-    <div class="form-group">
-        <form action="{% url 'sendmessage' %}" method="POST">
-            {% csrf_token %}
+     <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
+         <div class="input-single ">
+                    <form action="{% url 'sendmessage' %}" method = "POST">
+                    {% csrf_token %}
 
-            <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}"/>
-            <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
-            <textarea name="message" id="note-textarea" rows="4" class="form-control"></textarea>
-            <br/>
-            <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px; float: right;" return
-                    false> SEND
-            </button>
-        </form>
-    </div>
+                    <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
+                    <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
+                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="35"></textarea>
+                    <a href="#">
+                        <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 45px;" aria-hidden="true" return false></button></a>
 
+                    <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
+                 </form>
+         </div>
 
-</div>
-
-<!-- script for different button -->
-<script>
-    var status = document.getElementById('missionStatus').innerHTML.toLowerCase();
-    status = status.replace(/\s/g,'');
-    if(status == "ongoing"){
-        document.getElementById("missionStatus").className = "label label-warning";
-        document.getElementById("btn_complete").style.display="none";
-    }
-    if(status == "cleanup"){
-        document.getElementById("missionStatus").className = "label label-info";
-        document.getElementById("btn_redeployment").style.display="none";
-        document.getElementById("btn_cleanUp").style.display="none";
-    }
-
-    if(status == "complete"){
-        document.getElementById("missionStatus").className = "label label-default";
-        document.getElementById("btnGroup").style.display="none";
-    }
-
-    if(status == "completed"){
-        document.getElementById("missionStatus").className = "label label-default";
-        document.getElementById("btnGroup").style.display="none";
-    }
-
-</script>
-
-<!-- script for updating status button -->
-<script>
-    function cleanup(){
-        document.getElementById('missionStatus').innerHTML = "Cleanup";
-        document.getElementById("missionStatus").className = "label label-info";
-        document.location.href="/updateStatus/{{ mission.missionID }}/Cleanup";
-    }
-
-    function complete(){
-        document.getElementById('missionStatus').innerHTML = "Completed";
-        document.getElementById("missionStatus").className = "label label-info";
-        document.location.href="/updateStatus/{{ mission.missionID }}/Completed";
-    }
-
-</script>
-
-<!-- script for updating status button -->
-<script>
-    function cleanup(){
-        document.getElementById('missionStatus').innerHTML = "Cleanup";
-        document.getElementById("missionStatus").className = "label label-info";
-        document.location.href="/updateStatus/{{ mission.missionID }}/Cleanup";
-    }
-
-    function complete(){
-        document.getElementById('missionStatus').innerHTML = "Completed";
-        document.getElementById("missionStatus").className = "label label-info";
-        document.location.href="/updateStatus/{{ mission.missionID }}/Completed";
-    }
-
-</script>
-
-
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
          <script>
             try {
                 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -394,6 +314,14 @@
 		});
 
 	</script>
+     </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <h4 style="text-align:center;">You have no missions assigned.</h4>
+</div>
+{% endif %}
 
 <script>
     setInterval(function(){
@@ -410,5 +338,4 @@
         });
     }, 5000)
 </script>
-
 {% endblock %}

@@ -19,6 +19,7 @@ from django.shortcuts import redirect
 import requests
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
+from django.urls import reverse
 
 # Create your views here.
 #def login(request):
@@ -40,6 +41,15 @@ from django.core.serializers.json import DjangoJSONEncoder
 def user(request):
     return redirect("accounts/login")
 
+#logout
+def logout(request):
+    request.session.flush()
+
+    #request.session['user'] = ""
+    #request.session['id'] = ""
+    #request.session['dir'] = ""
+    return redirect("user")
+
 #redirect user to their respective login menu
 
 def mainmenu(request):
@@ -57,37 +67,36 @@ def mainmenu(request):
         return redirect("/admin")
     else:
         request.session['Sesusername'] = ""
-        return redirect(user)
+        #del request.session['Sesusername']
+        return redirect("user")
 
 #request main page of mc
 def mcmain(request):
     fav_color = request.session.get('Sesusername')
     fav_dir= request.session.get('dir')
-    fav_id = request.session.get('id')
     if fav_color is not None:
         if request.user.is_authenticated is not None:
                 loginuser = request.user.username
                 if Commander.objects.filter(username=loginuser).filter(is_admin=True):
-                    return redirect("user")
+                    return redirect(user)
 
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
-                    if fav_dir is not None:
-                        if fav_id is not None:
-                            return redirect("scmission"+"/"+fav_id)
-                        else:
-                            return redirect(fav_dir)
+                    fav_id = request.session.get('Id')
+
+                    if fav_id is not None:
+                        return redirect(scmission, fav_id)
+                        ###return redirect("scmission"+"/"+fav_ID)
                     else:
                         return redirect("scmission")
 
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
-                    if fav_dir is not None:
-                        return redirect(fav_dir)
-                    else:
+
+                        request.session['id'] = ""
                         context = {'all_missions': getAllMissions(request)}
-                        #request.session['dir'] = "mcmain"
+                        request.session['dir'] = "mcmain"
                         return render(request, 'efssad_front/MCmain.html', context)
     else:
-        return redirect("user")
+                return redirect("user")
 
 
 #mission detail page for mc
@@ -104,7 +113,8 @@ def missionDetail(request, missionID):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return  redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir, fav_id)
+                        ###return  redirect(fav_dir+"/"+fav_id)
                     else:
                         return redirect(fav_dir)
                 else:
@@ -146,26 +156,25 @@ def missionDetail(request, missionID):
 #redirect the sc to the appropriate sc page
 def scmission(request):
     fav_color = request.session.get('Sesusername')
-    fav_dir = request.session.get('dir')
     fav_id = request.session.get('id')
+    fav_dir = request.session.get('dir')
 
     if fav_color is not None:
-
             if request.user.is_authenticated is not None:
                 loginuser = request.user.username
                 if Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
                     if fav_dir is not None:
                         if fav_id is not None:
-                            return redirect(fav_dir+"/"++fav_id)
+                            return redirect(fav_dir, fav_id)
                         else:
-                            return  redirect(fav_dir)
+                            return redirect(fav_dir)
                     else:
                         return redirect("mcmain")
 
                 elif Commander.objects.filter(username=loginuser).filter(is_admin=True):
                     return redirect("/admin")
 
-                elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
+                else:
                     username = request.user.name
                     try:
                         query = AssignedCommander.objects.filter(name=username)
@@ -200,15 +209,19 @@ def nomissions(request):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return  redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir, fav_id)
+                        ###return  redirect(fav_dir+"/"+fav_id)
                     else:
                         return redirect(fav_dir)
                 else:
                     return redirect("mcmain")
 
             else:
-                request.session['dir'] = "nomissions"
-                return render(request, 'efssad_front/SCmission.html')
+                if fav_id is not None:
+                    return redirect("scmission")
+                else:
+                    request.session['dir'] = "nomissions"
+                    return render(request, 'efssad_front/SCmission.html')
     else:
         return redirect("user")
 
@@ -225,7 +238,8 @@ def scmissionID(request, missionID):
             if Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir,fav_id)
+
                     else:
                         return redirect(fav_dir)
                 else:
@@ -235,9 +249,11 @@ def scmissionID(request, missionID):
                 return redirect("/admin")
 
             elif Commander.objects.filter(username=loginuser).filter(is_admin=False):
-                if fav_dir is not None:
-                    return redirect(fav_dir)
-                else:
+                # Commented out the if-else to test MsgLog
+                # if fav_dir is not None:
+                #     will return here, dir as nomissions but sc is assigned to mission
+                    # return redirect(fav_dir)
+                # else:
                     mission = getOneMission(request, missionID)
                     message = getmessagelog(request, missionID)
 
@@ -261,6 +277,7 @@ def scmissionID(request, missionID):
 
                     context = {'mission': mission, 'message': list}
                     request.session['id'] = missionID
+
                     # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
                     return render(request, 'efssad_front/SCmission.html', context)
     else:
@@ -283,14 +300,17 @@ def archive(request):
                 return redirect("scmission")
                 if fav_dir is not None:
                     if fav_ID is not None:
-                        return redirect("scmission" + "/" + fav_ID)
+                        return redirect(scmission, fav_id)
+                        ###return redirect("scmission/" + fav_ID)
                     else:
-                        return redirect(fav_dir)
+                        return redirect("nomissions")
                 else:
                         return redirect("scmission")
             else:
                 context = {'all_missions': getAllMissions(request)};
                 request.session['dir'] = "archive"
+
+                request.session['id'] = ""
                 return render(request, 'efssad_front/MCarchive.html', context)
 
     else:
@@ -310,9 +330,10 @@ def archiveDetail(request, missionID):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return redirect(fav_dir+"/"+fav_id)
+                        return redirect(scmission, fav_id)
+                        ###return redirect("scmission/"+fav_id)
                     else:
-                        return redirect(fav_dir)
+                        return redirect("nomissions")
                 else:
                     return redirect("scmission")
             else:
@@ -344,7 +365,7 @@ def archiveDetail(request, missionID):
 
                 context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
                 request.session['dir'] = "archiveDetail"
-                request.session['id']=missionID
+                request.session['id']= missionID
                 return render(request, 'efssad_front/MCarchivedetails.html', context)
     else:
         return redirect("user")
@@ -362,7 +383,8 @@ def deployment(request, missionID):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir, fav_id)
+                        ###return redirect(fav_dir+"/"+fav_id)
                     else:
                         return redirect(fav_dir)
                 else:
@@ -401,7 +423,8 @@ def updateStatus(request, missionID, status):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir, fav_id)
+                        ###return redirect(fav_dir+"/"+fav_id)
                     else:
                         return redirect(fav_dir)
                 else:
@@ -426,7 +449,8 @@ def updateStatus(request, missionID, status):
 
                     request.session['id'] = missionID
                     request.session['dir'] = "archiveDetail"
-                    return redirect("archiveDetail", missionID)
+                    return redirect(archiveDetail, missionID)
+                    ###return redirect(archiveDetail+"/"+ missionID)
     else:
         return redirect("user")
 
@@ -660,7 +684,8 @@ def searchByMissionID(request):
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_dir is not None:
                     if fav_id is not None:
-                        return redirect(fav_dir+"/"+fav_id)
+                        return redirect(fav_dir, fav_id)
+                       ### return redirect(fav_dir+"/"+fav_id)
                     else:
                         return  redirect(fav_dir)
                 else:
@@ -706,6 +731,7 @@ def sendSystemMessage(request, missionID, status):
     obj.updateID = updateID
     obj.save()
 
+
 # get unassigned Commanders
 def getUnassignedCommanders(request):
     uaCommanders = Commander.objects.filter(is_deployed=False, is_admin=False, is_mainComm=False).values_list('name', flat=True)
@@ -735,7 +761,7 @@ def assignSiteCommander(request):
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                     if fav_dir is not None:
                         if fav_id is not None:
-                            return redirect(fav_dir+"/"+fav_id)
+                            return redirect(fav_dir,fav_id)
                         else:
                             return redirect(fav_dir)
                     else:
@@ -768,7 +794,7 @@ def assignSiteCommander(request):
     else:
         if fav_dir is not None:
             if fav_id is not None:
-                return redirect(fav_dir+"/"+fav_id)
+                return redirect(fav_dir,fav_id)
             else:
                 return redirect(fav_dir)
         else:
@@ -782,6 +808,31 @@ def getAssignedCommanders(request, missionID):
     assignedSC = AssignedCommander.objects.filter(missionID=missionID).values_list('name', flat=True)
     assignedSC = list(chain("", assignedSC))
     return assignedSC
+
+# assign site commanders to mission
+def assignSiteCommanders(request):
+    missionID = request.POST.get('missionID')
+    assignSC = request.POST.get('scAva')
+
+    if assignSC:
+        for x in assignSC.split(','):
+            sc = Commander.objects.get(name__iexact=x)
+            # if sc:
+            sc.is_deployed = True
+            sc.save()
+
+
+        for x in assignSC.split(','):
+            assignedsc = AssignedCommander()
+            assignedsc.missionID = missionID
+            assignedsc.name = x
+            assignedsc.save()
+
+        updateStatus(request, missionID, "Ongoing")
+        return redirect("missionDetail", missionID)
+    else:
+        messages.info(request, 'No Available Commander!')
+        return redirect("deployment", missionID)
 
 #unassign commanders upon mission complete
 def unassignSiteCommander(request, missionID):
