@@ -3,7 +3,7 @@ import speech_recognition as sr
 from django.contrib.auth import authenticate
 from django.http import HttpResponse, Http404
 from django.template import loader
-from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Team, Plan
+from efssad_back.models import Mission, AssignedCommander, MessageLog, Commander, Team, Plan, JsonFormat
 from datetime import datetime
 from itertools import chain
 from rest_framework.views import APIView
@@ -66,7 +66,7 @@ def mainmenu(request):
         request.session['Sesusername'] = "efadmin"
         return redirect("/admin")
     else:
-        request.session['Sesusername'] = ""
+        request.session['Sesusername'] = None
         #del request.session['Sesusername']
         return redirect("user")
 
@@ -91,7 +91,7 @@ def mcmain(request):
 
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
 
-                        request.session['id'] = ""
+                        request.session['id'] = None
                         context = {'all_missions': getAllMissions(request)}
                         request.session['dir'] = "mcmain"
                         return render(request, 'efssad_front/MCmain.html', context)
@@ -148,7 +148,7 @@ def missionDetail(request, missionID):
                         list.append(element)
 
                 context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
-                request.session['dir'] = "mcmain"
+                request.session['dir'] = "deployment"
                 request.session['id'] = missionID
                 return render(request, 'efssad_front/MCmission.html', context)
     else:
@@ -185,8 +185,13 @@ def scmission(request):
                     if query:
                         q = query.values_list('missionID', flat=True).order_by('-missionID')
                         status = getDeploymentStatus(request, username)
-                        if status[0]:
-                            return redirect("scmissionID", q.first())
+                        if status is not None:
+                            if fav_dir is "nomissions":
+                                return redirect("nomissions")
+                            else:
+                                request.session['dir'] = "scmissionID"
+                                request.session['id'] = q.first()
+                                return redirect("scmissionID", q.first())
                         else:
                             return redirect("nomissions")
                     else:
@@ -221,6 +226,7 @@ def nomissions(request):
                     return redirect("scmission")
                 else:
                     request.session['dir'] = "nomissions"
+                    request.session['id']= None
                     return render(request, 'efssad_front/SCmission.html')
     else:
         return redirect("user")
@@ -250,36 +256,38 @@ def scmissionID(request, missionID):
 
             elif Commander.objects.filter(username=loginuser).filter(is_admin=False):
                 # Commented out the if-else to test MsgLog
-                # if fav_dir is not None:
+                 #if fav_dir is None:
                 #     will return here, dir as nomissions but sc is assigned to mission
-                    # return redirect(fav_dir)
-                # else:
-                    mission = getOneMission(request, missionID)
-                    message = getmessagelog(request, missionID)
 
-                    key = 3
-                    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    cipher = ''
-                    list = []
-                    emptystring = ""
-                    for x in message:
-                        if x.message and x.message not in list:
-                            cipher = ''
-                            for c in x.message:
-                                if c in dummy:
-                                    cipher += dummy[(dummy.index(c) + key) % len(dummy)]
-                                else:
-                                    cipher += " "
-                            dt = x.dateTime
-                            cmdname = x.name
-                            element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
-                            list.append(element)
+                if fav_id is None:
+                    return redirect("nomissions")
+                else:
+                        mission = getOneMission(request, missionID)
+                        message = getmessagelog(request, missionID)
 
-                    context = {'mission': mission, 'message': list}
-                    request.session['id'] = missionID
+                        key = 3
+                        dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        cipher = ''
+                        list = []
+                        emptystring = ""
+                        for x in message:
+                            if x.message and x.message not in list:
+                                cipher = ''
+                                for c in x.message:
+                                    if c in dummy:
+                                        cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                                    else:
+                                        cipher += " "
+                                dt = x.dateTime
+                                cmdname = x.name
+                                element = {'message': cipher, 'dateTime': dt, 'name': cmdname}
+                                list.append(element)
 
-                    # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
-                    return render(request, 'efssad_front/SCmission.html', context)
+                        context = {'mission': mission, 'message': list}
+                        #request.session['dir'] = "scmissionID"
+                        #request.session['id'] = missionID
+                        # return render(request, 'efssad_front/SCmission.html', {'mission' : mission} ,{'messages' : messages})
+                        return render(request, 'efssad_front/SCmission.html', context)
     else:
         return redirect("user")
 
@@ -305,12 +313,12 @@ def archive(request):
                     else:
                         return redirect("nomissions")
                 else:
-                        return redirect("scmission")
+                        return redirect("scmissions")
             else:
                 context = {'all_missions': getAllMissions(request)};
                 request.session['dir'] = "archive"
 
-                request.session['id'] = ""
+                request.session['id'] = None
                 return render(request, 'efssad_front/MCarchive.html', context)
 
     else:
@@ -533,7 +541,7 @@ def getOneMissionForArchive(request, missionID):
 #send message to the database
 def sendmessage(request):
     fav_color = request.session.get('Sesusername')
-    fav_id = request.session.get('ID')
+    fav_id = request.session.get('id')
     fav_dir = request.session.get('dir')
 
     if fav_color is not None:
@@ -543,44 +551,46 @@ def sendmessage(request):
                 return redirect("/admin")
             elif Commander.objects.filter(username=loginuser).filter(is_mainComm=False):
                 if fav_id is not None:
-                    missionid = request.POST.get('missionID')
-                    missionInstance = Mission.objects.get(missionID=missionid)
-                    message = request.POST.get('message')
-                    name = request.user.username
+                    if fav_dir is not None:
+                        missionid = request.POST.get('missionID')
+                        missionInstance = Mission.objects.get(missionID=missionid)
+                        message = request.POST.get('message')
+                        name = request.user.username
 
-                    mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by('-updateID')
+                        mID = MessageLog.objects.filter(missionID=missionid).values_list('updateID', flat=True).order_by('-updateID')
 
-                    if mID:
-                        uID = mID[0]
-                        updateID = uID + 1
-                    else:
-                        updateID = 1
-
-                    key = -3
-                    dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-                    obj = MessageLog()
-                    obj.missionID = (missionInstance)
-
-                    cipher = ''
-                    for c in message:
-                        if c in dummy:
-                            cipher += dummy[(dummy.index(c) + key) % len(dummy)]
-                            message = cipher
+                        if mID:
+                            uID = mID[0]
+                            updateID = uID + 1
                         else:
-                            cipher += " "
+                            updateID = 1
 
-                    obj.message = message
-                    obj.name = name
+                        key = -3
+                        dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-                    obj.updateID = updateID
-                    obj.save()
-                    if Commander.objects.filter(username=name).filter(is_mainComm=True):
-                        return redirect("missionDetail", missionid)
-                    else:
+                        obj = MessageLog()
+                        obj.missionID = (missionInstance)
+
+                        cipher = ''
+                        for c in message:
+                            if c in dummy:
+                                cipher += dummy[(dummy.index(c) + key) % len(dummy)]
+                                message = cipher
+                            else:
+                                cipher += " "
+
+                        obj.message = message
+                        obj.name = name
+
+                        obj.updateID = updateID
+                        obj.save()
+
+                       # if Commander.objects.filter(username=name).filter(is_mainComm=True):
+                       #     return redirect("missionDetail", missionid)
+                        # else:
                         return redirect("scmissionID", missionid)
                 else:
-                    return redirect("scmission")
+                    return redirect("nomissions")
 
             else:
                 if fav_id is not None:
@@ -617,10 +627,10 @@ def sendmessage(request):
 
                     obj.updateID = updateID
                     obj.save()
-                    if Commander.objects.filter(username=name).filter(is_mainComm=True):
-                        return redirect("missionDetail", missionid)
-                    else:
-                        return redirect("scmissionID", missionid)
+                    #if Commander.objects.filter(username=name).filter(is_mainComm=True):
+                    return redirect("missionDetail", missionid)
+                    #else:
+                    #    return redirect("scmissionID", missionid)
                 else:
                     return redirect("mcmain")
     else:
