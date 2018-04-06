@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Getting AJAX Content</title>
+    <meta charset="UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        (function poll() {
+        setTimeout(function() {
+                   $.ajax({
+                          url: "https://infosoftpmo.info/plans/json/",
+                          xhrFields: {
+                            withCredentials: false
+                          },
+                          headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                          },
+                          type: "GET",
+                          beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', 'Token a528483d8d71425d3a5220c6034ae583d24a86cd')
+                          },
+                          error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('jqXHR:' + jqXHR);
+
+                                console.log('textStatus:' + textStatus);
+
+                                console.log('errorThrown:' + errorThrown);
+
+                          },
+                          success: function(data) {
+
+                          // check if null return (no results from API)
+                          if (data == null) {
+                                console.log('no data!');
+                          } else {
+                                console.log('new data!');
+                                console.log(data);
+
+                                document.getElementById("user").innerHTML = data.user;
+                                document.getElementById("demo").innerHTML = data.plans[0]['plan_title'];
+
+                          }
+                          },
+                          dataType: "json",
+                          complete: poll,
+                          timeout: 2000
+                          })
+                   }, 3000);
+        })();
+
+    </script>
+
+</head>
+<body>
+<p>Hello what am i doing here</p>
+<p id="user"></p>
+<p id="demo"></p>
+</body>
+
+
+</html>

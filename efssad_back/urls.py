@@ -33,6 +33,7 @@ urlpatterns = [
     re_path(r'^test/new/(?P<pk>[0-9]+)/$', views.PullFromCMO, name='pullFromCMO'),
     path('assignSiteCommander/', views.assignSiteCommander, name='assignSiteCommander'),#done 222
     path('updateMsgLog/', views.updateMsgLog, name='updateMsgLog'),
+    path('ajax/', views.testAjax, name='testAjax'), #done123
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1144,3 +1144,7 @@ class PlanDetail(APIView):
         plan = self.get_object(pk)
         plan.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def testAjax(request):
+    return render(request, 'efssad_front/ajax.html')

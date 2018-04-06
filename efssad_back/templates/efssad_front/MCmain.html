@@ -113,6 +113,7 @@ function receiveMission(){
 <div class="container">
     <h2>Mission List</h2>
     <button id="receiveBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission</button>
+    <button id="ajaxBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'testAjax' %}'">Test AJAX</button>
     <table id="missionTable" class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
             <tr>
