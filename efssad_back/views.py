@@ -981,29 +981,34 @@ class UpdateNew(APIView):
             mission = Mission.objects.get(missionID=pk)
             lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
             if MessageLog.objects.filter(missionID=mission.missionID):
-                return MessageLog.objects.filter(missionID=mission.missionID).get(updateID=lastReceivedPlan.planID)
+                if lastReceivedPlan:
+                    return MessageLog.objects.filter(missionID=mission.missionID).get(updateID=lastReceivedPlan.planID)
+                else:
+                    return MessageLog()
             else:
                 return MessageLog()
         except (MessageLog.DoesNotExist, Mission.DoesNotExist):
             raise Http404
 
-    def get(self, request, pk):
+    def get(self, request):
         all_missions = getAllMissions(request)
         for m in all_missions:
-            update = self.get_object(m.missionID)
-            # update = self.get_object(pk)
+            if m.level == 3:
+                # testID = 1
+                update = self.get_object(m.missionID)
+                # update = self.get_object(pk)
 
-            if update.missionID is not None:
-                mission = Mission.objects.get(missionID=update.missionID)
-                updateserializer = MessageLogSerializer(update)
-                missionserializer = MissionSerializer(mission)
-                content = {
-                    'update': updateserializer.data,
-                    'crisis_abated': missionserializer.data,
-                }
-                return Response(content)
-            else:
-                raise Http404
+                if update.missionID is not None:
+                    mission = Mission.objects.get(missionID=update.missionID)
+                    updateserializer = MessageLogSerializer(update)
+                    missionserializer = MissionSerializer(mission)
+                    content = {
+                        'update': updateserializer.data,
+                        'crisis_abated': missionserializer.data,
+                    }
+                    return Response(content)
+                else:
+                    raise Http404
 
     # def put(self, request, pk):
     #     mission = self.get_object(pk)
