@@ -974,31 +974,36 @@ class UpdateList(APIView):
         }
         return Response(content)
 
-# /updates/new/<missionID>
+# /updates/new/
 class UpdateNew(APIView):
     def get_object(self, pk):
         try:
             mission = Mission.objects.get(missionID=pk)
+            lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
             if MessageLog.objects.filter(missionID=mission.missionID):
-                return MessageLog.objects.filter(missionID=mission.missionID).order_by("-updateID")[0]
+                return MessageLog.objects.filter(missionID=mission.missionID).get(updateID=lastReceivedPlan.planID)
             else:
                 return MessageLog()
         except (MessageLog.DoesNotExist, Mission.DoesNotExist):
             raise Http404
 
     def get(self, request, pk):
-        update = self.get_object(pk)
-        if update.missionID is not None:
-            mission = Mission.objects.get(missionID=update.missionID)
-            updateserializer = MessageLogSerializer(update)
-            missionserializer = MissionSerializer(mission)
-            content = {
-                'update': updateserializer.data,
-                'crisis_abated': missionserializer.data,
-            }
-            return Response(content)
-        else:
-            raise Http404
+        all_missions = getAllMissions(request)
+        for m in all_missions:
+            update = self.get_object(m.missionID)
+            # update = self.get_object(pk)
+
+            if update.missionID is not None:
+                mission = Mission.objects.get(missionID=update.missionID)
+                updateserializer = MessageLogSerializer(update)
+                missionserializer = MissionSerializer(mission)
+                content = {
+                    'update': updateserializer.data,
+                    'crisis_abated': missionserializer.data,
+                }
+                return Response(content)
+            else:
+                raise Http404
 
     # def put(self, request, pk):
     #     mission = self.get_object(pk)
