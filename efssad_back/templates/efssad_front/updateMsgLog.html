@@ -1,0 +1,8 @@
+{% load staticfiles %}
+{% for messagelog in message reversed%}
+            <tr>
+                <td style="height: 40px"><strong>{{ messagelog.name }}</strong></th>
+                <td>{{ messagelog.dateTime }}</td>
+                <td>{{ messagelog.message }}</td>
+            </tr>
+ {% endfor %}

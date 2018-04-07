@@ -31,7 +31,7 @@
                 <div class="panel-body">
                     <!--<div style="float:left; width: 50%;">-->
                         <label>ID:</label>
-                        <span id="missionIdNum">{{ mission.missionID }}</span>
+                        <span id="mID">{{ mission.missionID }}</span>
                         <br/>
                         <label>Level:</label>
                         <span id="missionLevel"> {{ mission.level }} </span>
@@ -101,23 +101,25 @@
 
     <h2>Message Logs</h2>
 
-    <table class="table borderless">
-        <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
+    <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
+        <table class="table borderless" id="msglog">
+            <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
             <tr>
                 <th scope="col" style="text-align:center;width:140px">Commander</th>
                 <th scope="col" style="text-align:left;width:200px">Date-Time</th>
                 <th scope="col">Message</th>
             </tr>
-        </thead>
-        {% for messagelog in message %}
+            </thead>
+            {% for messagelog in message reversed%}
             <tr>
-                <th scope="row">{{ messagelog.name }}</th>
+                <td><strong>{{ messagelog.name }}</strong></td>
                 <td>{{ messagelog.dateTime }}</td>
                 <td>{{ messagelog.message }}</td>
             </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
+    </div>
 
 
      <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
@@ -320,4 +322,20 @@
     <h4 style="text-align:center;">You have no missions assigned.</h4>
 </div>
 {% endif %}
+
+<script>
+    setInterval(function(){
+        var mID = {{ mission.missionID }};
+        <!--document.write(mID);-->
+        $.ajax({
+            type: "GET",
+            url: {% url 'updateMsgLog' %},
+            data :{'missionID' : mID}
+        })
+        .done(function(response){
+            $('#msglog td').remove();
+            $('#msglog').append(response);
+        });
+    }, 5000)
+</script>
 {% endblock %}

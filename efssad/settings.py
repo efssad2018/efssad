@@ -27,14 +27,15 @@ SECRET_KEY = '=^a)3t#u_nh*io_a6%)j-(aaimhh)hps_d*1ezpx+i(5=u2soe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
-ALLOWED_HOSTS = ['efies.pythonanywhere.com']
+ALLOWED_HOSTS = ['efies.pythonanywhere.com', '127.0.0.1']
+# ALLOWED_HOSTS = ['efies.pythonanywhere.com']
 
 # Application definition
 
 INSTALLED_APPS = [
     # 'leaflet',
     'jsonify',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     # 'drf_multiple_model',
@@ -58,6 +59,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -164,6 +168,7 @@ GEOPOSITION_MARKER_OPTIONS = {
 }
 
 LOGIN_REDIRECT_URL = '/mainmenu/'
+LOGOUT_REDIRECT_URL = '/account/login'
 
 AUTH_USER_MODEL = 'efssad_back.Commander'
 
@@ -178,3 +183,30 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+
+#LIVERELOAD_HOST = '127.0.0.1'
+
+#LIVERELOAD_PORT = '8000'
