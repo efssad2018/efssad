@@ -40,7 +40,7 @@
                                 console.log('new data!');
                                 console.log(data);
 
-                                document.getElementById("mission").innerHTML = data.update.missionID;
+                                document.getElementById("mission").innerHTML = data.crises[0].title;
                                 document.getElementById("update").innerHTML = data.update.updateID;
                                 document.getElementById("message").innerHTML = data.update.message;
 
