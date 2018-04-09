@@ -6,33 +6,51 @@
 <body>
 <!--  -->
 <script>
-$(document).ready(function(){
-    <!--$.ajax({-->
-        <!--url: 'http://127.0.0.1:8000/test/new/1',-->
-        <!--type: 'GET',-->
-        <!--success: function(data){-->
-            <!--&lt;!&ndash;console.log("my data: " + data.message);&ndash;&gt;-->
-            <!--alert(data);-->
-            <!--&lt;!&ndash;alert('hi');&ndash;&gt;-->
-        <!--},-->
-        <!--failure: function(data){-->
-            <!--alert('Got an error dude');-->
-        <!--}-->
-    <!--});-->
-});
+(function poll() {
+        setTimeout(function() {
+                   $.ajax({
+                          <!--url: "https://infosoftpmo.info/plans/json/",-->
+                          url: "https://efies.pythonanywhere.com/updates/new/",
+                          xhrFields: {
+                            withCredentials: false
+                          },
+                          headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                          },
+                          type: "GET",
+                          beforeSend: function(xhr) {
+                            <!--xhr.setRequestHeader('Authorization', 'Token a528483d8d71425d3a5220c6034ae583d24a86cd')-->
+                            xhr.setRequestHeader('Authorization', 'Token 479b4e2edc4adbb44722432a8fd27e626d577b80')
+                          },
+                          error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('jqXHR:' + jqXHR);
 
-function testReceive(){
-    $.ajax({
-        url: 'http://127.0.0.1:8000/test/new/1',
-        type: 'get',
-        success: function(data){
-            alert(data);
-        },
-        failure: function(data){
-            alert('Got error');
-        }
-    });
-}
+                                console.log('textStatus:' + textStatus);
+
+                                console.log('errorThrown:' + errorThrown);
+
+                          },
+                          success: function(data) {
+
+                          // check if null return (no results from API)
+                          if (data == null) {
+                                console.log('no data!');
+                          } else {
+                                console.log('new data!');
+                                console.log(data);
+
+                                document.getElementById("mission").innerHTML = data.update.missionID;
+                                document.getElementById("update").innerHTML = data.update.updateID;
+                                document.getElementById("message").innerHTML = data.update.message;
+
+                          }
+                          },
+                          dataType: "json",
+                          complete: poll,
+                          timeout: 2000
+                          })
+                   }, 3000);
+        })();
 
 function receiveMission(){
     var crisis1 = {
@@ -90,24 +108,6 @@ function receiveMission(){
     Actioncell.appendChild(action);
 }
 
-<!--(function poll(){-->
-    <!--setTimeout(function(){-->
-        <!--var req = $.ajax({-->
-                    <!--url: "http://127.0.0.1:8000/updates/new/1",-->
-                    <!--type: "GET",-->
-                    <!--success: function (response) {-->
-                        <!--console.log(response);-->
-                    <!--},-->
-                    <!--dataType: "json",-->
-                    <!--timeout: 2000,-->
-                    <!--headers: {-->
-                        <!--'Content-type': 'application/json',-->
-                        <!--'Authorization': 'Token 479b4e2edc4adbb44722432a8fd27e626d577b80',-->
-                    <!--}-->
-
-        <!--})-->
-    <!--}, 5000);-->
-<!--})();-->
 </script>
 
 <div class="container">
@@ -244,6 +244,11 @@ function receiveMission(){
         <!--</tbody>-->
     <!--</table>-->
 
+    <!-- testing for ajax -->
+    <p>Hello here's the ajax that we've caught: </p>
+    <p id="mission"></p>
+    <p id="update"></p>
+    <p id="message"></p>
 
 </div>
 </body>

@@ -992,6 +992,8 @@ class UpdateNew(APIView):
 
     def get(self, request):
         all_missions = getAllMissions(request)
+        updateList = []
+        crisisabatedList = []
         for m in all_missions:
             if m.level == 3:
                 # testID = 1
@@ -1002,13 +1004,18 @@ class UpdateNew(APIView):
                     mission = Mission.objects.get(missionID=update.missionID)
                     updateserializer = MessageLogSerializer(update)
                     missionserializer = MissionSerializer(mission)
-                    content = {
-                        'update': updateserializer.data,
-                        'crisis_abated': missionserializer.data,
-                    }
-                    return Response(content)
+
+                    updateList.append(updateserializer.data)
+                    crisisabatedList.append(missionserializer.data)
+
                 else:
                     raise Http404
+
+        content = {
+            'update': updateList,
+            'crisis_abated': crisisabatedList,
+        }
+        return Response(content)
 
     # def put(self, request, pk):
     #     mission = self.get_object(pk)
