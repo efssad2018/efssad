@@ -7,6 +7,10 @@
     font-family: 'Orbitron';
 }
 
+.big-icon {
+    font-size: 32px;
+}
+
 .borderless > tbody > tr > td,
 .borderless > tbody > tr > th,
 .borderless > tfoot > tr > td,

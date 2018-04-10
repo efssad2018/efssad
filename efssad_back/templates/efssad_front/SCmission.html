@@ -23,7 +23,7 @@
 
     <h2>Message Logs</h2>
 
-    <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
+    <div style="height: 500px; border: 0.5px solid black;" class="pre-scrollable">
         <table class="table borderless" id="msglog">
             <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
@@ -129,10 +129,10 @@
 
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
                     <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
-                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="35"></textarea>
-                    <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
+                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="3" cols="35"></textarea>
+                    <button id="send-record-btn" class="btn btn-primary" style="height: 65px; width: 65px;" return false > SEND</button>
                  </form>
-               <a href="#"> <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 340px;" aria-hidden="true" return false></button></a>
+               <a href="#"> <i id="start-record-btn" class="fa fa-microphone fa-3x" style="padding-top:22px;vertical-align: text-bottom;text-align:center;font-size:50px;height: 90px; width: 90px" aria-hidden="true" return false></i></a>
          </div>
 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
