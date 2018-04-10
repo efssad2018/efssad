@@ -34,6 +34,7 @@ urlpatterns = [
     path('assignSiteCommander/', views.assignSiteCommander, name='assignSiteCommander'),#done 222
     path('updateMsgLog/', views.updateMsgLog, name='updateMsgLog'),
     path('ajax/', views.testAjax, name='testAjax'), #done123
+    path('saveplan/', views.saveplan, name='saveplan'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

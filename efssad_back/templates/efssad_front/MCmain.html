@@ -32,24 +32,26 @@
 
                           },
                           success: function(data) {
-                          alert("data");
+                          <!--alert("data");-->
                           // check if null return (no results from API)
                           if (data == null) {
                                 console.log('no data!');
+                                alert("no data");
                                 document.write("test");
                           } else {
                                 console.log('new data!');
                                 console.log(data);
-                                alert("test2");
+                                <!--alert("test2");-->
 
                                 <!-- create mission object -->
-                                var mission = {
-                                    "missionID" : data.crises[0][]
-                                }
+                                <!--var mission = {-->
+                                    <!--"missionID" : data.crises[0][]-->
+                                <!--}-->
 
                                 document.getElementById("mission").innerHTML = data.crises[0]['title'];
                                 <!--document.getElementById("update").innerHTML = data.update[0]['updateID'];-->
                                 <!--document.getElementById("message").innerHTML = data.user;-->
+                                <!--document.getElementById("mission").innerHTML = "test";-->
 
                           }
                           },

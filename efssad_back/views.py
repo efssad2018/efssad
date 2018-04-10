@@ -124,6 +124,7 @@ def missionDetail(request, missionID):
                 mission = getOneMission(request, missionID)
                 message = getmessagelog(request, missionID)
                 assignedSC = getAssignedCommanders(request, missionID)
+                planID = getPlanID(request, missionID)
 
                 key = 3
                 dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -147,7 +148,7 @@ def missionDetail(request, missionID):
 
                         list.append(element)
 
-                context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
+                context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC, 'planID' : planID}
                 request.session['dir'] = "deployment"
                 request.session['id'] = missionID
                 return render(request, 'efssad_front/MCmission.html', context)
@@ -911,6 +912,37 @@ def updateMsgLog(request):
             list.append(element)
 
     return render(request, 'efssad_front/updateMsgLog.html', {'message' : list})
+
+#get latest planID for a misisonID
+def getPlanID(request, missionID):
+    plan = Plan.objects.filter(missionID=missionID)
+    if plan:
+        p = plan.values_list('planID', flat=True).order_by('-planID')
+        p = p.first()
+    else:
+        p=0
+    return p
+
+#save a plan
+def saveplan(request):
+    missionID = request.POST.get('pRMID')
+    planID = request.POST.get('planID')
+    title = request.POST.get('pTitle')
+    description = request.POST.get('pD')
+    team = request.POST.get('pTeam')
+    action = request.POST.get('pA')
+
+    planObj = Plan()
+    planObj.missionID = missionID
+    planObj.planID = planID
+    planObj.title = title
+    planObj.description = description
+    planObj.team = team
+    planObj.action = action
+    planObj.plantime = datetime.now()
+    planObj.save()
+    return redirect("missionDetail", planObj.missionID)
+
 
 
 
