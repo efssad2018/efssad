@@ -19,6 +19,29 @@
 {% block body %}
 {% if mission %}
 <div class="container">
+
+
+    <h2>Message Logs</h2>
+
+    <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
+        <table class="table borderless" id="msglog">
+            <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
+
+            <tr>
+                <th scope="col" style="text-align:center;width:140px">Commander</th>
+                <th scope="col" style="text-align:left;width:200px">Date-Time</th>
+                <th scope="col">Message</th>
+            </tr>
+            </thead>
+            {% for messagelog in message reversed%}
+            <tr>
+                <td><strong>{{ messagelog.name }}</strong></td>
+                <td>{{ messagelog.dateTime }}</td>
+                <td>{{ messagelog.message }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <h2>Mission Details</h2>
     <div class="panel-group" id="missionDetail">
         <div class="panel panel-primary">
@@ -99,29 +122,6 @@
         </div>
     </div>
 
-    <h2>Message Logs</h2>
-
-    <div style="height: 300px; border: 0.5px solid black;" class="pre-scrollable">
-        <table class="table borderless" id="msglog">
-            <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
-
-            <tr>
-                <th scope="col" style="text-align:center;width:140px">Commander</th>
-                <th scope="col" style="text-align:left;width:200px">Date-Time</th>
-                <th scope="col">Message</th>
-            </tr>
-            </thead>
-            {% for messagelog in message reversed%}
-            <tr>
-                <td><strong>{{ messagelog.name }}</strong></td>
-                <td>{{ messagelog.dateTime }}</td>
-                <td>{{ messagelog.message }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-
-
      <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
          <div class="input-single ">
                     <form action="{% url 'sendmessage' %}" method = "POST">
@@ -130,11 +130,9 @@
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
                     <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
                     <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="35"></textarea>
-                    <a href="#">
-                        <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 45px;" aria-hidden="true" return false></button></a>
-
                     <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
                  </form>
+               <a href="#"> <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 340px;" aria-hidden="true" return false></button></a>
          </div>
 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
