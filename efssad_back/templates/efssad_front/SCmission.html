@@ -23,7 +23,7 @@
 
     <h2>Message Logs</h2>
 
-    <div style="height: 600px; border: 0.5px solid black;" class="pre-scrollable">
+    <div style="height: 500px; border: 0.5px solid black;" class="pre-scrollable">
         <table class="table borderless" id="msglog">
             <thead style="background:black; color: white; height: 50px;width:1100px;table-layout:fixed;float:center">
 
@@ -69,7 +69,7 @@
                         <span id="dateTimeCompleted"> {{ mission.datetimeCompleted }}</span>
                         <br/>
                         <label>Site Commanders:</label>
-                        <span id="SC"> {{ user.name }}</span>
+                        <span id="SC"> {{ user.get_username }}</span>
                         <br/>
                         <label>Status:</label>
                         <span id="missionStatus"class="missionStatus" style="font-size: 15px">{{ mission.status }}</span>
@@ -105,7 +105,7 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>Zombie Invasion</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
@@ -122,17 +122,17 @@
         </div>
     </div>
 
-     <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:20px; padding-top:20px; z-index:2;" >
+     <div style="position:fixed; background-color: white; text-align: center; padding:10px; left: 0; bottom: 0; width:100%; padding-bottom:10px; padding-top:10px; z-index:2;" >
          <div class="input-single ">
                     <form action="{% url 'sendmessage' %}" method = "POST">
                     {% csrf_token %}
 
                     <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}" />
                     <input type="hidden" id="updateID" name="updateID" value="{{ messagelog.updateID }}" />
-                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="2" cols="35"></textarea>
-                    <button id="send-record-btn" class="btn btn-primary" style="height: 45px; width: 65px;" return false > SEND</button>
+                    <textarea name ="message" id="note-textarea" placeholder="Say something and it will appear here" rows="3" cols="35"></textarea>
+                    <button id="send-record-btn" class="btn btn-primary" style="height: 65px; width: 65px;" return false > SEND</button>
                  </form>
-               <a href="#"> <button id="start-record-btn" class="btn btn-primary fa fa-microphone fa-3x" style="height: 45px; width: 340px;" aria-hidden="true" return false></button></a>
+               <a href="#"> <i id="start-record-btn" class="fa fa-microphone fa-3x" style="padding-top:22px;vertical-align: text-bottom;text-align:center;font-size:50px;height: 90px; width: 90px" aria-hidden="true" return false></i></a>
          </div>
 
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
