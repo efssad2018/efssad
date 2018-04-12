@@ -94,7 +94,7 @@ def mcmain(request):
 
                         request.session['id'] = None
                         all_missions = getAllMissions(request)
-                        latestmission = all_missions.aggregate(Max('missionID'))['missionID__max']
+                        latestmission = all_missions.aggregate(Max('missionID'))['missionID__max'] or 0
                         missionStatus3 = getMIDStatus3(request)
                         plan = getPlan(request, missionStatus3)
                         context = {'all_missions': all_missions, 'latestmission': latestmission, 'plan': plan}
@@ -960,7 +960,6 @@ def savenewmission(request):
     missionID = request.POST.get('mID')
     missionTitle = request.POST.get('mTitle')
     missionDescription = request.POST.get('mDescription')
-    missionStatus = request.POST.get('mStatus')
     missionLong = request.POST.get('mLong')
     missionLat = request.POST.get('mLat')
 
@@ -980,7 +979,7 @@ def savenewmission(request):
     missionObj.title = missionTitle
     missionObj.description = missionDescription
     missionObj.datetimeReceived = datetime.now()
-    missionObj.status = missionStatus
+    missionObj.status = "New"
     missionObj.latitude = missionLat
     missionObj.longitude = missionLong
     missionObj.save()

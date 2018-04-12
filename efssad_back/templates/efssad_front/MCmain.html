@@ -67,7 +67,6 @@
                                     document.getElementById("mID").value = requestMissionID;
                                     document.getElementById("mTitle").value = data.crises[0]['title'];
                                     document.getElementById("mDescription").value = data.crises[0]['details'];
-                                    document.getElementById("mStatus").value = data.crises[0]['status'];
                                     document.getElementById("mLong").value = data.crises[0]['longitude'];
                                     document.getElementById("mLat").value = data.crises[0]['latitude'];
 
@@ -156,7 +155,6 @@ function receiveMission(){
             <input type="hidden" id="mID" name="mID"/>
             <input type="hidden" id="mTitle" name="mTitle"/>
             <input type="hidden" id="mDescription" name="mDescription"/>
-            <input type="hidden" id="mStatus" name="mStatus"/>
             <input type="hidden" id="mLong" name="mLong"/>
             <input type="hidden" id="mLat" name="mLat"/>
 
@@ -208,6 +206,8 @@ function receiveMission(){
             <!-- Modal -->
             <div id="myModal1" class="modal fade" role="dialog">
                 <div class="modal-dialog">
+                    {{plan.planID}}
+                    {{msID}}
 
                     <!-- Modal content-->
                     <div class="modal-content">
@@ -315,10 +315,10 @@ function receiveMission(){
     <!--</table>-->
 
     <!-- testing for ajax -->
-    <p>Hello here's the ajax that we've caught: </p>
-    <p id="mission"></p>
-    <p id="update"></p>
-    <p id="message"></p>
+    <p hidden>Hello here's the ajax that we've caught: </p>
+    <p id="mission" hidden></p>
+    <p id="update" hidden></p>
+    <p id="message" hidden></p>
 
 </div>
 </body>
