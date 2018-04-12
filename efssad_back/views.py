@@ -412,7 +412,8 @@ def deployment(request, missionID):
                     allType = list(chain(allType,typelist))
                 commander = list(chain("",commanders))
 
-                context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
+                plan = getPlan(request, missionID)
+                context = {'mission' : mission, 'type' : allType, 'commanders' : commander, 'plan': plan }
                 request.session['id'] = missionID
                 request.session['dir'] = "deployment"
                 return render(request, 'efssad_front/MCdeployment.html', context)
