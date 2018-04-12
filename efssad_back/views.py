@@ -458,6 +458,7 @@ def updateStatus(request, missionID, status):
                     return redirect("missionDetail", missionID)
                 else:
                     mission.datetimeCompleted = datetime.now()
+                    mission.is_crisisAbated = True
                     mission.save()
                     unassignSiteCommander(request, missionID)
                     sendSystemMessage(request, missionID, "Mission Completed")

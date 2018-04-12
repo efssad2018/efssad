@@ -74,7 +74,7 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>{{ mission.title }}</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
