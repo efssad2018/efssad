@@ -55,17 +55,16 @@ def logout(request):
 
 def mainmenu(request):
     type = request.user.username
-    if Commander.objects.filter(username = type).filter(is_mainComm=True):
+    if Commander.objects.filter(username=type).filter(is_admin=True):
+        # request.session['Sesusername'] = "efadmin"
+        return redirect("/admin")
+    elif Commander.objects.filter(username = type).filter(is_mainComm=True):
         request.session['Sesusername'] = "mcmain"
         return redirect("mcmain")
 
-    elif Commander.objects.filter(username = type).filter(is_admin=False):
+    elif Commander.objects.filter(username = type).filter(is_mainComm=False):
         request.session['Sesusername'] = "scmission"
         return redirect("scmission")
-
-    elif Commander.objects.filter(username=type).filter(is_admin=True):
-        request.session['Sesusername'] = "efadmin"
-        return redirect("/admin")
     else:
         request.session['Sesusername'] = None
         #del request.session['Sesusername']
