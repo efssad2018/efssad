@@ -952,7 +952,7 @@ def saveplan(request):
 
 #save a new mission from cmo
 def savenewmission(request):
-    planID = request.POST.get('planID')
+    # planID = request.POST.get('planID')
     title = request.POST.get('pTitle')
     description = request.POST.get('pD')
     team = request.POST.get('pTeam')
@@ -966,7 +966,7 @@ def savenewmission(request):
 
     planObj = Plan()
     planObj.missionID = missionID
-    planObj.planID = planID
+    planObj.planID = 0
     planObj.title = title
     planObj.description = description
     planObj.team = team
@@ -989,8 +989,8 @@ def savenewmission(request):
 
 #get missionID with status 3
 def getMIDStatus3(request):
-    # mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('-missionID')
-    mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('missionID')
+    mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('-missionID')
+    # mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('missionID')
     mission = mission.first()
     return mission
 
@@ -1071,7 +1071,12 @@ class UpdateNew(APIView):
             lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
             if MessageLog.objects.filter(missionID=mission.missionID):
                 if lastReceivedPlan:
-                    return MessageLog.objects.filter(missionID=mission.missionID).get(updateID=lastReceivedPlan.planID)
+                    update = MessageLog.objects.filter(missionID=mission.missionID).get(updateID=(lastReceivedPlan.planID) + 1)
+                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(updateID__gte=(lastReceivedPlan.planID + 1))
+                    # update1 = update1.last()
+                    print(update1)
+                    # update = update.first()
+                    return update1
                 else:
                     return MessageLog()
             else:
@@ -1084,25 +1089,32 @@ class UpdateNew(APIView):
         updateList = []
         crisisabatedList = []
         planList = []
-        for m in all_missions:
-            if m.level == 3:
-                # testID = 1
-                update = self.get_object(m.missionID)
-                # update = self.get_object(pk)
+        # for m in all_missions:
+        #     if m.level == 3:
+        mID = getMIDStatus3(request)
+        m = getOneMission(request, mID)
+        # if m.status.lower() != "complete":
+        #     if m.status.lower() != "completed":
+        # testID = 1
+        update = self.get_object(m.missionID)
+        # update = self.get_object(pk)
+        for u in update:
+            print(u)
+            if u.missionID is not None:
+                mission = Mission.objects.get(missionID=u.missionID)
+                lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
+                updateserializer = MessageLogSerializer(u)
+                updateList.append(updateserializer.data)
 
-                if update.missionID is not None:
-                    mission = Mission.objects.get(missionID=update.missionID)
-                    lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
-                    updateserializer = MessageLogSerializer(update)
-                    missionserializer = MissionSerializer(mission)
-                    planserializer = PlanSerializer(lastReceivedPlan)
 
-                    updateList.append(updateserializer.data)
-                    crisisabatedList.append(missionserializer.data)
-                    planList.append(planserializer.data)
+            else:
+                raise Http404
 
-                else:
-                    raise Http404
+        missionserializer = MissionSerializer(mission)
+        print(missionserializer)
+        planserializer = PlanSerializer(lastReceivedPlan)
+        crisisabatedList.append(missionserializer.data)
+        planList.append(planserializer.data)
 
         content = {
             'update': updateList,
