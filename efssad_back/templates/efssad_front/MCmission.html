@@ -112,12 +112,12 @@
                         <p id="planAction"></p>
                         <!--hidden info-->
                         <!--<p id="planID" style="display:none;"/>-->
-                        <input type="text" id="planID" name="planID"/>
-                        <input type="text" id="pTitle" name="pTitle"/>
-                        <input type="text" id="pTeam" name="pTeam"/>
-                        <input type="text" id="pD" name="pD"/>
-                        <input type="text" id="pA" name="pA"/>
-                        <input type="text" id="pRMID" name="pRMID" value="{{ mission.missionID }}"/>
+                        <input type="hidden" id="planID" name="planID"/>
+                        <input type="hidden" id="pTitle" name="pTitle"/>
+                        <input type="hidden" id="pTeam" name="pTeam"/>
+                        <input type="hidden" id="pD" name="pD"/>
+                        <input type="hidden" id="pA" name="pA"/>
+                        <input type="hidden" id="pRMID" name="pRMID" value="{{ mission.missionID }}"/>
                     </div>
                     <div class="modal-footer">
                         <button id="Plan" class="btn btn-default" return false>Close</button>
@@ -488,6 +488,7 @@
                                 var requestPlanID = data.crises[0]['plan']['planID'];
                                 var currentPlanID = {{planID}}
                                 var currentMissionID = {{mission.missionID}}
+
                                 if(requestMissionID == currentMissionID){
                                     if(requestPlanID > currentPlanID){
                                         document.getElementById("newPlan").style.visibility = "visible";

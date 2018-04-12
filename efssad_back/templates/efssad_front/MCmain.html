@@ -53,6 +53,26 @@
                                 <!--document.getElementById("message").innerHTML = data.user;-->
                                 <!--document.getElementById("mission").innerHTML = "test";-->
 
+                                var requestMissionID = data.crises[0]['crisisID'];
+                                var currentMissionID = {{ latestmission }}
+
+                                if(requestMissionID > currentMissionID){
+                                    <!-- hidden info to pass to views -->
+                                    document.getElementById("planID").value = data.crises[0]['plan']['planID'];
+                                    document.getElementById("pTitle").value = data.crises[0]['plan']['title'];
+                                    document.getElementById("pTeam").value = data.crises[0]['plan']['assets_involved'];
+                                    document.getElementById("pD").value = data.crises[0]['plan']['details'];
+                                    document.getElementById("pA").value = data.crises[0]['plan']['action'];
+
+                                    document.getElementById("mID").value = requestMissionID;
+                                    document.getElementById("mTitle").value = data.crises[0]['title'];
+                                    document.getElementById("mDescription").value = data.crises[0]['details'];
+                                    document.getElementById("mStatus").value = data.crises[0]['status'];
+                                    document.getElementById("mLong").value = data.crises[0]['longitude'];
+                                    document.getElementById("mLat").value = data.crises[0]['latitude'];
+
+                                    document.getElementById('newMission').click();
+                                }
                           }
                           },
                           dataType: "json",
@@ -122,6 +142,29 @@ function receiveMission(){
 </script>
 
 <div class="container">
+    <form action="{% url 'savenewmission' %}" method="POST">
+        {% csrf_token %}
+            <!--hidden info-->
+            <!-- for plan -->
+            <input type="hidden" id="planID" name="planID"/>
+            <input type="hidden" id="pTitle" name="pTitle"/>
+            <input type="hidden" id="pTeam" name="pTeam"/>
+            <input type="hidden" id="pD" name="pD"/>
+            <input type="hidden" id="pA" name="pA"/>
+
+            <!-- for mission -->
+            <input type="hidden" id="mID" name="mID"/>
+            <input type="hidden" id="mTitle" name="mTitle"/>
+            <input type="hidden" id="mDescription" name="mDescription"/>
+            <input type="hidden" id="mStatus" name="mStatus"/>
+            <input type="hidden" id="mLong" name="mLong"/>
+            <input type="hidden" id="mLat" name="mLat"/>
+
+
+
+            <button id="newMission" style="visibility: hidden;"class="btn btn-default" return false>Close</button>
+
+    </form>
     <h2>Mission List</h2>
     <button id="receiveBtn" type="button" class="btn btn-primary active"
             onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission
@@ -170,10 +213,15 @@ function receiveMission(){
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Modal Header</h4>
+                            <h4 class="modal-title">{{ plan.title }}</h4>
                         </div>
                         <div class="modal-body">
-                            <p>Some text in the modal.</p>
+                             <p><strong>Teams Involved:</strong></p>
+                        <p id="planTeams">{{ plan.team }}</p>
+                        <p><strong>Plan Detail:</strong></p>
+                        <p id="planDetail">{{ plan.description }}</p>
+                        <p><strong>Action:</strong></p>
+                        <p id="planAction">{{ plan.action }}</p>
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-primary active"

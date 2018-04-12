@@ -20,6 +20,7 @@ import requests
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse
+from django.db.models import Max
 
 # Create your views here.
 #def login(request):
@@ -92,7 +93,11 @@ def mcmain(request):
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
 
                         request.session['id'] = None
-                        context = {'all_missions': getAllMissions(request)}
+                        all_missions = getAllMissions(request)
+                        latestmission = all_missions.aggregate(Max('missionID'))['missionID__max']
+                        missionStatus3 = getMIDStatus3(request)
+                        plan = getPlan(request, missionStatus3)
+                        context = {'all_missions': all_missions, 'latestmission': latestmission, 'plan': plan}
                         request.session['dir'] = "mcmain"
                         return render(request, 'efssad_front/MCmain.html', context)
     else:
@@ -942,6 +947,57 @@ def saveplan(request):
     planObj.plantime = datetime.now()
     planObj.save()
     return redirect("missionDetail", planObj.missionID)
+
+#save a new mission from cmo
+def savenewmission(request):
+    planID = request.POST.get('planID')
+    title = request.POST.get('pTitle')
+    description = request.POST.get('pD')
+    team = request.POST.get('pTeam')
+    action = request.POST.get('pA')
+
+    missionID = request.POST.get('mID')
+    missionTitle = request.POST.get('mTitle')
+    missionDescription = request.POST.get('mDescription')
+    missionStatus = request.POST.get('mStatus')
+    missionLong = request.POST.get('mLong')
+    missionLat = request.POST.get('mLat')
+
+    planObj = Plan()
+    planObj.missionID = missionID
+    planObj.planID = planID
+    planObj.title = title
+    planObj.description = description
+    planObj.team = team
+    planObj.action = action
+    planObj.plantime = datetime.now()
+    planObj.save()
+
+    missionObj = Mission()
+    missionObj.missionID = missionID
+    missionObj.level = 3
+    missionObj.title = missionTitle
+    missionObj.description = missionDescription
+    missionObj.datetimeReceived = datetime.now()
+    missionObj.status = missionStatus
+    missionObj.latitude = missionLat
+    missionObj.longitude = missionLong
+    missionObj.save()
+
+    return redirect("mcmain")
+
+#get missionID with status 3
+def getMIDStatus3(request):
+    # mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('-missionID')
+    mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('missionID')
+    mission = mission.first()
+    return mission
+
+#get plan by missionID
+def getPlan(request, missionID):
+    plan = Plan.objects.filter(missionID=missionID).order_by('-planID')
+    plan = plan.first()
+    return plan
 
 
 
