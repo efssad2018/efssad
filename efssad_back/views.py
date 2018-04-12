@@ -1082,6 +1082,7 @@ class UpdateNew(APIView):
         all_missions = getAllMissions(request)
         updateList = []
         crisisabatedList = []
+        planList = []
         for m in all_missions:
             if m.level == 3:
                 # testID = 1
@@ -1090,11 +1091,14 @@ class UpdateNew(APIView):
 
                 if update.missionID is not None:
                     mission = Mission.objects.get(missionID=update.missionID)
+                    lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
                     updateserializer = MessageLogSerializer(update)
                     missionserializer = MissionSerializer(mission)
+                    planserializer = PlanSerializer(lastReceivedPlan)
 
                     updateList.append(updateserializer.data)
                     crisisabatedList.append(missionserializer.data)
+                    planList.append(planserializer.data)
 
                 else:
                     raise Http404
@@ -1102,6 +1106,7 @@ class UpdateNew(APIView):
         content = {
             'update': updateList,
             'crisis_abated': crisisabatedList,
+            'plan': planList,
         }
         return Response(content)
 

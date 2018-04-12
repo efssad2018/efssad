@@ -26,4 +26,5 @@ class MessageLogSerializer(serializers.ModelSerializer):
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ('id', 'planID', 'title', 'team', 'description', 'action', 'actiontime')
+        # fields = ('id', 'planID', 'title', 'team', 'description', 'action', 'actiontime')
+        fields = ('missionID', 'planID', 'title')
