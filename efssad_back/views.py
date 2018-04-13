@@ -638,8 +638,10 @@ def sendmessage(request):
                     obj.name = name
 
                     obj.updateID = updateID
-                    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                    # lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID)
                     if lastReceivedPlan:
+                        lastReceivedPlan = lastReceivedPlan.order_by("-planID")[0]
                         obj.planID = lastReceivedPlan.planID
                     else:
                         obj.planID = -1
@@ -756,8 +758,10 @@ def sendSystemMessage(request, missionID, status):
     obj.name = name
 
     obj.updateID = updateID
-    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+    # lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0] or 0
+    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID)
     if lastReceivedPlan:
+        lastReceivedPlan = lastReceivedPlan.order_by("-planID")[0]
         obj.planID = lastReceivedPlan.planID
     else:
         obj.planID = -1
@@ -1087,7 +1091,7 @@ class UpdateNew(APIView):
                 if lastReceivedPlan:
                     update = MessageLog.objects.filter(missionID=mission.missionID).get(updateID=(lastReceivedPlan.planID) + 1)
                     # update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(updateID__gte=(lastReceivedPlan.planID + 1))
-                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(planID=(lastReceivedPlan.planID + 1))
+                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(planID=lastReceivedPlan.planID) # planID=lastReceivedPlan.planID
                     # update1 = update1.last()
                     print(update1)
                     # update = update.first()
@@ -1113,18 +1117,22 @@ class UpdateNew(APIView):
         # testID = 1
         update = self.get_object(m.missionID)
         # update = self.get_object(pk)
-        for u in update:
-            print(u)
-            if u.missionID is not None:
-                mission = Mission.objects.get(missionID=u.missionID)
-                lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
-                updateserializer = MessageLogSerializer(u)
-                updateList.append(updateserializer.data)
+        if update:
+            if not isinstance(update, MessageLog):
+                for u in update:
+                    print(u)
+                    if u.missionID is not None:
+                        mission = Mission.objects.get(missionID=u.missionID)
+                        lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
+                        updateserializer = MessageLogSerializer(u)
+                        updateList.append(updateserializer.data)
 
 
-            else:
-                raise Http404
+                    else:
+                        raise Http404
 
+        mission = Mission.objects.get(missionID=m.missionID)
+        lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
         missionserializer = MissionSerializer(mission)
         print(missionserializer)
         planserializer = PlanSerializer(lastReceivedPlan)

@@ -112,12 +112,12 @@
                         <p id="planAction"></p>
                         <!--hidden info-->
                         <!--<p id="planID" style="display:none;"/>-->
-                        <input type="text" id="planID" name="planID"/>
-                        <input type="text" id="pTitle" name="pTitle"/>
-                        <input type="text" id="pTeam" name="pTeam"/>
-                        <input type="text" id="pD" name="pD"/>
-                        <input type="text" id="pA" name="pA"/>
-                        <input type="text" id="pRMID" name="pRMID" value="{{ mission.missionID }}"/>
+                        <input type="hidden" id="planID" name="planID"/>
+                        <input type="hidden" id="pTitle" name="pTitle"/>
+                        <input type="hidden" id="pTeam" name="pTeam"/>
+                        <input type="hidden" id="pD" name="pD"/>
+                        <input type="hidden" id="pA" name="pA"/>
+                        <input type="hidden" id="pRMID" name="pRMID" value="{{ mission.missionID }}"/>
                     </div>
                     <div class="modal-footer">
                         <button id="Plan" class="btn btn-default" return false>Close</button>
@@ -176,10 +176,10 @@
 
 <div>
         <!-- testing for ajax -->
-    <p>Hello here's the ajax that we've caught: </p>
-    <p id="mission">rr</p>
-    <p id="update"></p>
-    <p id="message"></p>
+    <p hidden>Hello here's the ajax that we've caught: </p>
+    <p id="mission" hidden>rr</p>
+    <p id="update" hidden></p>
+    <p id="message" hidden></p>
 </div>
 
 <!-- script for different button -->
@@ -482,7 +482,7 @@
                                 <!--document.getElementById("message").innerHTML = data.user;-->
 
                                 <!--document.getElementById("mission").innerHTML = data.crises[0]['crisisID'];-->
-                                document.getElementById("mission").innerHTML = data.crises[1]['crisisID'];
+                                document.getElementById("mission").innerHTML = data.crises[0]['crisisID'];
                                 document.getElementById("update").innerHTML = {{planID}};
 
 
@@ -491,7 +491,7 @@
                                 <!--var currentPlanID = {{planID}}-->
                                 <!--var currentMissionID = {{mission.missionID}}-->
 
-                                var requestMissionID = data.crises[1]['crisisID'];
+                                var requestMissionID = data.crises[0]['crisisID'];
                                 var currentPlanID = {{planID}}
                                 var currentMissionID = {{mission.missionID}}
 

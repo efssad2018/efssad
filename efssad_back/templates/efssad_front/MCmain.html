@@ -184,12 +184,12 @@ function receiveMission(){
 
     </form>
     <h2>Mission List</h2>
-    <button id="receiveBtn" type="button" class="btn btn-primary active"
-            onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission
-    </button>
-    <button id="ajaxBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'testAjax' %}'">
-        Test AJAX
-    </button>
+    <!--<button id="receiveBtn" type="button" class="btn btn-primary active"-->
+            <!--onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission-->
+    <!--</button>-->
+    <!--<button id="ajaxBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'testAjax' %}'">-->
+        <!--Test AJAX-->
+    <!--</button>-->
     <table id="missionTable" class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
         <tr>
@@ -335,10 +335,10 @@ function receiveMission(){
     <!--</table>-->
 
     <!-- testing for ajax -->
-    <p>Hello here's the ajax that we've caught: </p>
-    <p id="mission"></p>
-    <p id="update"></p>
-    <p id="message"></p>
+    <p hidden>Hello here's the ajax that we've caught: </p>
+    <p id="mission" hidden></p>
+    <p id="update" hidden></p>
+    <p id="message" hidden></p>
 
 </div>
 </body>
