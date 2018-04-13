@@ -1,89 +1,14 @@
-{% extends 'efssad_front/master.html' %}
+
+{% load staticfiles %}
 
 {% block body %}
 <body>
 
-<div class="container">
-    <h2 style="float:left;">Archive</h2>
-    <br/>
-    <form action="{% url 'searchByMissionID' %}" method="POST">
-            {% csrf_token %}
-        <div class="input-group col-md-4" style="float:right; margin-bottom: 10px;">
-            <textarea  name="message" id="note-textarea" class="form-control" placeholder="Search by MissionID" rows="1" cols="35"></textarea>
-            <span class="input-group-btn">
-                <button id="send-record-btn" class="btn btn-info" return false>
-                    <i class="glyphicon glyphicon-search"></i>
-                </button>
-            </span>
-        </div>
-    </form>
-    <br>
-    <table class="table table-hover">
-        <thead style="background:black; color: white; height: 50px;">
-        <tr>
-            <th scope="col" class="col-md-1">ID</th>
-            <th scope="col" class="col-md-1">Level</th>
-            <th scope="col" class="col-md-4">Description</th>
-            <th scope="col" class="col-md-2">Datetime received</th>
-            <th scope="col" class="col-md-2">Datetime completed</th>
-            <th scope="col" class="col-md-1">Action</th>
-        </tr>
+<video width='100%'; min-height= '100%' autoplay>
+<source src="{% static 'video/k9.mp4' type='video/mp4' %}" >
+Your browser does not support the video tag.
+</video>
 
-        </thead>
-        <tbody>
-        {% for mission in all_missions reversed %}
-        {% if mission.status|lower == "completed" %}
-        <tr>
-            <td><strong>{{ mission.missionID }}</strong></td>
-            <td>{{ mission.level }}</td>
-            <td>{{ mission.description }}</td>
-            <td>{{ mission.datetimeReceived }}</td>
-            <td>{{ mission.datetimeCompleted }}</td>
-            <td><input type="button" class="btn btn-primary active" onclick="location.href='/archiveDetail/{{ mission.missionID }}';" value="View Details"/></td>
-        </tr>
-        {% elif mission.status|lower == "complete" %}
-        <tr>
-            <td><strong>{{ mission.missionID }}</strong></td>
-            <td>{{ mission.level }}</td>
-            <td>{{ mission.description }}</td>
-            <td>{{ mission.datetimeReceived }}</td>
-            <td>{{ mission.datetimeCompleted }}</td>
-            <td><input type="button" class="btn btn-primary active" onclick="location.href='/archiveDetail/{{ mission.missionID }}';" value="View Details"/></td>
-        </tr>
-        {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
-
-
-
-    <!--<table class="table table-hover">-->
-        <!--<thead style="background:black; color: white; height: 50px;">-->
-        <!--<tr>-->
-            <!--<th scope="col" class="col-md-1">ID</th>-->
-            <!--<th scope="col" class="col-md-1">Level</th>-->
-            <!--<th scope="col" class="col-md-4">Description</th>-->
-            <!--<th scope="col" class="col-md-2">Datetime received</th>-->
-            <!--<th scope="col" class="col-md-2">Datetime completed</th>-->
-
-        <!--</tr>-->
-
-        <!--</thead>-->
-        <!--<tbody>-->
-        <!--<tr>-->
-            <!--<td><strong>1</strong></td>-->
-            <!--<td>1</td>-->
-            <!--<td>Zombie Invasion</td>-->
-            <!--<td>11-02-2018 18:00</td>-->
-            <!--<td>15-02-2018 18:00</td>-->
-        <!--</tr>-->
-
-        <!--</tbody>-->
-    <!--</table>-->
-
-
-</div>
-</body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
          <script>
             try {

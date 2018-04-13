@@ -13,7 +13,7 @@ class MessageLogSerializer(serializers.ModelSerializer):
     # mission = MissionSerializer(read_only=True)
     class Meta:
         model = MessageLog
-        fields = ('updateID', 'missionID', 'name', 'dateTime', 'message')
+        fields = ('updateID', 'missionID', 'planID', 'name', 'dateTime', 'message')
 
 # class MessageLogSerializer(serializers.Serializer):
 #     update_id = Field(source='updateID')

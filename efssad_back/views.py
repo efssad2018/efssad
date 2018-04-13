@@ -590,6 +590,11 @@ def sendmessage(request):
                         obj.name = name
 
                         obj.updateID = updateID
+                        lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                        if lastReceivedPlan:
+                            obj.planID = lastReceivedPlan.planID
+                        else:
+                            obj.planID = -1
                         obj.save()
 
                        # if Commander.objects.filter(username=name).filter(is_mainComm=True):
@@ -633,6 +638,11 @@ def sendmessage(request):
                     obj.name = name
 
                     obj.updateID = updateID
+                    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                    if lastReceivedPlan:
+                        obj.planID = lastReceivedPlan.planID
+                    else:
+                        obj.planID = -1
                     obj.save()
                     #if Commander.objects.filter(username=name).filter(is_mainComm=True):
                     return redirect("missionDetail", missionid)
@@ -746,6 +756,11 @@ def sendSystemMessage(request, missionID, status):
     obj.name = name
 
     obj.updateID = updateID
+    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+    if lastReceivedPlan:
+        obj.planID = lastReceivedPlan.planID
+    else:
+        obj.planID = -1
     obj.save()
 
 
@@ -1071,7 +1086,8 @@ class UpdateNew(APIView):
             if MessageLog.objects.filter(missionID=mission.missionID):
                 if lastReceivedPlan:
                     update = MessageLog.objects.filter(missionID=mission.missionID).get(updateID=(lastReceivedPlan.planID) + 1)
-                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(updateID__gte=(lastReceivedPlan.planID + 1))
+                    # update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(updateID__gte=(lastReceivedPlan.planID + 1))
+                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(planID=(lastReceivedPlan.planID + 1))
                     # update1 = update1.last()
                     print(update1)
                     # update = update.first()
