@@ -32,25 +32,66 @@
 
                           },
                           success: function(data) {
-                          alert("data");
+                          <!--alert("data");-->
                           // check if null return (no results from API)
                           if (data == null) {
                                 console.log('no data!');
+                                alert("no data");
                                 document.write("test");
                           } else {
                                 console.log('new data!');
                                 console.log(data);
-                                alert("test2");
+                                <!--alert("test2");-->
 
                                 <!-- create mission object -->
-                                var mission = {
-                                    "missionID" : data.crises[0][]
-                                }
+                                <!--var mission = {-->
+                                    <!--"missionID" : data.crises[0][]-->
+                                <!--}-->
 
                                 document.getElementById("mission").innerHTML = data.crises[0]['title'];
                                 <!--document.getElementById("update").innerHTML = data.update[0]['updateID'];-->
                                 <!--document.getElementById("message").innerHTML = data.user;-->
+                                <!--document.getElementById("mission").innerHTML = "test";-->
 
+                                var requestMissionID = data.crises[0]['crisisID'];
+                                var currentMissionID = {{ latestmission }}
+
+                                if(requestMissionID > currentMissionID){
+                                    <!-- hidden info to pass to views -->
+                                    <!--document.getElementById("planID").value = data.crises[0]['plan']['planID'];-->
+                                    document.getElementById("pTitle").value = data.crises[0]['plan']['title'];
+                                    document.getElementById("pTeam").value = data.crises[0]['plan']['assets_involved'];
+                                    document.getElementById("pD").value = data.crises[0]['plan']['details'];
+                                    document.getElementById("pA").value = data.crises[0]['plan']['action'];
+
+                                    document.getElementById("mID").value = requestMissionID;
+                                    document.getElementById("mTitle").value = data.crises[0]['title'];
+                                    document.getElementById("mDescription").value = data.crises[0]['details'];
+                                    document.getElementById("mLong").value = data.crises[0]['longitude'];
+                                    document.getElementById("mLat").value = data.crises[0]['latitude'];
+
+                                    document.getElementById('newMission').click();
+                                }
+
+                                <!--var requestMissionID = data.crises[1]['crisisID'];-->
+                                <!--var currentMissionID = {{ latestmission }}-->
+
+                                <!--if(requestMissionID == 4){-->
+                                    <!--&lt;!&ndash; hidden info to pass to views &ndash;&gt;-->
+                                    <!--&lt;!&ndash;document.getElementById("planID").value = data.crises[1]['plan']['planID'];&ndash;&gt;-->
+                                    <!--document.getElementById("pTitle").value = data.crises[1]['plan']['title'];-->
+                                    <!--document.getElementById("pTeam").value = data.crises[1]['plan']['assets_involved'];-->
+                                    <!--document.getElementById("pD").value = data.crises[1]['plan']['details'];-->
+                                    <!--document.getElementById("pA").value = data.crises[1]['plan']['action'];-->
+
+                                    <!--document.getElementById("mID").value = requestMissionID;-->
+                                    <!--document.getElementById("mTitle").value = data.crises[1]['title'];-->
+                                    <!--document.getElementById("mDescription").value = data.crises[0]['details'];-->
+                                    <!--document.getElementById("mLong").value = data.crises[1]['longitude'];-->
+                                    <!--document.getElementById("mLat").value = data.crises[1]['latitude'];-->
+
+                                    <!--document.getElementById('newMission').click();-->
+                                <!--}-->
                           }
                           },
                           dataType: "json",
@@ -120,13 +161,35 @@ function receiveMission(){
 </script>
 
 <div class="container">
+    <form action="{% url 'savenewmission' %}" method="POST">
+        {% csrf_token %}
+            <!--hidden info-->
+            <!-- for plan -->
+            <input type="hidden" id="planID" name="planID"/>
+            <input type="hidden" id="pTitle" name="pTitle"/>
+            <input type="hidden" id="pTeam" name="pTeam"/>
+            <input type="hidden" id="pD" name="pD"/>
+            <input type="hidden" id="pA" name="pA"/>
+
+            <!-- for mission -->
+            <input type="hidden" id="mID" name="mID"/>
+            <input type="hidden" id="mTitle" name="mTitle"/>
+            <input type="hidden" id="mDescription" name="mDescription"/>
+            <input type="hidden" id="mLong" name="mLong"/>
+            <input type="hidden" id="mLat" name="mLat"/>
+
+
+
+            <button id="newMission" style="visibility: hidden;"class="btn btn-default" return false>Close</button>
+
+    </form>
     <h2>Mission List</h2>
-    <button id="receiveBtn" type="button" class="btn btn-primary active"
-            onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission
-    </button>
-    <button id="ajaxBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'testAjax' %}'">
-        Test AJAX
-    </button>
+    <!--<button id="receiveBtn" type="button" class="btn btn-primary active"-->
+            <!--onclick="location.href='{% url 'pullFromCMO' pk=1 %}'">Test Receive Mission-->
+    <!--</button>-->
+    <!--<button id="ajaxBtn" type="button" class="btn btn-primary active" onclick="location.href='{% url 'testAjax' %}'">-->
+        <!--Test AJAX-->
+    <!--</button>-->
     <table id="missionTable" class="table table-hover">
         <thead style="background:black; color: white; height: 50px;">
         <tr>
@@ -157,21 +220,28 @@ function receiveMission(){
                 </button>
                 {% else%}
                 <input type="button" class="btn btn-primary active" onclick="location.href='/missionDetail/{{ msID }}';"
-                       value="Deploy"/>
+                       value="View Detail"/>
                 {% endif %}
             </td>
             <!-- Modal -->
             <div id="myModal1" class="modal fade" role="dialog">
                 <div class="modal-dialog">
+                    {{plan.planID}}
+                    {{msID}}
 
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Modal Header</h4>
+                            <h4 class="modal-title">{{ plan.title }}</h4>
                         </div>
                         <div class="modal-body">
-                            <p>Some text in the modal.</p>
+                            <p><strong>Teams Involved:</strong></p>
+                            <p id="planTeams">{{ plan.team }}</p>
+                            <p><strong>Plan Detail:</strong></p>
+                            <p id="planDetail">{{ plan.description }}</p>
+                            <p><strong>Action:</strong></p>
+                            <p id="planAction">{{ plan.action }}</p>
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-primary active"
@@ -265,10 +335,10 @@ function receiveMission(){
     <!--</table>-->
 
     <!-- testing for ajax -->
-    <p>Hello here's the ajax that we've caught: </p>
-    <p id="mission"></p>
-    <p id="update"></p>
-    <p id="message"></p>
+    <p hidden>Hello here's the ajax that we've caught: </p>
+    <p id="mission" hidden></p>
+    <p id="update" hidden></p>
+    <p id="message" hidden></p>
 
 </div>
 </body>

@@ -73,7 +73,7 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>{{ mission.title }}</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
@@ -90,23 +90,39 @@
     </div>
 
     <div id="btnGroup" style="float:right">
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span id="numOfNewPlans" class="badge"><strong>!</strong></span>&nbsp New plan from CMO</button>
+        <button id="newPlan" type="button" style="visibility: hidden;" class="btn btn-danger" data-toggle="modal" data-target="#myModal"><span id="numOfNewPlans" class="badge"><strong>!</strong></span>&nbsp New plan from CMO</button>
         <!-- Modal -->
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
 
                 <!-- Modal content-->
                 <div class="modal-content">
+                    <form action="{% url 'saveplan' %}" method="POST">
+                    {% csrf_token %}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Modal Header</h4>
+                        <h4 id="planTitle" class="modal-title">Modal Header</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Some text in the modal.</p>
+                        <p><strong>Teams Involved:</strong></p>
+                        <p id="planTeams"></p>
+                        <p><strong>Plan Detail:</strong></p>
+                        <p id="planDetail"></p>
+                        <p><strong>Action:</strong></p>
+                        <p id="planAction"></p>
+                        <!--hidden info-->
+                        <!--<p id="planID" style="display:none;"/>-->
+                        <input type="hidden" id="planID" name="planID"/>
+                        <input type="hidden" id="pTitle" name="pTitle"/>
+                        <input type="hidden" id="pTeam" name="pTeam"/>
+                        <input type="hidden" id="pD" name="pD"/>
+                        <input type="hidden" id="pA" name="pA"/>
+                        <input type="hidden" id="pRMID" name="pRMID" value="{{ mission.missionID }}"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button id="Plan" class="btn btn-default" return false>Close</button>
                     </div>
+                    </form>
                 </div>
 
             </div>
@@ -114,7 +130,7 @@
         <button type="button" class="btn btn-primary" id="btn_complete" onclick="complete()">Complete</button>
         <button type="button" class="btn btn-primary" id="btn_redeployment" onclick="location.href='/deployment/{{ mission.missionID }}';">Redeployment</button>
         <button type="button" class="btn btn-primary" id="btn_cleanUp" onclick="cleanup()">Clean up</button>
-        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.160.17:8080/browserfs.html')">Livestream</button>
+        <button type="button" class="btn btn-success" id="btn_liveStream" onclick="window.open('http://10.27.190.148:8080/browserfs.html')">Livestream</button>
     </div>
 
     <h2>Mission Control Centre</h2>
@@ -156,6 +172,14 @@
     </div>
 
 
+</div>
+
+<div>
+        <!-- testing for ajax -->
+    <p hidden>Hello here's the ajax that we've caught: </p>
+    <p id="mission" hidden>rr</p>
+    <p id="update" hidden></p>
+    <p id="message" hidden></p>
 </div>
 
 <!-- script for different button -->
@@ -409,6 +433,124 @@
             $('#msglog').append(response);
         });
     }, 5000)
+</script>
+
+<script>
+(function poll() {
+        setTimeout(function() {
+                   $.ajax({
+                          <!--url: "https://infosoftpmo.info/plans/json/",-->
+                          <!--url: "https://efies.pythonanywhere.com/updates/new/",-->
+                          url: "https://iescmo.herokuapp.com/api/crises/",
+                          xhrFields: {
+                            withCredentials: false
+                          },
+                          headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                          },
+                          type: "GET",
+                          beforeSend: function(xhr) {
+                            <!--xhr.setRequestHeader('Authorization', 'Token a528483d8d71425d3a5220c6034ae583d24a86cd')-->
+                            <!--xhr.setRequestHeader('Authorization', 'Token 479b4e2edc4adbb44722432a8fd27e626d577b80')-->
+                          },
+                          error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('jqXHR:' + jqXHR);
+
+                                console.log('textStatus:' + textStatus);
+
+                                console.log('errorThrown:' + errorThrown);
+
+                          },
+                          success: function(data) {
+                          <!--alert("data");-->
+                          // check if null return (no results from API)
+                          if (data == null) {
+                                console.log('no data!');
+                                document.write("test");
+                          } else {
+                                console.log('new data!');
+                                console.log(data);
+                                <!--alert("test2");-->
+
+                                <!-- create mission object -->
+                                <!--var mission = {-->
+                                    <!--"missionID" : data.crises[0][]-->
+                                <!--}-->
+
+                                <!--document.getElementById("mission").innerHTML = data.crises[0]['title'];-->
+                                <!--document.getElementById("update").innerHTML = data.update[0]['updateID'];-->
+                                <!--document.getElementById("message").innerHTML = data.user;-->
+
+                                <!--document.getElementById("mission").innerHTML = data.crises[0]['crisisID'];-->
+                                document.getElementById("mission").innerHTML = data.crises[0]['crisisID'];
+                                document.getElementById("update").innerHTML = {{planID}};
+
+
+                                <!--var requestMissionID = data.crises[0]['crisisID'];-->
+                                <!--var requestPlanID = data.crises[0]['plan']['planID'];-->
+                                <!--var currentPlanID = {{planID}}-->
+                                <!--var currentMissionID = {{mission.missionID}}-->
+
+                                var requestMissionID = data.crises[0]['crisisID'];
+                                var currentPlanID = {{planID}}
+                                var currentMissionID = {{mission.missionID}}
+
+                                <!--alert("before count");-->
+                                var reqCount = (data.crises[0]['updates']).length;
+                                <!--alert(reqCount);-->
+                                var reqStatus = data.crises[0]['updates'][0]['updated_plan']['status'];
+                                <!--alert(reqStatus);-->
+
+                                if(requestMissionID == currentMissionID){
+                                    <!--if(requestPlanID > currentPlanID){-->
+                                    if(reqStatus == "approved"){
+                                        if(reqCount > currentPlanID){
+                                            <!--document.getElementById("newPlan").style.visibility = "visible";-->
+                                            <!--document.getElementById("planTitle").innerHTML = data.crises[0]['plan']['title'];-->
+                                            <!--document.getElementById("planTeams").innerHTML = data.crises[0]['plan']['assets_involved'];-->
+                                            <!--document.getElementById("planDetail").innerHTML = data.crises[0]['plan']['details'];-->
+                                            <!--document.getElementById("planAction").innerHTML = data.crises[0]['plan']['action'];-->
+
+                                            <!--&lt;!&ndash; hidden info to pass to views &ndash;&gt;-->
+                                            <!--document.getElementById("planID").value = requestPlanID;-->
+                                            <!--document.getElementById("pTitle").value = data.crises[0]['plan']['title'];-->
+                                            <!--document.getElementById("pTeam").value = data.crises[0]['plan']['assets_involved'];-->
+                                            <!--document.getElementById("pD").value = data.crises[0]['plan']['details'];-->
+                                            <!--document.getElementById("pA").value = data.crises[0]['plan']['action'];-->
+
+                                            document.getElementById("newPlan").style.visibility = "visible";
+                                            document.getElementById("planTitle").innerHTML = data.crises[0]['updates'][0]['updated_plan']['title'];
+                                            document.getElementById("planTeams").innerHTML = data.crises[0]['updates'][0]['updated_plan']['assets_involved'];
+                                            document.getElementById("planDetail").innerHTML = data.crises[0]['updates'][0]['updated_plan']['details'];
+                                            document.getElementById("planAction").innerHTML = data.crises[0]['updates'][0]['updated_plan']['action'];
+
+                                            <!-- hidden info to pass to views -->
+                                            document.getElementById("planID").value = currentPlanID + 1;
+                                            document.getElementById("pTitle").value = data.crises[0]['updates'][0]['updated_plan']['title'];
+                                            document.getElementById("pTeam").value = data.crises[0]['updates'][0]['updated_plan']['assets_involved'];
+                                            document.getElementById("pD").value = data.crises[0]['updates'][0]['updated_plan']['details'];
+                                            document.getElementById("pA").value = data.crises[0]['updates'][0]['updated_plan']['action'];
+                                        }
+
+                                    }
+
+                                }
+
+                          }
+                          },
+                          dataType: "json",
+                          complete: poll,
+                          timeout: 2000
+                          })
+                   }, 3000);
+        })();
+</script>
+
+<!-- for viewing new plan -->
+<script>
+    function savePlan(){
+
+    }
 </script>
 
 {% endblock %}

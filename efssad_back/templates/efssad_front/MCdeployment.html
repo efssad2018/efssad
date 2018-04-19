@@ -11,7 +11,8 @@
 <!--{#% load leaflet_tags %}-->
 <!--{#% leaflet_js %}-->
 <!--{#% leaflet_css %}-->
-
+<!--{{plan}}-->
+<!--{{plan.team}}-->
 <div class="container">
     <h2>EF Deployment</h2>
     <div class="panel-group" id="missionDetail">
@@ -71,7 +72,7 @@
                                 $.get(url, function(data,status){
                                     var addressjson = JSON.parse(data);
                                     <!--alert(addressjson.results[0].formatted_address);-->
-                                    var text = "<b>{{ mission.description }}</b><br>" + addressjson.results[0].formatted_address;
+                                    var text = "<b>{{ mission.title }}</b><br>" + addressjson.results[0].formatted_address;
                                     marker.bindPopup(text).openPopup();
                                 }, 'html');
                             });
@@ -208,6 +209,14 @@
             {% csrf_token %}
             <input type="hidden" id="missionID" name="missionID" value="{{ mission.missionID }}"/>
             <input type="hidden" id="scAva" name="scAva"/>
+            {% if plan %}
+                {% if plan.team|lower != "null" %}
+                    <div style="width: 400px; margin-top: 20px;">
+                        <h4><strong>Suggested Team deployment</strong></h4>
+                        <p>{{ plan.team }}</p>
+                    </div>
+                {% endif %}
+            {% endif %}
 
             <div style="width: 400px; margin-top: 20px;">
                 <div class="checkbox" style="padding-bottom: 7px;">

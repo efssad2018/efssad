@@ -103,6 +103,7 @@ class MessageLog(models.Model):
     def __int__(self):
         return self.missionID
     missionID = models.IntegerField()
+    planID = models.IntegerField()
     updateID = models.IntegerField()
     dateTime = models.DateTimeField(auto_now_add = True)
     message = models.CharField(max_length=1000)

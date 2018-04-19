@@ -20,6 +20,7 @@ import requests
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse
+from django.db.models import Max
 
 # Create your views here.
 #def login(request):
@@ -54,17 +55,16 @@ def logout(request):
 
 def mainmenu(request):
     type = request.user.username
-    if Commander.objects.filter(username = type).filter(is_mainComm=True):
+    if Commander.objects.filter(username=type).filter(is_admin=True):
+        # request.session['Sesusername'] = "efadmin"
+        return redirect("/admin")
+    elif Commander.objects.filter(username = type).filter(is_mainComm=True):
         request.session['Sesusername'] = "mcmain"
         return redirect("mcmain")
 
-    elif Commander.objects.filter(username = type).filter(is_admin=False):
+    elif Commander.objects.filter(username = type).filter(is_mainComm=False):
         request.session['Sesusername'] = "scmission"
         return redirect("scmission")
-
-    elif Commander.objects.filter(username=type).filter(is_admin=True):
-        request.session['Sesusername'] = "efadmin"
-        return redirect("/admin")
     else:
         request.session['Sesusername'] = None
         #del request.session['Sesusername']
@@ -92,7 +92,11 @@ def mcmain(request):
                 elif Commander.objects.filter(username=loginuser).filter(is_mainComm=True):
 
                         request.session['id'] = None
-                        context = {'all_missions': getAllMissions(request)}
+                        all_missions = getAllMissions(request)
+                        latestmission = all_missions.aggregate(Max('missionID'))['missionID__max'] or 0
+                        missionStatus3 = getMIDStatus3(request)
+                        plan = getPlan(request, missionStatus3)
+                        context = {'all_missions': all_missions, 'latestmission': latestmission, 'plan': plan}
                         request.session['dir'] = "mcmain"
                         return render(request, 'efssad_front/MCmain.html', context)
     else:
@@ -124,6 +128,7 @@ def missionDetail(request, missionID):
                 mission = getOneMission(request, missionID)
                 message = getmessagelog(request, missionID)
                 assignedSC = getAssignedCommanders(request, missionID)
+                planID = getPlanID(request, missionID)
 
                 key = 3
                 dummy = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -147,7 +152,7 @@ def missionDetail(request, missionID):
 
                         list.append(element)
 
-                context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC}
+                context = {'mission': mission, 'message': list, 'assignedSC' : assignedSC, 'planID' : planID}
                 request.session['dir'] = "deployment"
                 request.session['id'] = missionID
                 return render(request, 'efssad_front/MCmission.html', context)
@@ -406,7 +411,8 @@ def deployment(request, missionID):
                     allType = list(chain(allType,typelist))
                 commander = list(chain("",commanders))
 
-                context = {'mission' : mission, 'type' : allType, 'commanders' : commander }
+                plan = getPlan(request, missionID)
+                context = {'mission' : mission, 'type' : allType, 'commanders' : commander, 'plan': plan }
                 request.session['id'] = missionID
                 request.session['dir'] = "deployment"
                 return render(request, 'efssad_front/MCdeployment.html', context)
@@ -451,6 +457,7 @@ def updateStatus(request, missionID, status):
                     return redirect("missionDetail", missionID)
                 else:
                     mission.datetimeCompleted = datetime.now()
+                    mission.is_crisisAbated = True
                     mission.save()
                     unassignSiteCommander(request, missionID)
                     sendSystemMessage(request, missionID, "Mission Completed")
@@ -583,6 +590,11 @@ def sendmessage(request):
                         obj.name = name
 
                         obj.updateID = updateID
+                        lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                        if lastReceivedPlan:
+                            obj.planID = lastReceivedPlan.planID
+                        else:
+                            obj.planID = -1
                         obj.save()
 
                        # if Commander.objects.filter(username=name).filter(is_mainComm=True):
@@ -626,6 +638,13 @@ def sendmessage(request):
                     obj.name = name
 
                     obj.updateID = updateID
+                    # lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0]
+                    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID)
+                    if lastReceivedPlan:
+                        lastReceivedPlan = lastReceivedPlan.order_by("-planID")[0]
+                        obj.planID = lastReceivedPlan.planID
+                    else:
+                        obj.planID = -1
                     obj.save()
                     #if Commander.objects.filter(username=name).filter(is_mainComm=True):
                     return redirect("missionDetail", missionid)
@@ -739,6 +758,13 @@ def sendSystemMessage(request, missionID, status):
     obj.name = name
 
     obj.updateID = updateID
+    # lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID).order_by("-planID")[0] or 0
+    lastReceivedPlan = Plan.objects.filter(missionID=missionInstance.missionID)
+    if lastReceivedPlan:
+        lastReceivedPlan = lastReceivedPlan.order_by("-planID")[0]
+        obj.planID = lastReceivedPlan.planID
+    else:
+        obj.planID = -1
     obj.save()
 
 
@@ -912,6 +938,87 @@ def updateMsgLog(request):
 
     return render(request, 'efssad_front/updateMsgLog.html', {'message' : list})
 
+#get latest planID for a misisonID
+def getPlanID(request, missionID):
+    plan = Plan.objects.filter(missionID=missionID)
+    if plan:
+        p = plan.values_list('planID', flat=True).order_by('-planID')
+        p = p.first()
+    else:
+        p=0
+    return p
+
+#save a plan
+def saveplan(request):
+    missionID = request.POST.get('pRMID')
+    planID = request.POST.get('planID')
+    title = request.POST.get('pTitle')
+    description = request.POST.get('pD')
+    team = request.POST.get('pTeam')
+    action = request.POST.get('pA')
+
+    planObj = Plan()
+    planObj.missionID = missionID
+    planObj.planID = planID
+    planObj.title = title
+    planObj.description = description
+    planObj.team = team
+    planObj.action = action
+    planObj.plantime = datetime.now()
+    planObj.save()
+    return redirect("missionDetail", planObj.missionID)
+
+#save a new mission from cmo
+def savenewmission(request):
+    # planID = request.POST.get('planID')
+    title = request.POST.get('pTitle')
+    description = request.POST.get('pD')
+    team = request.POST.get('pTeam')
+    action = request.POST.get('pA')
+
+    missionID = request.POST.get('mID')
+    missionTitle = request.POST.get('mTitle')
+    missionDescription = request.POST.get('mDescription')
+    missionLong = request.POST.get('mLong')
+    missionLat = request.POST.get('mLat')
+
+    planObj = Plan()
+    planObj.missionID = missionID
+    planObj.planID = 0
+    planObj.title = title
+    planObj.description = description
+    planObj.team = team
+    planObj.action = action
+    planObj.plantime = datetime.now()
+    planObj.save()
+
+    missionObj = Mission()
+    missionObj.missionID = missionID
+    missionObj.level = 3
+    missionObj.title = missionTitle
+    missionObj.description = missionDescription
+    missionObj.datetimeReceived = datetime.now()
+    missionObj.status = "New"
+    missionObj.latitude = missionLat
+    missionObj.longitude = missionLong
+    missionObj.save()
+
+    return redirect("mcmain")
+
+#get missionID with status 3
+def getMIDStatus3(request):
+    mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('-missionID')
+    # mission = Mission.objects.filter(level=3).values_list('missionID', flat=True).order_by('missionID')
+    mission = mission.first()
+    return mission
+
+#get plan by missionID
+def getPlan(request, missionID):
+    plan = Plan.objects.filter(missionID=missionID).order_by('-planID')
+    plan = plan.first()
+    return plan
+
+
 
 
 # class UserViewSet(viewsets.ModelViewSet):
@@ -982,7 +1089,13 @@ class UpdateNew(APIView):
             lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
             if MessageLog.objects.filter(missionID=mission.missionID):
                 if lastReceivedPlan:
-                    return MessageLog.objects.filter(missionID=mission.missionID).get(updateID=lastReceivedPlan.planID)
+                    update = MessageLog.objects.filter(missionID=mission.missionID).get(updateID=(lastReceivedPlan.planID) + 1)
+                    # update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(updateID__gte=(lastReceivedPlan.planID + 1))
+                    update1 = MessageLog.objects.filter(missionID=mission.missionID).filter(planID=lastReceivedPlan.planID) # planID=lastReceivedPlan.planID
+                    # update1 = update1.last()
+                    print(update1)
+                    # update = update.first()
+                    return update1
                 else:
                     return MessageLog()
             else:
@@ -994,26 +1107,42 @@ class UpdateNew(APIView):
         all_missions = getAllMissions(request)
         updateList = []
         crisisabatedList = []
-        for m in all_missions:
-            if m.level == 3:
-                # testID = 1
-                update = self.get_object(m.missionID)
-                # update = self.get_object(pk)
+        planList = []
+        # for m in all_missions:
+        #     if m.level == 3:
+        mID = getMIDStatus3(request)
+        m = getOneMission(request, mID)
+        # if m.status.lower() != "complete":
+        #     if m.status.lower() != "completed":
+        # testID = 1
+        update = self.get_object(m.missionID)
+        # update = self.get_object(pk)
+        if update:
+            if not isinstance(update, MessageLog):
+                for u in update:
+                    print(u)
+                    if u.missionID is not None:
+                        mission = Mission.objects.get(missionID=u.missionID)
+                        lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
+                        updateserializer = MessageLogSerializer(u)
+                        updateList.append(updateserializer.data)
 
-                if update.missionID is not None:
-                    mission = Mission.objects.get(missionID=update.missionID)
-                    updateserializer = MessageLogSerializer(update)
-                    missionserializer = MissionSerializer(mission)
 
-                    updateList.append(updateserializer.data)
-                    crisisabatedList.append(missionserializer.data)
+                    else:
+                        raise Http404
 
-                else:
-                    raise Http404
+        mission = Mission.objects.get(missionID=m.missionID)
+        lastReceivedPlan = Plan.objects.filter(missionID=mission.missionID).order_by("-planID")[0]
+        missionserializer = MissionSerializer(mission)
+        print(missionserializer)
+        planserializer = PlanSerializer(lastReceivedPlan)
+        crisisabatedList.append(missionserializer.data)
+        planList.append(planserializer.data)
 
         content = {
             'update': updateList,
             'crisis_abated': crisisabatedList,
+            'plan': planList,
         }
         return Response(content)
 
