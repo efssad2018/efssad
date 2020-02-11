@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 certifi = "==2018.1.18"
 chardet = "==3.0.4"
-Django = "==2.0.2"
+Django = "==2.2.10"
 "django-bootstrap3" = "==9.1.0"
 django-geoposition = "==0.3.0"
 idna = "==2.6"
